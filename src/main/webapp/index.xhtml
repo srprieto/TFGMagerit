@@ -16,55 +16,53 @@
             </p:inputText>  
             
   
-            <h:outputLabel for="nombre" value="Nombre: *" />  
+            <h:outputLabel for="nombre" value="#{msg.NOM}" />  
             <p:inputText id="nombre" value="#{activoController.activoEnEdicion.nombre}" required="true" label="Nombre">  
                 <f:validateLength minimum="2" />  
             </p:inputText>  
             
-            <h:outputLabel for="descripcion" value="Descripcion: *" />  
-            <p:inputText id="descripcion" value="#{pprBean.descripcion}" required="true" label="Descripcion"/>  
+            <h:outputLabel for="descripcion" value="#{msg.DES}" />  
+            <p:inputText id="descripcion" value="#{activoController.activoEnEdicion.descripcion}" required="true" label="Descripcion">  
+                <f:validateLength minimum="2" />  
+            </p:inputText> 
+            
+            <h:outputLabel for="responsable" value="#{msg.RES}" />  
+            <p:inputText id="responsable" value="#{activoController.activoEnEdicion.responsable}" required="true" label="Responsable">  
+                <f:validateLength minimum="2" />  
+            </p:inputText> 
+            
+            <h:outputLabel for="ubicacion" value="#{msg.UBI}" />  
+            <p:inputText id="ubicacion" value="#{activoController.activoEnEdicion.ubicacion}" required="true" label="Ubicacion"/>  
             
             
- 
-            <h:outputLabel for="responsable" value="Responsable: *" />  
-            <p:inputText id="responsable" value="#{pprBean.responsable}" required="true" label="Responsable"/>  
-           
-            
-            <h:outputLabel for="ubicacion" value="Ubicacion: *" />  
-            <p:inputText id="ubicacion" value="#{pprBean.ubicacion}" required="true" label="Ubicacion"/>  
-            
-            
-            <h:outputLabel for="cantidad" value="Cantidad: *" />  
-            <p:inputText id="cantidad" value="#{pprBean.cantidad}" required="true" label="Cantidad"/> 
+            <h:outputLabel for="cantidad" value="#{msg.CAN}" />  
+            <p:inputText id="cantidad" value="#{activoController.activoEnEdicion.cantidad}" required="true" label="Cantidad"/> 
   
-            <h:outputLabel for="valor" value="Valor: *" />  
-            <h:selectOneMenu id="valor" value="#{pprBean.valor}" required="true">  
-                <f:selectItem itemLabel="Select One" itemValue="" />  
-                <f:selectItems value="#{pprBean.valor}" />  
-            </h:selectOneMenu>  
-            
-            <h:outputLabel for="grupo" value="Grupo: *" />  
-            <h:selectOneMenu id="grupo" value="#{pprBean.grupo}" required="true">  
-                <f:selectItem itemLabel="Select One" itemValue="" />  
-                <f:selectItems value="#{pprBean.grupo}" />  
+        </h:panelGrid>  
+        
+        <h:panelGrid columns="2"  styleClass="menu"> 
+             
+            <h:outputLabel for="grupo" value="#{msg.GRU}" />  
+            <h:selectOneMenu id="grupo" value="#{activoController.activoEnEdicion.grupoActivos}" required="true">  
+                <f:selectItems value="#{activoController.grupoActivos}" />  
             </h:selectOneMenu>  
            
-            <p:commandButton update="@(form)" value="Nuevo grupo" /><br/>
-             
-            <h:outputLabel for="tipo" value="Tipo: *" />  
+            <p:commandButton update="@(form)" value="#{msg.NG}" /><br/>
+            
+            <h:outputLabel for="tipo" value="#{msg.TIP}" />  
             <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" required="true">  
                     <f:selectItems value="#{activoController.tiposActivos}" />  
             </h:selectOneMenu>  
             
-            <p:commandButton update="@(form)" value="Seleccionar" />  
-             
+            <p:commandButton update="@(form)" value="#{msg.SEL}" />  
+           
         </h:panelGrid>  
     </p:panel>  
   
-    <h:panelGrid columns="5">  
-        <p:commandButton process="" update="@(form)" value="Guardar" />  
    
-    </h:panelGrid>  
+       <p:commandButton process="#{activoController.doGuargar()}" update="@(form)" value="#{msg.GUA}" />  
+   
+   
   
 </h:form>  
 </html>

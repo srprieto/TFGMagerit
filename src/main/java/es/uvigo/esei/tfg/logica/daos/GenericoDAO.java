@@ -4,6 +4,7 @@ package es.uvigo.esei.tfg.logica.daos;
  *
  * 
  * 
+ * @param <T>
  */
 
 public interface GenericoDAO<T> {

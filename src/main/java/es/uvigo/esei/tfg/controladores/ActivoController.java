@@ -6,9 +6,13 @@
 
 package es.uvigo.esei.tfg.controladores;
 
+import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.GrupoActivosDAO;
+import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -27,24 +31,29 @@ public class ActivoController implements Serializable {
     private Activo activoEnEdicion;
     
     private List<TipoActivo> tiposActivos;
+    private List<CriterioValoracion> valorBase;
+    private List<GrupoActivos> grupoActivos;
+ 
     
     @Inject 
     ActivoDAO activoDAO;
     
-    //@Inject
-    //TipoActivoDAO  tipoActivoDAO;
+    @Inject
+    TipoActivoDAO  tipoActivoDAO;
+    
+    @Inject
+    GrupoActivosDAO  grupoActivoDAO;
             
     public ActivoController() {
         
         
     }
     
-    
     @PostConstruct
     private void inicializar(){
         activoEnEdicion = new Activo();
-        //tiposActivos = tipoActivoDAO.buscarTodos();
-        
+        tiposActivos = tipoActivoDAO.buscarTodos();
+        grupoActivos = grupoActivoDAO.buscarTodos();
     }
 
     public Activo getActivoEnEdicion() {
@@ -61,6 +70,22 @@ public class ActivoController implements Serializable {
 
     public void setTiposActivos(List<TipoActivo> tiposActivos) {
         this.tiposActivos = tiposActivos;
+    }
+    
+    public List<CriterioValoracion> getValorBase() {
+        return valorBase;
+    }
+
+    public void setValorBase(List<CriterioValoracion> valorBase) {
+        this.valorBase = valorBase;
+    }
+    
+     public List<GrupoActivos> getGrupoActivos() {
+        return grupoActivos;
+    }
+
+    public void setGrupoActivos(List<GrupoActivos> grupoActivos) {
+        this.grupoActivos = grupoActivos;
     }
     
     public void doGuargar(){

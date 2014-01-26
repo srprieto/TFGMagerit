@@ -21,7 +21,7 @@ public class GrupoActivosJPA extends GenericoJPA<GrupoActivos> implements GrupoA
     @Override
     public List<GrupoActivos> buscarTodos() {
       
-       Query q = em.createQuery("SELECT object(p) FROM Grupoactivos AS p");
+       Query q = em.createQuery("SELECT object(p) FROM GrupoActivos AS p");
        return q.getResultList();
       
     }

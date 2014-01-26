@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
    <h:form id="form">  
   
     <p:panel id="panel" header="Nuevo activo" style="margin-bottom:10px;">  
@@ -43,27 +44,22 @@
         <h:panelGrid columns="2"  styleClass="menu"> 
              
             <h:outputLabel for="grupo" value="#{msg.GRU}" />  
-            <h:selectOneMenu id="grupo" value="#{activoController.activoEnEdicion.grupoActivos}" required="true">  
-                <f:selectItems value="#{activoController.grupoActivos}" />  
+            <h:selectOneMenu id="grupo" value="#{activoController.activoEnEdicion.grupoActivos}" converter="omnifaces.SelectItemsConverter" required="true">  
+                <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
             </h:selectOneMenu>  
            
             <p:commandButton update="@(form)" value="#{msg.NG}" /><br/>
             
             <h:outputLabel for="tipo" value="#{msg.TIP}" />  
-            <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" required="true">  
-                    <f:selectItems value="#{activoController.tiposActivos}" />  
+            <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" converter="omnifaces.SelectItemsConverter" required="true">  
+                <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
             </h:selectOneMenu>  
             
             <p:commandButton update="@(form)" value="#{msg.SEL}" />  
            
         </h:panelGrid>  
     </p:panel>  
-  
-   
        <p:commandButton process="#{activoController.doGuargar()}" update="@(form)" value="#{msg.GUA}" />  
-   
-   
-  
 </h:form>  
 </html>
 

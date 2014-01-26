@@ -89,7 +89,6 @@ public class ActivoController implements Serializable {
     }
     
     public void doGuargar(){
-           activoDAO.crear(activoEnEdicion);
-    
+         activoDAO.crear(activoEnEdicion);  
     }
 }

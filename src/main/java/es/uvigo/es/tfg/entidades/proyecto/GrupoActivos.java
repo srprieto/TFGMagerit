@@ -3,6 +3,7 @@ package es.uvigo.es.tfg.entidades.proyecto;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -68,6 +69,5 @@ public class GrupoActivos implements Serializable {
         }
         activo.setGrupoActivos(this);
         activos.add(activo);
-    } 
-     
+    }     
 }

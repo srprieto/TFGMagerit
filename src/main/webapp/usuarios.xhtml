@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:p="http://primefaces.org/ui"
+template="/templates/plantilla.xhtml">
+<ui:define name="head">:: Gestión Usuarios ::</ui:define>
+<ui:define name="sidebar1">  
+    <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+        <h:form id="frmMenu" prependId="false" >
+            <p:menu>  
+                <p:submenu label="#{msg.MEN}">  
+                    <p:menuitem value="#{msg.INI}" url="login.xhtml" />  
+                    <p:menuitem value="#{msg.GES}" url="usuarios.xhtml" />  
+                </p:submenu>  
+            </p:menu>
+        </h:form>  
+    </div>
+</ui:define>
+<ui:define name="content">
+<div class="tabla">
+<h:form id="form">  
+      <p:dataTable id="multiUsuarios" var="usuario" value="#{tablaUsuariosController.usuarioModel}" paginator="true" rows="10" selection="#{tablaUsuariosController.selectedUsuarios}" >  
+            <f:facet name="header">  
+                <h:outputText value="Lista de Usuarios"/>  
+            </f:facet>  
+  
+        <p:column selectionMode="multiple" style="width:2%" /> 
+  
+            <p:column headerText="Login" style="width:25%">  
+                #{usuario.login}  
+            </p:column>  
+  
+            <p:column headerText="tipo" style="width:25%">  
+                #{usuario.tipo}  
+            </p:column>  
+  
+            <p:column headerText="ultima conexion" style="width:24%">  
+                #{usuario.ultimoAcceso}  
+            </p:column> 
+        
+            <p:column headerText="fecha alta" style="width:24%">  
+                #{usuario.fechaAlta}  
+            </p:column>    
+        </p:dataTable>     
+</h:form>
+</div>
+</ui:define>
+</ui:composition>

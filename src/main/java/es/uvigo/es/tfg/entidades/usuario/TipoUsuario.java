@@ -12,7 +12,7 @@ package es.uvigo.es.tfg.entidades.usuario;
  * @author Saul
  */
 public enum TipoUsuario {
-    Administrador,
-    normal
+    ADMINISTRADOR,
+    TRABAJADOR
     
 }

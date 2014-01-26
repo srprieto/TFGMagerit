@@ -5,10 +5,12 @@ import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
@@ -30,6 +32,11 @@ public class Proyecto implements Serializable {
     
     @ManyToOne
     Usuario creador;
+    
+    @ManyToMany
+    List<Usuario> editores;
+
+    
     
     @ManyToOne
     Proyecto proyectoBase;
@@ -115,7 +122,14 @@ public class Proyecto implements Serializable {
     public void setProyectoBase(Proyecto proyectoBase) {
         this.proyectoBase = proyectoBase;
     }
+    
+    public List<Usuario> getEditores() {
+        return editores;
+    }
 
+    public void setEditores(List<Usuario> editores) {
+        this.editores = editores;
+    }
     
     
     

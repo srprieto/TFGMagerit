@@ -22,7 +22,7 @@ public class TipoActivoJPA extends GenericoJPA<TipoActivo> implements TipoActivo
     @Override
     public List<TipoActivo> buscarTodos() {
       
-       Query q = em.createQuery("SELECT object(p) FROM Tipoactivo AS p");
+       Query q = em.createQuery("SELECT object(p) FROM TipoActivo AS p");
        return q.getResultList();
       
     }

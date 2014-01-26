@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+<h:body>
+  <h:form id="form">  
+  
+      <p:dataTable id="multiUsuarios" var="usuario" value="#{tablaUsuariosController.usuarioModel}" paginator="true" rows="10"  
+                   selection="#{tablaUsuariosController.selectedUsuarios}" >  
+  
+        <f:facet name="header">  
+            <h:outputText value="Lista de Usuarios"/>  
+        </f:facet>  
+  
+        <p:column selectionMode="multiple" style="width:2%" /> 
+  
+        <p:column headerText="Login" style="width:25%">  
+            #{usuario.login}  
+        </p:column>  
+  
+        <p:column headerText="tipo" style="width:25%">  
+            #{usuario.tipo}  
+        </p:column>  
+  
+        <p:column headerText="ultima conexion" style="width:24%">  
+            #{usuario.ultimoAcceso}  
+        </p:column> 
+        
+        <p:column headerText="fecha alta" style="width:24%">  
+            #{usuario.fechaAlta}  
+        </p:column> 
+        
+    </p:dataTable>     
+  
+</h:form>  
+</h:body>
+</html>

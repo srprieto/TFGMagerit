@@ -6,29 +6,34 @@
 
 package es.uvigo.es.tfg.entidades.usuario;
 
-
+import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
+import javax.persistence.ManyToMany;
+import javax.persistence.Temporal;  
 
 /**
  *
  * @author Saul
  */
 @Entity
-public class Usuario implements Serializable {
+public class Usuario implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @ManyToMany
+    List<Proyecto> proyectos;
     
     private String login;
     private String password;
@@ -39,10 +44,11 @@ public class Usuario implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipo;
+   
     
     public Usuario() {
     }
-
+    
     public Usuario(String login, String password, TipoUsuario tipo, Date fechaAlta, Date ultimoAcceso) {
         this.login = login;
         this.password = password;
@@ -129,7 +135,15 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "dagss.gestionactivos.entidades.Usuario[ id=" + id + " ]";
+        return "Usuario{" + "id=" + id + ", proyectos=" + proyectos + ", login=" + login + ", password=" + password + ", fechaAlta=" + fechaAlta + ", ultimoAcceso=" + ultimoAcceso + ", tipo=" + tipo + '}';
     }
     
+    public List<Proyecto> getProyectos() {
+        return proyectos;
+    }
+
+    public void setProyectos(List<Proyecto> proyectos) {
+        this.proyectos = proyectos;
+    }
+ 
 }

@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width"/>
-    </head>
-    <body>
-        <div>Trabajador</div>
-    </body>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:p="http://primefaces.org/ui"
+template="/templates/plantilla.xhtml">
+<h:outputStylesheet library="css" name="estilo.css"  />
+<ui:define name="head"><h:outputText value="#{msg.IND}"/></ui:define>
+<ui:define name="sidebar1">  
+    <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+        <h:form id="frmMenu" prependId="false" >
+            <p:menu>  
+                <p:submenu label="#{msg.MEN}">  
+                    <p:menuitem value="#{msg.INI}" url="login.xhtml" />  
+                    <p:menuitem value="#{msg.PRO}" url="proyectos.xhtml" />  
+                </p:submenu>  
+            </p:menu>
+        </h:form>  
+    </div>
+</ui:define>
+<ui:define name="content">   
+    <h1 class="title ui-widget-header ui-corner-all"><h:outputText value="#{msg.BIE1}&#160;#{usuarioController.usuarioActual.login} "/></h1>
+    <div class="entry">
+        <h:form id="Acceso">
+             EN CONSTRUCCIÓN      
+        </h:form>  
+    </div>
+</ui:define>
+</ui:composition>

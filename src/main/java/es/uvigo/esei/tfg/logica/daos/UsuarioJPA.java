@@ -12,6 +12,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
+
 /**
  *
  * @author Saul
@@ -62,4 +63,6 @@ public class UsuarioJPA extends GenericoJPA<Usuario> implements UsuarioDAO {
         Query q = em.createQuery("SELECT count(u) FROM Usuario as u");
         return q.getFirstResult();
     }
+    
+  
 }

@@ -1,49 +1,73 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:p="http://primefaces.org/ui"
-template="/templates/plantilla.xhtml">
-<ui:define name="head">:: Gestión Usuarios ::</ui:define>
-<ui:define name="sidebar1">  
-    <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
-        <h:form id="frmMenu" prependId="false" >
-            <p:menu>  
-                <p:submenu label="#{msg.MEN}">  
-                    <p:menuitem value="#{msg.INI}" url="login.xhtml" />  
-                    <p:menuitem value="#{msg.GES}" url="usuarios.xhtml" />  
-                </p:submenu>  
-            </p:menu>
-        </h:form>  
-    </div>
-</ui:define>
-<ui:define name="content">
-<div class="tabla">
-<h:form id="form">  
-      <p:dataTable id="multiUsuarios" var="usuario" value="#{tablaUsuariosController.usuarioModel}" paginator="true" rows="10" selection="#{tablaUsuariosController.selectedUsuarios}" >  
-            <f:facet name="header">  
-                <h:outputText value="Lista de Usuarios"/>  
-            </f:facet>  
-  
-        <p:column selectionMode="multiple" style="width:2%" /> 
-  
-            <p:column headerText="Login" style="width:25%">  
-                #{usuario.login}  
-            </p:column>  
-  
-            <p:column headerText="tipo" style="width:25%">  
-                #{usuario.tipo}  
-            </p:column>  
-  
-            <p:column headerText="ultima conexion" style="width:24%">  
-                #{usuario.ultimoAcceso}  
-            </p:column> 
-        
-            <p:column headerText="fecha alta" style="width:24%">  
-                #{usuario.fechaAlta}  
-            </p:column>    
-        </p:dataTable>     
-</h:form>
-</div>
-</ui:define>
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.GES1}"/></ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" url="indexadministrador.xhtml" />  
+                        <p:menuitem value="#{msg.ANA}" url="crearusuario.xhtml"/> 
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+                <p:dataTable id="multiUsuarios" emptyMessage="#{msg.ERR1}" var="usuario" value="#{tablaUsuariosController.usuarioModel}"  paginator="true" rows="10" selection="#{tablaUsuariosController.selectedUsuarios}">  
+                    <f:facet name="header" >  
+                        <p:outputPanel>  
+                            <h:outputText value="#{msg.LIS}"/>   
+                        </p:outputPanel>  
+                    </f:facet> 
+
+                    <p:column styleClass="tabla2" selectionMode="multiple"/> 
+
+                    <p:column id="login" styleClass="tabla1" filterBy="#{usuario.login}" headerText="#{msg.LOG}">  
+                        <h:outputText value="#{usuario.login}" />   
+                    </p:column>  
+
+                    <p:column id="tipo" styleClass="tabla1" filterBy="#{usuario.tipo}" headerText="#{msg.TIP1}">  
+                        <h:outputText value="#{usuario.tipo}" />    
+                    </p:column>  
+
+                    <p:column id="ultimoAcceso" styleClass="tabla1" filterBy="#{usuario.ultimoAcceso}" headerText="#{msg.ULT}">  
+                        <h:outputText value="#{usuario.ultimoAcceso}" />  
+                    </p:column> 
+
+                    <p:column id="fechaAlta" styleClass="tabla1"  filterBy="#{usuario.fechaAlta}" headerText="#{msg.FEC}"> 
+                        <h:outputText value="#{usuario.fechaAlta}"> 
+                            <f:convertDateTime dateStyle="short" locale="es" type="date" />
+                        </h:outputText>
+                    </p:column>  
+
+                    <f:facet id="pie" name="footer">  
+                        <div style="izquierda">
+                        <p:commandButton id="multiViewButton" value="Borrar" icon="ui-icon-trash"  
+                                         update=":form:displayMulti" oncomplete="PF('multiUsuarioDialog').show()"/>
+                        </div>
+                    </f:facet> 
+
+                </p:dataTable>   
+
+                <p:dialog id="multiDialog" header="#{msg.ELI}" widgetVar="multiUsuarioDialog"  
+                          height="200" width="300" showEffect="fade" hideEffect="explode">  
+
+                    <p:dataList id="displayMulti" value="#{tablaUsuariosController.selectedUsuarios}" var="selectedUsuario">  
+                        <h:outputText value="#{msg.LOG1}&#160;#{selectedUsuario.login}"/>
+                    </p:dataList>  
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaUsuariosController.eliminarUsuarios()}" /> 
+                    <p:commandButton value="#{msg.CAN}"  actionListener="#{dialogBean.viewCars}" />
+                </p:dialog>  
+            </h:form>
+        </div>
+    <p:growl id="growl" life="3000" />
+    </ui:define>
 </ui:composition>

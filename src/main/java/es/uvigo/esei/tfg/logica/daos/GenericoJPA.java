@@ -19,8 +19,8 @@ public class GenericoJPA<T> implements GenericoDAO<T> {
 
     @Override
     public T crear(T entidad) {
-       em.persist(entidad); // Crea una nueva tupla en la BD con los datos de "entidad"
-                            // -> ademas genera su ID
+       em.persist(entidad);      // Crea una nueva tupla en la BD con los datos de "entidad"
+                                // -> ademas genera su ID           
        return entidad;
     }
 

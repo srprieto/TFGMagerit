@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.es.tfg.entidades.usuario;
+package es.uvigo.esei.tfg.controladores.modelos;
 
+import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import java.util.List;
 import javax.faces.model.ListDataModel;
 import org.primefaces.model.SelectableDataModel;

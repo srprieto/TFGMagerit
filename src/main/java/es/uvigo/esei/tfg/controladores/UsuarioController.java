@@ -5,50 +5,47 @@
  */
 package es.uvigo.esei.tfg.controladores;
 
+import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
+import es.uvigo.es.tfg.entidades.usuario.Usuario;
+import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
+import java.io.Serializable;
+import static java.util.Collections.list;
+import java.util.Iterator;
+import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+
 /**
  *
  * @author Saul
  */
-import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
-import es.uvigo.es.tfg.entidades.usuario.Usuario;
-import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
-import java.io.Serializable;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
-
-@ManagedBean(name = "usuarioController")
+@Named(value = "usuarioController")
 @SessionScoped
 public class UsuarioController implements Serializable {
+
+     // Atributos
    
-    // Atributos
-    private Usuario usuarioEnEdicion;
     private Usuario usuarioActual = null;
-    private final TipoUsuario tipusu = null;
+    private TipoUsuario tipo1=null;
     private String login = "";
     private String password = "";
     private String password2 = "";
     private boolean nuevoUsuario = true;
     
-    // EJBs
-    @EJB
+    
+    @Inject
     private GestorUsuariosDAO gestorUsuariosDAO;
-   
     
     public UsuarioController() {
         
     }
-
-    @PostConstruct
-    private void inicializar(){
-        usuarioEnEdicion = new Usuario();
-    }
     
-    /**
+
+     /**
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
      * @param mensaje
      */
@@ -56,63 +53,13 @@ public class UsuarioController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
     }
+    protected void anadirMensajeCorrecto(String mensaje){
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+    }
     
-    // Acciones para paginas JSF
-    public String doLogin() {
-        String destino;
-        TipoUsuario tipo;
-        if (gestorUsuariosDAO.autenticarUsuario(login, password)) {
-            usuarioActual = gestorUsuariosDAO.recuperarDatosUsuario(login);
-            password2 = password;
-            nuevoUsuario = false;
-            tipo = usuarioActual.getTipo();
-            if(tipo == TipoUsuario.ADMINISTRADOR)
-            {
-                destino = "indexadministrador.xhtml";
-            }else{
-                destino = "indextrabajador.xhtml";
-            }
-        } else {
-            destino = "login.xhtml";
-        }
-
-        return destino;
-    }
-
-    public String doLogout() {
-        String destino;
-        if (usuarioActual != null) {
-            gestorUsuariosDAO.actualizarUltimoAcceso(usuarioActual.getId());
-            // carroCompraController.vaciarCarro();
-        }
-        usuarioActual = null;
-        login = "";
-        password = "";
-        password2 = "";
-
-        nuevoUsuario = true;
-
-        // Limpiar los objetos de sesiÃ³n (vaciar la sesiÃ³n)
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();        
+    public void doCrearUsuario() {
         
-        destino = "login.xhtml";
-        
-        return destino;
-    }
-
-    public String doNuevoUsuario() {
-        nuevoUsuario = true;
-        usuarioActual = new Usuario();
-        login = "";
-        password = "";
-        password2 = "";
-
-        return "usuario.nuevo";
-    }
-
-    public String doCrearUsuario() {
-        String destino = null;
-
         if (login.equals("")) {
             anadirMensajeError("No se ha indicado un nombre de usuario");
         } else if (password.equals("")) {
@@ -123,15 +70,16 @@ public class UsuarioController implements Serializable {
             anadirMensajeError("Las contraseñas introducidas no coinciden");
         } else if (gestorUsuariosDAO.existeUsuario(login)) {
             anadirMensajeError("El nombre de usuario " + login + " ya existe");
-        } else {
-            usuarioActual = gestorUsuariosDAO.crearNuevoUsuario(login, password, tipusu);
-            nuevoUsuario = false;
-            destino = "usuario.creado";
+        }else {
+            gestorUsuariosDAO.crearNuevoUsuario(login, password, tipo1);
+            login="";
+            password="";
+            password2="";
+            tipo1=null; 
+            anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
         }
-
-        return destino;
     }
-
+    
     public String doActualizarUsuario() {
         String destino = null;
 
@@ -148,7 +96,9 @@ public class UsuarioController implements Serializable {
         }
         return destino;
     }
-
+    
+   
+    
     public String doCancelarModificacionUsuario() {
         String destino;
         if (nuevoUsuario) {
@@ -212,11 +162,11 @@ public class UsuarioController implements Serializable {
         this.nuevoUsuario = nuevoUsuario;
     }
     
-     public Usuario getUsuarioEnEdicion() {
-        return usuarioEnEdicion;
+     public TipoUsuario getTipo() {
+        return tipo1;
     }
 
-    public void setUsuarioEnEdicion(Usuario usuarioEnEdicion) {
-        this.usuarioEnEdicion = usuarioEnEdicion;
+    public void setTipo(TipoUsuario tipo1) {
+        this.tipo1 = tipo1;
     }
 }

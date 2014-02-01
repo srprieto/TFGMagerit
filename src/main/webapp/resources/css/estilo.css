@@ -45,3 +45,27 @@
     height:300px;
     width:200px;
 }
+
+.tabla1{
+    width: 25px;
+}
+
+.tabla2{
+    width: 2px;
+}
+
+.tabla3{
+    margin-left: 40%;
+}
+
+.negrita{
+    font-weight:bold;
+}
+
+form .boton{
+    margin-right:10px;
+}
+
+.izquierda{
+    float: left;
+}

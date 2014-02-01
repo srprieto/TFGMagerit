@@ -3,6 +3,7 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
     <application>
         <locale-config>
             <default-locale>es</default-locale>
@@ -16,4 +17,8 @@
             </var>
         </resource-bundle>
     </application>
+    <converter>
+            <converter-for-class>java.lang.Enum</converter-for-class>
+            <converter-class>javax.faces.convert.EnumConverter</converter-class>
+    </converter>
 </faces-config>

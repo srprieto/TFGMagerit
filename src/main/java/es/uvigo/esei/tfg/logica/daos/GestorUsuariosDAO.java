@@ -18,10 +18,11 @@ import javax.ejb.Local;
 public interface GestorUsuariosDAO {
      public boolean autenticarUsuario(String login, String passwordPlano);
      public Usuario recuperarDatosUsuario(String login);
-     public Usuario crearNuevoUsuario(String login, String password, TipoUsuario tipusu);
+     public void crearNuevoUsuario(String login, String password, TipoUsuario tipusu);
      public Usuario actualizarDatosCliente(Usuario datosUsuario);
      public Usuario actualizarPassword(long idUsuario, String password);
      public Usuario actualizarUltimoAcceso(long idUsuario);
      public boolean existeUsuario(String login);
      public TipoUsuario tipoUsuario(String login);
+     public void eliminarUsuario(Usuario usuario); 
 }

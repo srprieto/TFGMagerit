@@ -9,29 +9,54 @@ package es.uvigo.esei.tfg.controladores;
  * @author Saul
  */
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
-import es.uvigo.es.tfg.entidades.usuario.UsuarioModel;
+import es.uvigo.esei.tfg.controladores.modelos.UsuarioModel;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.Serializable;  
 import java.util.List;    
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
   
 @Named(value = "tablaUsuariosController")
 @SessionScoped 
-public class TablaUsuariosController implements Serializable {  
+public class TablaUsuariosController implements Serializable { 
 
     private Usuario usuario;
     private List<Usuario> usuarios;
     private Usuario selectedUsuario; 
     private Usuario[] selectedUsuarios;
     private UsuarioModel usuarioModel;  
+    private List<Usuario> filteredUsuarios; 
     
     @Inject
     UsuarioDAO usuarioDAO;
     
     public TablaUsuariosController() {
         
+    }
+    
+    
+    /**
+     * Añade un mensaje de error a la jeraquia de componetes de la página JSF
+     * @param mensaje
+     */
+    protected void anadirMensajeError(String mensaje){
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
+    }
+    protected void anadirMensajeCorrecto(String mensaje){
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+    }
+    
+    public List<Usuario> getFilteredUsuarios() {   
+        return filteredUsuarios;  
+    }  
+  
+    public void setFilteredUsuarios(List<Usuario> filteredUsuarios) {  
+        this.filteredUsuarios = filteredUsuarios;  
     }
     
     public Usuario[] getSelectedUsuarios() {  
@@ -58,9 +83,7 @@ public class TablaUsuariosController implements Serializable {
     }
 
     public List<Usuario> getUsuarios() {
-       if (usuarios == null) {
-            usuarios = usuarioDAO.buscarTodos();
-        }
+        usuarios = usuarioDAO.buscarTodos();
         return usuarios;
     }
 
@@ -69,11 +92,19 @@ public class TablaUsuariosController implements Serializable {
     }
     
     public UsuarioModel getUsuarioModel() {
-        if (usuarios == null) {
-            usuarios = usuarioDAO.buscarTodos();
-        }
+        usuarios = usuarioDAO.buscarTodos();
         usuarioModel = new UsuarioModel(usuarios);
         return usuarioModel;  
     }  
-
+    
+    public void eliminarUsuarios(){
+        Usuario[] lista = this.getSelectedUsuarios();
+        int tamano = lista.length;
+        for (int i=0; i<tamano; i++)
+        {
+            Usuario user= lista[i];
+            usuarioDAO.eliminar(user);
+        }
+        anadirMensajeCorrecto("Los usuarios fueron eliminados correctamente");
+    }
 }                 

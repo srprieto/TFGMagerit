@@ -44,12 +44,16 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
     }
 
     @Override
-    public Usuario crearNuevoUsuario(String login, String password, TipoUsuario tipusu) {
+    public void crearNuevoUsuario(String login, String password, TipoUsuario tipusu) {
         // Crear el usuario 
-        Usuario nuevoUsuario = usuarioDAO.crear(new Usuario(login, password, tipusu, Calendar.getInstance().getTime(),null));
-        
-        // Crear el usuario
-        return usuarioDAO.crear(nuevoUsuario);
+        Usuario nuevo = new Usuario(login, password, tipusu, Calendar.getInstance().getTime(),null);
+        usuarioDAO.crear(nuevo);
+    }
+    
+    @Override
+    public void eliminarUsuario(Usuario usuario) {
+        // Crear el usuario 
+        usuarioDAO.eliminar(usuario);
     }
 
     @Override

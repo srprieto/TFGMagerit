@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
@@ -27,11 +21,13 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
     public boolean autenticarUsuario(String login, String passwordPlano) {
         Usuario usuario;
         boolean resultado = false;
+        
 
         usuario = usuarioDAO.buscarPorLogin(login);
         if (usuario != null) {
             if (usuario.getPassword().equals(passwordPlano)) {
                 resultado = true;
+               
             }
         }
 
@@ -86,5 +82,4 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
         return usuario.getTipo();
     
     }
-
 }

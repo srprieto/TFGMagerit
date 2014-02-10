@@ -3,7 +3,21 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
-
+    <navigation-rule>
+        <from-view-id>/login.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>exito.loginadmin</from-outcome>
+            <to-view-id>/administrador/index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>exito.logineditor</from-outcome>
+            <to-view-id>/editor/index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>fallo.login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
     <application>
         <locale-config>
             <default-locale>es</default-locale>

@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
@@ -6,6 +8,11 @@
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
     <ui:define name="head"><h:outputText value="#{msg.GES1}"/></ui:define>
+    <ui:define name="sidebar">
+    <h:form id="logout">
+        <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+    </h:form>
+    </ui:define>
     <ui:define name="sidebar1">  
         <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
             <h:form id="frmMenu" prependId="false" >
@@ -34,15 +41,17 @@
                         <h:outputText value="#{usuario.login}" />   
                     </p:column>  
 
-                    <p:column id="tipo" styleClass="tabla1" filterBy="#{usuario.tipo}" headerText="#{msg.TIP1}">  
+                    <p:column id="tipo" styleClass="tabla1" headerText="#{msg.TIP1}">  
                         <h:outputText value="#{usuario.tipo}" />    
                     </p:column>  
 
-                    <p:column id="ultimoAcceso" styleClass="tabla1" filterBy="#{usuario.ultimoAcceso}" headerText="#{msg.ULT}">  
-                        <h:outputText value="#{usuario.ultimoAcceso}" />  
+                    <p:column id="ultimoAcceso" styleClass="tabla1" headerText="#{msg.ULT}">  
+                        <h:outputText value="#{usuario.ultimoAcceso}">
+                             <f:convertDateTime dateStyle="short" locale="es" type="date" />
+                        </h:outputText>
                     </p:column> 
 
-                    <p:column id="fechaAlta" styleClass="tabla1"  filterBy="#{usuario.fechaAlta}" headerText="#{msg.FEC}"> 
+                    <p:column id="fechaAlta" styleClass="tabla1"  headerText="#{msg.FEC}"> 
                         <h:outputText value="#{usuario.fechaAlta}"> 
                             <f:convertDateTime dateStyle="short" locale="es" type="date" />
                         </h:outputText>
@@ -63,8 +72,8 @@
                     <p:dataList id="displayMulti" value="#{tablaUsuariosController.selectedUsuarios}" var="selectedUsuario">  
                         <h:outputText value="#{msg.LOG1}&#160;#{selectedUsuario.login}"/>
                     </p:dataList>  
-                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaUsuariosController.eliminarUsuarios()}" /> 
-                    <p:commandButton value="#{msg.CAN}"  actionListener="#{dialogBean.viewCars}" />
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaUsuariosController.eliminarUsuarios()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiUsuarioDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>  
             </h:form>
         </div>

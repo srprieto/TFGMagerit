@@ -69,3 +69,10 @@ form .boton{
 .izquierda{
     float: left;
 }
+
+ .logout{
+    margin-left: 90%;
+    width: 20%;   
+}
+
+

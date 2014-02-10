@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:p="http://primefaces.org/ui"
+template="/templates/plantilla.xhtml">
+<h:outputStylesheet library="css" name="estilo.css"  />
+<ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
+<ui:define name="sidebar">
+    <h:form id="logout">
+        <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+    </h:form>
+</ui:define>
+<ui:define name="sidebar1">  
+    <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+        <h:form id="frmMenu" prependId="false" >
+            <p:menu>  
+                <p:submenu label="#{msg.MEN}">  
+                    <p:menuitem value="#{msg.ATR}" url="crearmarco.xhtml" />   
+                </p:submenu>  
+            </p:menu>
+        </h:form>  
+    </div>
+</ui:define>
+<ui:define name="content">
+<div class="tabla">
+<h:form id="form" enctype="multipart/form-data">
+    <p:panel header="Confirmar datos">
+        <p><h:outputText value="Nombre del Marco:&#160;#{marcosController.nombre}"/></p>
+        <p><h:outputText value="Descripción del Marco:&#160;#{marcosController.descripcion}"/></p>
+        <h:panelGrid id="grid" columns="2" cellpadding="5"> 
+            
+            <p:messages showDetail="true"/>  
+            <p:fileUpload value="#{ficherosController.file}" mode="simple"/>  
+            
+   
+        </h:panelGrid>
+        <p:commandButton value="Submit" ajax="false"  actionListener="#{marcosController.doCrear()}"/>
+    </p:panel>
+</h:form>  
+</div>
+<p:growl id="growl" life="3000" />
+</ui:define>
+</ui:composition>

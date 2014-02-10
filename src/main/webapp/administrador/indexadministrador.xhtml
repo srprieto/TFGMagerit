@@ -7,14 +7,21 @@ xmlns:f="http://java.sun.com/jsf/core"
 xmlns:p="http://primefaces.org/ui"
 template="/templates/plantilla.xhtml">
 <h:outputStylesheet library="css" name="estilo.css"  />
-<ui:define name="head"><h:outputText value="#{msg.IND}"/></ui:define>
+<ui:define name="head">
+    <h:outputText value="#{msg.IND}"/>
+</ui:define>
+<ui:define name="sidebar">
+    <h:form id="logout">
+        <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+    </h:form>
+</ui:define>
 <ui:define name="sidebar1">  
     <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
         <h:form id="frmMenu" prependId="false" >
             <p:menu>  
                 <p:submenu label="#{msg.MEN}">  
-                    <p:menuitem value="#{msg.GES}" url="usuarios.xhtml" />  
-                    <p:menuitem value="#{msg.GES2}" url="crearusuario.xhtml" /> 
+                    <p:menuitem value="#{msg.GES}"  url="usuarios.xhtml" />  
+                    <p:menuitem value="#{msg.GES2}" url="marcos.xhtml" /> 
                 </p:submenu>  
             </p:menu>
         </h:form>  

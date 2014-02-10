@@ -7,6 +7,7 @@
 package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
+import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -25,6 +26,13 @@ public class TipoActivoJPA extends GenericoJPA<TipoActivo> implements TipoActivo
        Query q = em.createQuery("SELECT object(p) FROM TipoActivo AS p");
        return q.getResultList();
       
+    }
+    
+    @Override
+    public List<TipoActivo> buscarTipoActivosSinPadre(){
+        Query q = em.createQuery("SELECT object(u) FROM TipoActivo as u "+
+                                 "  WHERE u.tipoActivoPadre = null");
+        return q.getResultList();
     }
  
 }

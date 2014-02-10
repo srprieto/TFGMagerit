@@ -6,9 +6,12 @@
 
 package es.uvigo.esei.tfg.logica.daos;
 
+import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 /**
  *
@@ -18,9 +21,19 @@ import javax.ejb.Stateless;
 public class ActivoJPA extends GenericoJPA<Activo> implements ActivoDAO{
 
     @Override
-    public List<Activo> buscarPorTipoActivo(Long idTipoActivo) {
-        return null;
+    public List<Activo> buscarPorTipoActivo(TipoActivo tipo) {
+        Query q = em.createQuery("SELECT object(u) FROM Activo as u "+
+                                 "  WHERE u.tipo = :tipo");
+        q.setParameter("tipo", tipo);
+        return q.getResultList(); 
     }
-
+    
+    @Override
+    public List<Activo> buscarActivosProyecto(Proyecto proyecto){
+        Query q = em.createQuery("SELECT object(u) FROM Activo as u "+
+                                 "  WHERE u.proyecto = :proyecto");
+        q.setParameter("proyecto", proyecto);
+        return q.getResultList();
+    }
     
 }

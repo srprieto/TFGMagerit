@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.controladores;
+package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import javax.inject.Named;

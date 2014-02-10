@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.uvigo.esei.tfg.controladores;
+package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
+import es.uvigo.esei.tfg.controladores.LoginController;
 import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
+import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import static java.util.Collections.list;
-import java.util.Iterator;
-import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -25,12 +24,12 @@ import javax.inject.Inject;
 
 @Named(value = "usuarioController")
 @SessionScoped
-public class UsuarioController implements Serializable {
+public class GestionUsuarioController implements Serializable {
 
      // Atributos
    
-    private Usuario usuarioActual = null;
-    private TipoUsuario tipo1=null;
+    private Usuario usuarioActual;
+    private TipoUsuario tipo1;
     private String login = "";
     private String password = "";
     private String password2 = "";
@@ -38,9 +37,15 @@ public class UsuarioController implements Serializable {
     
     
     @Inject
-    private GestorUsuariosDAO gestorUsuariosDAO;
+    GestorUsuariosDAO gestorUsuariosDAO;
     
-    public UsuarioController() {
+    @Inject
+    UsuarioDAO usuarioDAO;
+    
+    @Inject
+    LoginController loginController;
+    
+    public GestionUsuarioController() {
         
     }
     
@@ -74,8 +79,7 @@ public class UsuarioController implements Serializable {
             gestorUsuariosDAO.crearNuevoUsuario(login, password, tipo1);
             login="";
             password="";
-            password2="";
-            tipo1=null; 
+            tipo1=null;
             anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
         }
     }
@@ -84,11 +88,11 @@ public class UsuarioController implements Serializable {
         String destino = null;
 
         if (password.equals("")) {
-            anadirMensajeError("No se ha indicado una contraseÃ±a");
+            anadirMensajeError("No se ha indicado una contraseña");
         } else if (password2.equals("")) {
-            anadirMensajeError("No se ha repetido la contraseÃ±a");
+            anadirMensajeError("No se ha repetido la contraseña");
         } else if (!password.equals(password2)) {
-            anadirMensajeError("Las contraseÃ±as introducidas no coinciden");
+            anadirMensajeError("Las contraseñas introducidas no coinciden");
         } else {
             gestorUsuariosDAO.actualizarPassword(usuarioActual.getId(), password);
             gestorUsuariosDAO.actualizarDatosCliente(usuarioActual);
@@ -115,12 +119,12 @@ public class UsuarioController implements Serializable {
     }
 
     public String doVerPerfil() {
-        login = usuarioActual.getLogin();
-        password = usuarioActual.getPassword();
+        login = loginController.getUsuarioActual().getLogin();
+        password = loginController.getUsuarioActual().getPassword();
         password2 = password;
         return "usuario.perfil";
     }
-
+   
     // Metodos get y set
     public Usuario getUsuarioActual() {
         return usuarioActual;

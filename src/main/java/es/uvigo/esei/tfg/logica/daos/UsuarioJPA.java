@@ -40,7 +40,7 @@ public class UsuarioJPA extends GenericoJPA<Usuario> implements UsuarioDAO {
         }
     }
 
-     @Override
+    @Override
     public List<Usuario> buscarPorTipo(TipoUsuario tipo) {
         Query q = em.createQuery("SELECT object(u) FROM Usuario as u "+
                                  "  WHERE u.tipo = :tipo");
@@ -63,6 +63,4 @@ public class UsuarioJPA extends GenericoJPA<Usuario> implements UsuarioDAO {
         Query q = em.createQuery("SELECT count(u) FROM Usuario as u");
         return q.getFirstResult();
     }
-    
-  
 }

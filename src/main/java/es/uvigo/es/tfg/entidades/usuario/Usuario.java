@@ -8,11 +8,8 @@ package es.uvigo.es.tfg.entidades.usuario;
 
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.controladores;
+package es.uvigo.esei.tfg.controladores.editor;
 
 import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;

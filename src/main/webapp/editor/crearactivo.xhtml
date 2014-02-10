@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+   <h:form id="form">  
+  
+    <p:panel id="panel" header="Nuevo activo" style="margin-bottom:10px;">  
+        <p:messages id="messages" />  
+  
+        <h:panelGrid columns="2">  
+            <h:outputLabel for="codigo" value="#{msg.COD}" />  
+            <p:inputText id="codigo" value="#{activoController.activoEnEdicion.codigo}" required="true" label="Codigo">  
+                <f:validateLength minimum="2" />  
+            </p:inputText>  
+            
+  
+            <h:outputLabel for="nombre" value="#{msg.NOM}" />  
+            <p:inputText id="nombre" value="#{activoController.activoEnEdicion.nombre}" required="true" label="Nombre">  
+                <f:validateLength minimum="2" />  
+            </p:inputText>  
+            
+            <h:outputLabel for="descripcion" value="#{msg.DES}" />  
+            <p:inputText id="descripcion" value="#{activoController.activoEnEdicion.descripcion}" required="true" label="Descripcion">  
+                <f:validateLength minimum="2" />  
+            </p:inputText> 
+            
+            <h:outputLabel for="responsable" value="#{msg.RES}" />  
+            <p:inputText id="responsable" value="#{activoController.activoEnEdicion.responsable}" required="true" label="Responsable">  
+                <f:validateLength minimum="2" />  
+            </p:inputText> 
+            
+            <h:outputLabel for="ubicacion" value="#{msg.UBI}" />  
+            <p:inputText id="ubicacion" value="#{activoController.activoEnEdicion.ubicacion}" required="true" label="Ubicacion"/>  
+            
+            
+            <h:outputLabel for="cantidad" value="#{msg.CAN}" />  
+            <p:inputText id="cantidad" value="#{activoController.activoEnEdicion.cantidad}" required="true" label="Cantidad"/> 
+  
+        </h:panelGrid>  
+        
+        <h:panelGrid columns="2"  styleClass="menu"> 
+             
+            <h:outputLabel for="grupo" value="#{msg.GRU}" />  
+            <h:selectOneMenu id="grupo" value="#{activoController.activoEnEdicion.grupoActivos}" converter="omnifaces.SelectItemsConverter" required="true">  
+                <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
+            </h:selectOneMenu>  
+           
+            <p:commandButton update="@(form)" value="#{msg.NG}" /><br/>
+            
+            <h:outputLabel for="tipo" value="#{msg.TIP}" />  
+            <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" converter="omnifaces.SelectItemsConverter" required="true">  
+                <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
+            </h:selectOneMenu>  
+            
+            <p:commandButton update="@(form)" value="#{msg.SEL}" />  
+           
+        </h:panelGrid>  
+    </p:panel>  
+       <p:commandButton actionListener="#{activoController.doGuargar()}" update="@(form)" value="#{msg.GUA}" />  
+</h:form>  
+</html>
+

@@ -13,18 +13,19 @@ template="/templates/plantilla.xhtml">
         <h:form id="Acceso">
                    <h:panelGrid id="grid" columns="3" cellpadding="4">  
                         <h:outputLabel value="#{msg.LOG}" for="login"/>
-                        <h:inputText id="login" value="#{loginController.login}" required="true"/>
+                        <h:inputText id="login" value="#{loginController.login}"/>
                         <p:message for="login" /> 
 
                         <h:outputLabel value="#{msg.PAS}" for="password"/>
-                        <h:inputSecret id="password" value="#{loginController.password}" required="true"/>
+                        <h:inputSecret id="password" value="#{loginController.password}"/>
                         <p:message for="password" /> 
                     </h:panelGrid>
              
                     <h:panelGrid columns="2">
-                        <h:commandButton value="#{msg.ACC}" action="#{loginController.doLogin()}" />
+                        <h:commandButton value="#{msg.ACC}"  action="#{loginController.doLogin()}" />
                     </h:panelGrid>     
          </h:form>  
     </div>
+<p:growl id="growl" life="3000" />
 </ui:define>
 </ui:composition>

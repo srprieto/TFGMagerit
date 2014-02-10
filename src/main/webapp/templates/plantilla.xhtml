@@ -16,16 +16,16 @@ xmlns:p="http://primefaces.org/ui">
 <h:outputStylesheet library="css" name="estilo.css"  />
 </h:head>
     <h:body>
-        <div class="ui-widget ui-widget-header">
+        <div class="ui-widget ui-widget-header primero">
             <div id="logo">
                 <h1><h:outputText value="#{msg.CAB}"/></h1>
+                 <ui:insert name="sidebar"></ui:insert>  
             </div>
         </div>
         <div id="wrapper">
             <div id="page">
                 <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu">
                     <ui:insert name="sidebar1"></ui:insert>
-
                 </div>
                 <div id="content" class="ui-widget contenido">
                      <div class="post contenido">

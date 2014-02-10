@@ -9,13 +9,16 @@ package es.uvigo.esei.tfg.controladores;
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
+import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.util.List;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -26,16 +29,12 @@ import javax.inject.Inject;
 public class LoginController implements Serializable {
 
     private Usuario usuarioActual = null;
-    private List<TipoUsuario> tipusu;
-    private TipoUsuario tipo1=null;
     private String login = "";
     private String password = "";
-    private String password2 = "";
-    private boolean nuevoUsuario = true;
-    
-    
+    private boolean autenticado = false;
+
     @Inject
-    private GestorUsuariosDAO gestorUsuariosDAO;
+    GestorUsuariosDAO gestorUsuariosDAO;
     
     public LoginController() {
     }
@@ -52,46 +51,56 @@ public class LoginController implements Serializable {
     public String doLogin() {
         String destino;
         TipoUsuario tipo;
-        if (gestorUsuariosDAO.autenticarUsuario(login, password)) {
+        if("".equals(login))
+        {
+            anadirMensajeError("Debe introducir un Login");
+            destino = "fallo.login";
+        }else if("".equals(password)){
+            anadirMensajeError("Debe introducir una Contraseña");
+            destino = "fallo.login";
+        }else if (gestorUsuariosDAO.autenticarUsuario(login, password)) {
             usuarioActual = gestorUsuariosDAO.recuperarDatosUsuario(login);
-            password2 = password;
-            nuevoUsuario = false;
             tipo = usuarioActual.getTipo();
             if(tipo == TipoUsuario.ADMINISTRADOR)
             {
-                destino = "indexadministrador.xhtml";
+                destino = "exito.loginadmin";
+                autenticado= true;
             }else{
-                destino = "indextrabajador.xhtml";
+                destino = "exito.logineditor";
+                autenticado= true;
             }
         } else {
-            destino = "login.xhtml";
+            anadirMensajeError("Login o Password incorrectos");
+            destino = "fallo.login";
+            autenticado= false;
         }
 
         return destino;
     }
-
-    public String doLogout() {
-        String destino;
-        if (usuarioActual != null) {
-            gestorUsuariosDAO.actualizarUltimoAcceso(usuarioActual.getId());
-            // carroCompraController.vaciarCarro();
-        }
+    
+    
+    public void doLogout() throws IOException {
+        gestorUsuariosDAO.actualizarUltimoAcceso(usuarioActual.getId());
         usuarioActual = null;
+        autenticado= false;
         login = "";
         password = "";
-        password2 = "";
-
-        nuevoUsuario = true;
-
-        // Limpiar los objetos de sesiÃ³n (vaciar la sesiÃ³n)
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();        
-        
-        destino = "login.xhtml";
-        
-        return destino;
+        ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
+        String ctxPath = ((ServletContext) ctx.getContext()).getContextPath();
+        ((HttpSession) ctx.getSession(false)).invalidate();
+        ctx.redirect(ctxPath + "/index.xhtml");        
     }
+    
     public Usuario getUsuarioActual() {
         return usuarioActual;
+    }
+    
+    public boolean isAutenticado() {
+        return autenticado;
+    }
+
+    public void setAutenticado(boolean autenticado) {
+        this.autenticado = autenticado;
     }
 
     public void setUsuarioActual(Usuario usuario) {

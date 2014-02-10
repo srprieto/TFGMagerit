@@ -6,8 +6,6 @@
 
 package es.uvigo.esei.tfg.logica.daos;
 
-import es.uvigo.es.tfg.entidades.marco.TipoActivo;
-import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,9 +13,6 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface TipoActivoDAO extends GenericoDAO<TipoActivo>{
-
- public List<TipoActivo> buscarTodos();
- public List<TipoActivo> buscarTipoActivosSinPadre();
-    
+public interface GestorMarcosDAO {
+    public void crearNuevoMarco(String nombre, String descripcion);
 }

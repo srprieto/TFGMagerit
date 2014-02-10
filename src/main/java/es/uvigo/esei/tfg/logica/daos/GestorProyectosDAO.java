@@ -6,8 +6,8 @@
 
 package es.uvigo.esei.tfg.logica.daos;
 
-import es.uvigo.es.tfg.entidades.marco.TipoActivo;
-import java.util.List;
+import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import javax.ejb.Local;
 
 /**
@@ -15,9 +15,7 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface TipoActivoDAO extends GenericoDAO<TipoActivo>{
-
- public List<TipoActivo> buscarTodos();
- public List<TipoActivo> buscarTipoActivosSinPadre();
-    
+public interface GestorProyectosDAO {
+    public void crearNuevoProyecto(String nombre, String descripcion, MarcoTrabajo marcoTrabajo, Usuario creador);
+  
 }

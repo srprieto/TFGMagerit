@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.uvigo.esei.tfg.controladores;
+package es.uvigo.esei.tfg.controladores.administrador;
 /**
  *
  * @author Saul
@@ -105,6 +105,13 @@ public class TablaUsuariosController implements Serializable {
             Usuario user= lista[i];
             usuarioDAO.eliminar(user);
         }
-        anadirMensajeCorrecto("Los usuarios fueron eliminados correctamente");
+        if(tamano==0)
+        {
+            anadirMensajeError("No ha seleccionado ningun usuario");
+        }else if(tamano == 1){
+            anadirMensajeCorrecto("El usuario ha sido eliminado correctamente");
+        }else{
+            anadirMensajeCorrecto("Los usuarios fueron eliminados correctamente");
+        }
     }
 }                 

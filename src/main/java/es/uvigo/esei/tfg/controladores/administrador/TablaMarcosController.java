@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
@@ -16,52 +10,50 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
-/**
- *
- * @author Saul
- */
-
-  
 @Named(value = "tablaMarcosController")
-@SessionScoped 
-public class TablaMarcosController implements Serializable{
-    
-    private MarcoTrabajo marco;
+@SessionScoped
+public class TablaMarcosController implements Serializable {
+
     private List<MarcoTrabajo> marcos;
     private MarcoTrabajo selectedMarco;
-    private MarcoModel marcoModel;  
-    private List<MarcoTrabajo> filteredMarcos;
-    
+    private MarcoTrabajo[] selectedMarcos;
+    private MarcoModel marcoModel;
+    private boolean disponible = false;
+
     @Inject
     MarcoTrabajoDAO marcoDAO;
-    
-    @Inject
-    MarcosController marcoController;
-    
+
     public TablaMarcosController() {
-        
+
     }
-    
+
     /**
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
+     *
      * @param mensaje
      */
-    protected void anadirMensajeError(String mensaje){
+    protected void anadirMensajeError(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
     }
-    protected void anadirMensajeCorrecto(String mensaje){
+
+    protected void anadirMensajeCorrecto(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
 
-    public MarcoTrabajo getMarco() {
-        return marco;
+    public MarcoTrabajo[] getSelectedMarcos() {
+        return selectedMarcos;
     }
 
-    public void setMarco(MarcoTrabajo marco) {
-        this.marco = marco;
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
     }
 
     public List<MarcoTrabajo> getMarcos() {
@@ -73,42 +65,65 @@ public class TablaMarcosController implements Serializable{
         this.marcos = marcos;
     }
 
+    public void setSelectedMarcos(MarcoTrabajo[] selectedMarcos) {
+        this.selectedMarcos = selectedMarcos;
+    }
+
     public MarcoTrabajo getSelectedMarco() {
         return selectedMarco;
     }
 
     public void setSelectedMarco(MarcoTrabajo selectedMarco) {
-        System.out.println(selectedMarco);
         this.selectedMarco = selectedMarco;
     }
 
-    public List<MarcoTrabajo> getFilteredMarcos() {
-        return filteredMarcos;
-    }
-
-    public void setFilteredMarcos(List<MarcoTrabajo> filteredMarcos) {
-        this.filteredMarcos = filteredMarcos;
-    }
-    
     public MarcoModel getMarcoModel() {
         marcos = marcoDAO.buscarTodos();
         marcoModel = new MarcoModel(marcos);
-        return marcoModel;   
-    }  
-    
-     public void eliminarMarcos(){
-         MarcoTrabajo seleccionado= this.getSelectedMarco();
-         marcoDAO.eliminar(seleccionado);
-         anadirMensajeCorrecto("El marco ha sido eliminado correctamente");
-     }
-     
-     public void updateMarco(){
-         MarcoTrabajo seleccionado= this.getSelectedMarco();
-         seleccionado.setNombre(marcoController.getNombre());
-         seleccionado.setDescripcion(marcoController.getDescripcion());
-         marcoDAO.actualizar(seleccionado);
-         marcoController.setNombre(null);
-         marcoController.setDescripcion(null);
-         anadirMensajeCorrecto("El marco ha sido modificado correctamente");
-     }
-}  
+        return marcoModel;
+    }
+
+    public void eliminarMarcos() {
+
+        MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        int tamano = seleccionados.length;
+        if (tamano == 0) {
+            anadirMensajeError("No ha seleccionado ningun marco");
+        } else {
+            for (int i = 0; i < tamano; i++) {
+                MarcoTrabajo seleccionado = seleccionados[i];
+                marcoDAO.eliminar(seleccionado);
+            }
+            if (tamano == 1) {
+                anadirMensajeCorrecto("El marco ha sido eliminado correctamente");
+            } else {
+                anadirMensajeCorrecto("Los marcos fueron eliminados correctamente");
+            }
+        }
+    }
+    public void Update(){
+        
+    }
+
+    public void updateMarco() {
+        MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        int tamano = seleccionados.length;
+        if (tamano == 0) {
+            anadirMensajeError("No ha seleccionado ningun marco");
+        } else if (tamano != 1) {
+            anadirMensajeError("Solo puede seleccionar un marco para editarlo");
+        } else {
+            MarcoTrabajo seleccionado = seleccionados[0];
+            if (seleccionado.getNombre().equals("")) {
+                anadirMensajeError("Tienes que introducir un nombre para el marco");
+            } else if (seleccionado.getDescripcion().equals("")) {
+                anadirMensajeError("Tienes que introducir una descripcion para el marco");
+            } else {
+                marcoDAO.actualizar(seleccionado);
+                anadirMensajeCorrecto("El marco ha sido modificado correctamente");
+                RequestContext.getCurrentInstance().update("form");
+            }
+        }
+    }
+
+}

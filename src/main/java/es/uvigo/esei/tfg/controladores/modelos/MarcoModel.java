@@ -1,10 +1,10 @@
-package es.uvigo.esei.tfg.controladores.modelos;
-
+package es.uvigo.esei.tfg.controladores.modelos; 
+  
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import java.util.List;  
 import javax.faces.model.ListDataModel;  
 import org.primefaces.model.SelectableDataModel;
- 
+  
   
 public class MarcoModel extends ListDataModel<MarcoTrabajo> implements SelectableDataModel<MarcoTrabajo> {    
   
@@ -34,3 +34,4 @@ public class MarcoModel extends ListDataModel<MarcoTrabajo> implements Selectabl
         return marco.getNombre();  
     }  
 }  
+ 

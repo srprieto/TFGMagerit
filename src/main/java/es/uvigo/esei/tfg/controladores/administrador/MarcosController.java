@@ -7,7 +7,6 @@
 package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
-import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;

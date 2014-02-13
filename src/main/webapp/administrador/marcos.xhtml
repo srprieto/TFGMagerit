@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.GES1}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.MAR2}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -19,7 +19,7 @@
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
                         <p:menuitem value="#{msg.ATR}" url="indexadministrador.xhtml" />  
-                        <p:menuitem value="#{msg.ANA}" url="crearmarco.xhtml"/> 
+                        <p:menuitem value="#{msg.ANA1}" url="crearmarco.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -31,21 +31,21 @@
                 <p:dataTable id="multiMarcos" emptyMessage="#{msg.ERR1}" var="marco" value="#{tablaMarcosController.marcoModel}"  paginator="true" rows="10" selection="#{tablaMarcosController.selectedMarcos}"> 
                     <f:facet id="cabecera" name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="#{msg.LIS}"/>   
+                            <h:outputText value="#{msg.MAR1}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
                     <p:column styleClass="tabla2" selectionMode="multiple"/> 
 
-                    <p:column id="nombre" styleClass="tabla1" filterBy="#{marco.nombre}" headerText="#{msg.LOG}">  
+                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.NOM1}">  
                         <h:outputText value="#{marco.nombre}" />   
                     </p:column>  
 
-                    <p:column id="descripcion" styleClass="tabla1" headerText="#{msg.TIP1}">  
+                    <p:column id="descripcion" styleClass="tabla1" headerText="#{msg.DES1}">  
                         <h:outputText value="#{marco.descripcion}" />    
                     </p:column>  
 
-                    <p:column id="fechaCreacion" styleClass="tabla1" headerText="#{msg.ULT}">  
+                    <p:column id="fechaCreacion" styleClass="tabla1" headerText="#{msg.FEC1}">  
                         <h:outputText value="#{marco.fechaCreacion}">
                             <f:convertDateTime dateStyle="short" locale="es" type="date" />
                         </h:outputText>
@@ -53,35 +53,36 @@
 
                     <f:facet id="pie" name="footer">  
                         <div style="izquierda">
-                            <p:commandButton id="multiEditButton" value="Editar" icon="ui-icon-edit"  
-                                             update=":form:displayEdit" oncomplete="PF('multiMarcoEditDialog').show()"/>
-                            <p:commandButton id="multiViewButton" value="Borrar" icon="ui-icon-trash"  
-                                             update=":form:displayMulti" oncomplete="PF('multiMarcoDialog').show()"/>
+                            <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
+                                             update=":form:displayEdit, :growl" actionListener="#{tablaMarcosController.update()}"/>
+                            <p:commandButton id="multiViewButton" value="#{msg.BOR}" icon="ui-icon-trash"  
+                                             update=":form:displayMulti, :growl" actionListener="#{tablaMarcosController.eliminar()}"/>
                         </div>
                     </f:facet> 
 
                 </p:dataTable>   
-                <p:dialog id="multiEditDialog" header="#{msg.ELI}" widgetVar="multiMarcoEditDialog"  
+                <p:dialog id="multiEditDialog" header="#{msg.ELI2}" widgetVar="multiMarcoEditDialog"  
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
+                    <div class="datalist-noborder">
+                        <p:dataList id="displayEdit" value="#{tablaMarcosController.selectedMarcos}" type="none" var="selectedMarcoEdit">  
+                            <p><h:outputLabel for="nombre" value="#{msg.NOM}"  styleClass="negrita"/> 
+                                <p:inputText id="nombre" value="#{selectedMarcoEdit.nombre}"/></p>
 
-                    <p:dataList id="displayEdit" value="#{tablaMarcosController.selectedMarcos}" type="none" var="selectedMarcoEdit">  
-                        <p><h:outputLabel for="nombre" value="#{msg.NOM}"  styleClass="negrita"/> 
-                            <p:inputText id="nombre" value="#{selectedMarcoEdit.nombre}"/></p>
-
-                        <p><h:outputLabel for="descripcion" value="#{msg.DES}"  styleClass="negrita"/> 
-                            <p:inputText id="descripcion" value="#{selectedMarcoEdit.descripcion}"/></p>
-                    </p:dataList>  
+                            <p><h:outputLabel for="descripcion" value="#{msg.DES}"  styleClass="negrita"/> 
+                                <p:inputText id="descripcion" value="#{selectedMarcoEdit.descripcion}"/></p>
+                        </p:dataList>  
+                    </div>
                     <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaMarcosController.updateMarco()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiMarcoEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 
-                <p:dialog id="multiDialog" header="#{msg.ELI}" widgetVar="multiMarcoDialog"  
+                <p:dialog id="multiDialog" header="#{msg.ELI1}" widgetVar="multiMarcoDialog"  
                           height="200" width="300" showEffect="fade" hideEffect="explode">  
 
                     <p:dataList id="displayMulti" value="#{tablaMarcosController.selectedMarcos}" var="selectedMarco">  
                         <h:outputText value="#{msg.NOM}&#160;#{selectedMarco.nombre}"/>
                     </p:dataList>  
-                    <p:commandButton value="#{msg.ACE}" update=":growl"   actionListener="#{tablaMarcosController.eliminarMarcos()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaMarcosController.eliminarMarcos()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiMarcoDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>  
             </h:form> 

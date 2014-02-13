@@ -83,29 +83,33 @@ public class TablaMarcosController implements Serializable {
         return marcoModel;
     }
 
-    public void eliminarMarcos() {
-
+    public void eliminar() {
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
             anadirMensajeError("No ha seleccionado ningun marco");
         } else {
-            for (int i = 0; i < tamano; i++) {
-                MarcoTrabajo seleccionado = seleccionados[i];
-                marcoDAO.eliminar(seleccionado);
-            }
-            if (tamano == 1) {
-                anadirMensajeCorrecto("El marco ha sido eliminado correctamente");
-            } else {
-                anadirMensajeCorrecto("Los marcos fueron eliminados correctamente");
-            }
+            RequestContext.getCurrentInstance().execute("multiMarcoDialog.show();");
         }
     }
-    public void Update(){
-        
+
+    public void eliminarMarcos() {
+
+        MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        int tamano = seleccionados.length;
+        for (int i = 0; i < tamano; i++) {
+            MarcoTrabajo seleccionado = seleccionados[i];
+            marcoDAO.eliminar(seleccionado);
+        }
+        if (tamano == 1) {
+            anadirMensajeCorrecto("El marco ha sido eliminado correctamente");
+        } else {
+            anadirMensajeCorrecto("Los marcos fueron eliminados correctamente");
+
+        }
     }
 
-    public void updateMarco() {
+    public void update() {
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
@@ -113,16 +117,23 @@ public class TablaMarcosController implements Serializable {
         } else if (tamano != 1) {
             anadirMensajeError("Solo puede seleccionar un marco para editarlo");
         } else {
-            MarcoTrabajo seleccionado = seleccionados[0];
-            if (seleccionado.getNombre().equals("")) {
-                anadirMensajeError("Tienes que introducir un nombre para el marco");
-            } else if (seleccionado.getDescripcion().equals("")) {
-                anadirMensajeError("Tienes que introducir una descripcion para el marco");
-            } else {
-                marcoDAO.actualizar(seleccionado);
-                anadirMensajeCorrecto("El marco ha sido modificado correctamente");
-                RequestContext.getCurrentInstance().update("form");
-            }
+            RequestContext.getCurrentInstance().execute("multiMarcoEditDialog.show();");
+        }
+    }
+
+    public void updateMarco() {
+        MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        int tamano = seleccionados.length;
+
+        MarcoTrabajo seleccionado = seleccionados[0];
+        if (seleccionado.getNombre().equals("")) {
+            anadirMensajeError("Tienes que introducir un nombre para el marco");
+        } else if (seleccionado.getDescripcion().equals("")) {
+            anadirMensajeError("Tienes que introducir una descripcion para el marco");
+        } else {
+            marcoDAO.actualizar(seleccionado);
+            anadirMensajeCorrecto("El marco ha sido modificado correctamente");
+            RequestContext.getCurrentInstance().update("form");
         }
     }
 

@@ -75,4 +75,8 @@ form .boton{
     width: 20%;   
 }
 
+.datalist-noborder .ui-widget-content {
+border: none;
+}
+
 

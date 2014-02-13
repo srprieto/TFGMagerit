@@ -27,4 +27,9 @@ public class GestorMarcosJPA implements GestorMarcosDAO {
         MarcoTrabajo nuevo = new MarcoTrabajo(nombre, descripcion);
         marcoDAO.crear(nuevo);
     }
+    
+    @Override
+    public boolean existeMarco(String nombre) {
+        return (marcoDAO.buscarPorNombre(nombre) != null);
+    }
 }

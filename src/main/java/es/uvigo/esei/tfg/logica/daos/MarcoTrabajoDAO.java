@@ -17,4 +17,5 @@ import javax.ejb.Local;
 @Local
 public interface MarcoTrabajoDAO extends GenericoDAO<MarcoTrabajo>{
     public List<MarcoTrabajo> buscarTodos();
+    public MarcoTrabajo buscarPorNombre(String nombre);
 }

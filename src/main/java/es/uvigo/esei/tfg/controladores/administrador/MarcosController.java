@@ -3,46 +3,48 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
+import java.io.IOException;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
  * @author Saul
  */
-
 @Named(value = "marcosController")
 @SessionScoped
-public class MarcosController implements Serializable{
-    
+public class MarcosController implements Serializable {
+
     private String nombre = "";
     private String descripcion = "";
 
-    
     @Inject
     GestorMarcosDAO gestorMarcoDAO;
-    
-    public MarcosController(){
-        
+
+    public MarcosController() {
+
     }
-    
+
     /**
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
+     *
      * @param mensaje
      */
-    protected void anadirMensajeError(String mensaje){
+    protected void anadirMensajeError(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
     }
-    protected void anadirMensajeCorrecto(String mensaje){
+
+    protected void anadirMensajeCorrecto(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
@@ -62,28 +64,32 @@ public class MarcosController implements Serializable{
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
-    public String doMarco()
-    {
+
+    public String doMarco() {
         String destino;
-        if(nombre.equals("")){
+        if (nombre.equals("")) {
             anadirMensajeError("No se ha indicado un nombre para el marco de trabajo");
             destino = "crearmarco.xhtml";
-             return destino;
-        }else if(descripcion.equals("")){
+        } else if (descripcion.equals("")) {
             anadirMensajeError("No se ha indicado una descripción");
             destino = "crearmarco.xhtml";
-             return destino;
-        }else{
+        } else if (gestorMarcoDAO.existeMarco(nombre) == true) {
+            anadirMensajeError("Ya existe un marco con ese nombre");
+            destino = "crearmarco.xhtml";
+        } else {
             destino = "nuevomarco.xhtml";
-            return destino;
-        }  
+        }
+        return destino;
     }
-    
-    public void doCrear(){
+
+    public void doCrear() throws IOException {
         gestorMarcoDAO.crearNuevoMarco(nombre, descripcion);
-        nombre="";
-        descripcion="";
-        anadirMensajeCorrecto("El marco de trabajo ha sido creado");
+        nombre = "";
+        descripcion = "";
+        anadirMensajeCorrecto("El marco de trabajo ha sido creado correctamente");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context.redirect("marcos.xhtml");
+
     }
 }

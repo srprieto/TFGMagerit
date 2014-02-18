@@ -76,7 +76,10 @@ form .boton{
 }
 
 .datalist-noborder .ui-widget-content {
-border: none;
+    border: none;
+}
+.margin-bot{
+    margin-bottom: 2%;
 }
 
 

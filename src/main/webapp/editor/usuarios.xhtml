@@ -18,8 +18,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="indexadministrador.xhtml" />  
-                        <p:menuitem value="#{msg.ANA}" url="crearusuario.xhtml"/> 
+                        <p:menuitem value="#{msg.ATR}" url="proyecto.xhtml" />  
+                        <p:menuitem value="#{msg.ANA}" url="crearusuarioproyecto.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -28,7 +28,7 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="multiUsuarios" emptyMessage="#{msg.ERR1}" var="usuario" value="#{tablaUsuariosController.usuarioModel}"  paginator="true" rows="10" selection="#{tablaUsuariosController.selectedUsuarios}">  
+                <p:dataTable id="multiUsuarios" emptyMessage="#{msg.ERR1}" var="usuario" value="#{tablaUsuariosProyectoController.usuarioModel}"  paginator="true" rows="10" selection="#{tablaUsuariosController.selectedUsuarios}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.LIS}"/>   

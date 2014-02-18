@@ -23,4 +23,5 @@ public interface UsuarioDAO extends GenericoDAO<Usuario> {
     public List<Usuario> buscarPorTipo(TipoUsuario tipo);
     public List<Usuario> buscarTodos();
     public int contador();
+    public List<Usuario> usuario();
 }

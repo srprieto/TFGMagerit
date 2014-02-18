@@ -27,10 +27,38 @@ public class ProyectoJPA extends GenericoJPA<Proyecto> implements ProyectoDAO {
     
     @Override
     public List<Proyecto> buscarPorCreador(Usuario creador) {
-         Query q = em.createQuery("SELECT object(u) FROM Proyecto AS u " +
+        Query q = em.createQuery("SELECT object(u) FROM Proyecto AS u " +
                                  "  WHERE u.creador = :creador");
         q.setParameter("creador", creador);
         List<Proyecto> resultados = q.getResultList(); 
         return resultados;
     }
+    
+     @Override
+     public Proyecto buscarPorNombre(String nombre) {
+        Query q = em.createQuery("SELECT object(u) FROM Proyecto AS u " +
+                                 "  WHERE u.nombre = :nombre");
+        q.setParameter("nombre", nombre);
+
+        List<Proyecto> resultados = q.getResultList();
+
+        if (resultados ==null) {
+            return null;  // No encontrado
+        }
+        else if (resultados.size() != 1){
+            return null; // No encontrado
+        }
+        else {
+            return resultados.get(0);  // Devuelve el encontrado
+        }
+    }
+     
+     @Override
+     public List<Usuario> editores(Proyecto editores){
+        Query q = em.createQuery("SELECT object(u) FROM Proyecto AS u " +
+                                 "  WHERE u.editores = :editores");
+        q.setParameter("editores", editores);
+        List<Usuario> resultados = q.getResultList(); 
+        return resultados;
+     }
 }

@@ -13,12 +13,24 @@ import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.List;
+import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import javax.inject.Qualifier;
+
 
 /**
  *
@@ -28,11 +40,12 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class LoginController implements Serializable {
 
-    private Usuario usuarioActual = null;
-    private String login = "";
-    private String password = "";
+    private Usuario usuarioActual;
     private boolean autenticado = false;
-
+    
+    @Inject 
+    Credenciales credenciales;
+    
     @Inject
     GestorUsuariosDAO gestorUsuariosDAO;
     
@@ -51,15 +64,15 @@ public class LoginController implements Serializable {
     public String doLogin() {
         String destino;
         TipoUsuario tipo;
-        if("".equals(login))
-        {
-            anadirMensajeError("Debe introducir un Login");
+        List<Usuario> results = gestorUsuariosDAO.usuario();
+        if(!results.isEmpty()){
+            usuarioActual = results.get(0);
+        }
+        if (results.isEmpty()) {
+            anadirMensajeError("Login o Password incorrectos");
             destino = "fallo.login";
-        }else if("".equals(password)){
-            anadirMensajeError("Debe introducir una Contraseña");
-            destino = "fallo.login";
-        }else if (gestorUsuariosDAO.autenticarUsuario(login, password)) {
-            usuarioActual = gestorUsuariosDAO.recuperarDatosUsuario(login);
+            autenticado= false;
+        } else {  
             tipo = usuarioActual.getTipo();
             if(tipo == TipoUsuario.ADMINISTRADOR)
             {
@@ -69,10 +82,6 @@ public class LoginController implements Serializable {
                 destino = "exito.logineditor";
                 autenticado= true;
             }
-        } else {
-            anadirMensajeError("Login o Password incorrectos");
-            destino = "fallo.login";
-            autenticado= false;
         }
 
         return destino;
@@ -83,18 +92,12 @@ public class LoginController implements Serializable {
         gestorUsuariosDAO.actualizarUltimoAcceso(usuarioActual.getId());
         usuarioActual = null;
         autenticado= false;
-        login = "";
-        password = "";
         ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
         String ctxPath = ((ServletContext) ctx.getContext()).getContextPath();
         ((HttpSession) ctx.getSession(false)).invalidate();
         ctx.redirect(ctxPath + "/index.xhtml");        
     }
-    
-    public Usuario getUsuarioActual() {
-        return usuarioActual;
-    }
-    
+
     public boolean isAutenticado() {
         return autenticado;
     }
@@ -106,21 +109,11 @@ public class LoginController implements Serializable {
     public void setUsuarioActual(Usuario usuario) {
         this.usuarioActual = usuario;
     }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    
+    @Produces @LoggedIn Usuario getUsuarioActual() {return usuarioActual;}
+    
+    @Qualifier
+    @Retention(RUNTIME)
+    @Target({TYPE, METHOD, PARAMETER, FIELD})
+    public @interface LoggedIn {}
 }

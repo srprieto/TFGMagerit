@@ -9,6 +9,7 @@ package es.uvigo.esei.tfg.logica.daos;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -29,4 +30,15 @@ public class GestorProyectosJPA implements GestorProyectosDAO {
         Proyecto nuevo = new Proyecto(nombre, descripcion, marcoTrabajo, creador ,null);
         proyectoDAO.crear(nuevo);
     }
+    
+    @Override
+    public boolean existeProyecto(String nombre) {
+        return (proyectoDAO.buscarPorNombre(nombre) != null);
+    }
+    
+    @Override
+    public List<Usuario> editores(Proyecto proyecto){
+        return (proyectoDAO.editores(proyecto));
+    }
+    
 }

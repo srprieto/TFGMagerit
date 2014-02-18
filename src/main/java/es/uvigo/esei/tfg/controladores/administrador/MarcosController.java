@@ -84,9 +84,9 @@ public class MarcosController implements Serializable {
 
     public void doCrear() throws IOException {
         gestorMarcoDAO.crearNuevoMarco(nombre, descripcion);
+        anadirMensajeCorrecto("El marco de trabajo " +nombre+ " ha sido creado correctamente");
         nombre = "";
         descripcion = "";
-        anadirMensajeCorrecto("El marco de trabajo ha sido creado correctamente");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         context.redirect("marcos.xhtml");

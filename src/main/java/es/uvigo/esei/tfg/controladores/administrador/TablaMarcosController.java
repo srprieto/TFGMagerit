@@ -2,6 +2,7 @@ package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
+import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import java.io.Serializable;
 import java.util.List;
@@ -24,6 +25,9 @@ public class TablaMarcosController implements Serializable {
 
     @Inject
     MarcoTrabajoDAO marcoDAO;
+    
+    @Inject
+    GestorMarcosDAO gestorMarcoDAO;
 
     public TablaMarcosController() {
 
@@ -130,6 +134,8 @@ public class TablaMarcosController implements Serializable {
             anadirMensajeError("Tienes que introducir un nombre para el marco");
         } else if (seleccionado.getDescripcion().equals("")) {
             anadirMensajeError("Tienes que introducir una descripcion para el marco");
+        } else if (gestorMarcoDAO.existeMarco(seleccionado.getNombre()) == true) {
+            anadirMensajeError("Ya existe un marco con ese nombre");
         } else {
             marcoDAO.actualizar(seleccionado);
             anadirMensajeCorrecto("El marco ha sido modificado correctamente");

@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:p="http://primefaces.org/ui"
-template="/templates/plantilla.xhtml"
-xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-<h:outputStylesheet library="css" name="estilo.css"  />
-<ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
-<ui:define name="sidebar">
-    <h:form id="logout">
-        <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
-    </h:form>
-</ui:define>
-<ui:define name="sidebar1">  
-    <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
-        <h:form id="frmMenu" prependId="false" >
-            <p:menu>  
-                <p:submenu label="#{msg.MEN}">  
-                    <p:menuitem value="Atras" url="proyectos.xhtml" />  
-                    <p:menuitem value="Crear Proyecto" url="crearproyecto.xhtml" /> 
-                </p:submenu>  
-            </p:menu>
-        </h:form>  
-    </div>
-</ui:define>
-<ui:define name="content">
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.MIS}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="Atras" url="indexeditor.xhtml" />  
+                        <p:menuitem value="Crear Proyecto" url="crearproyecto.xhtml" /> 
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="No has creado ningun proyecto" var="proyecto" value="#{tablaProyectosController.proyectoModel}"  paginator="true" rows="10" selection="#{tablaProyectosController.selectedProyecto}">  
+                <p:dataTable id="Proyectos" emptyMessage="No has creado ningun proyecto" var="proyecto" value="#{tablaProyectosController.proyectoModel}"  paginator="true" rows="10" selection="#{tablaProyectosController.selectedProyectos}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.PRO}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
-                    <p:column styleClass="tabla2" selectionMode="single"/> 
+                    <p:column styleClass="tabla2" selectionMode="multiple"/> 
 
                     <p:column id="nombre" styleClass="tabla1"  headerText="#{msg.NOM1}">  
                         <h:outputText value="#{proyecto.nombre}" />   
@@ -48,7 +48,7 @@ xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
                     <p:column id="fechaCreacion" styleClass="tabla1" headerText="#{msg.FEC1}">  
                         <h:outputText value="#{proyecto.fechaCreacion}">
-                             <f:convertDateTime dateStyle="short" locale="es" type="date" />
+                            <f:convertDateTime dateStyle="short" locale="es" type="date" />
                         </h:outputText>
                     </p:column> 
 
@@ -57,14 +57,42 @@ xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
                             <f:convertDateTime dateStyle="short" locale="es" type="date" />
                         </h:outputText>
                     </p:column> 
-                    
+
                     <f:facet name="footer">  
-                         <p:commandButton id="viewButton" value="View" icon="ui-icon-search"  
-                                          update=":form, :growl" action="#{proyectoController.doDestino()}"/>  
-                     </f:facet>
+                        <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
+                                         update=":form:displayEdit, :growl" actionListener="#{tablaProyectosController.update()}"/>
+                        <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
+                                         update=":form:displayMulti, :growl" actionListener="#{tablaProyectosController.eliminar()}"/>
+                        <p:commandButton id="viewButton" value="Seleccionar" icon="ui-icon-search"  
+                                         update=":growl" action="#{proyectoController.doDestino()}"/>  
+                    </f:facet>
                 </p:dataTable> 
+                <p:dialog id="multiEditDialog" header="#{msg.ELI2}" widgetVar="multiEditDialog"  
+                          height="200" width="500" showEffect="fade" hideEffect="explode">  
+                    <div class="datalist-noborder">
+                        <p:dataList id="displayEdit" value="#{tablaProyectosController.selectedProyectos}" type="none" var="selectedEdit">  
+                            <p><h:outputLabel for="nombre" value="#{msg.NOM}"  styleClass="negrita"/> 
+                                <p:inputText id="nombre" value="#{selectedEdit.nombre}"/></p>
+
+                            <p><h:outputLabel for="descripcion" value="#{msg.DES}"  styleClass="negrita"/> 
+                                <p:inputText id="descripcion" value="#{selectedEdit.descripcion}"/></p>
+                        </p:dataList>  
+                    </div>
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaProyectosController.updateProyecto()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>
+
+                <p:dialog id="multiDialog" header="#{msg.ELI1}" widgetVar="multiDialog"  
+                          height="200" width="300" showEffect="fade" hideEffect="explode">  
+
+                    <p:dataList id="displayMulti" value="#{tablaProyectosController.selectedProyectos}" var="selected">  
+                        <h:outputText value="#{msg.NOM}&#160;#{selected.nombre}"/>
+                    </p:dataList>  
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaProyectosController.eliminarProyectos()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>  
             </h:form>
         </div>
-    <p:growl id="growl" life="3000" />
+        <p:growl id="growl" life="3000" />
     </ui:define>
 </ui:composition>

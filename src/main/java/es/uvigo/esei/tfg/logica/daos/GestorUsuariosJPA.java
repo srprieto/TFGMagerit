@@ -3,6 +3,7 @@ package es.uvigo.esei.tfg.logica.daos;
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import java.util.Calendar;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -82,4 +83,10 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
         return usuario.getTipo();
     
     }
+    
+    @Override
+    public List<Usuario> usuario(){
+        return usuarioDAO.usuario();
+    }
+
 }

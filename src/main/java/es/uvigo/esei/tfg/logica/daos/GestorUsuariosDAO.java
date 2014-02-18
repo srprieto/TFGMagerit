@@ -8,6 +8,7 @@ package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -25,4 +26,5 @@ public interface GestorUsuariosDAO {
      public boolean existeUsuario(String login);
      public TipoUsuario tipoUsuario(String login);
      public void eliminarUsuario(Usuario usuario); 
+     public List<Usuario> usuario();
 }

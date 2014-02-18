@@ -10,10 +10,12 @@ import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController;
 import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
+import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -63,25 +65,39 @@ public class GestionUsuarioController implements Serializable {
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
     
-    public void doCrearUsuario() {
+    public String doUsuario(){
         
-        if (login.equals("")) {
+        String destino;
+         if (login.equals("")) {
             anadirMensajeError("No se ha indicado un nombre de usuario");
+            destino= "crearusuario.xhtml";
         } else if (password.equals("")) {
             anadirMensajeError("No se ha indicado una contraseña");
+            destino= "crearusuario.xhtml";
         } else if (password2.equals("")) {
             anadirMensajeError("No se ha repetido la contraseña");
+            destino= "crearusuario.xhtml";
         } else if (!password.equals(password2)) {
             anadirMensajeError("Las contraseñas introducidas no coinciden");
+            destino= "crearusuario.xhtml";
         } else if (gestorUsuariosDAO.existeUsuario(login)) {
             anadirMensajeError("El nombre de usuario " + login + " ya existe");
+            destino= "crearusuario.xhtml";
         }else {
-            gestorUsuariosDAO.crearNuevoUsuario(login, password, tipo1);
-            login="";
-            password="";
-            tipo1=null;
-            anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
+             destino= "confirmarusuario.xhtml";
         }
+         return destino;
+    }
+    
+    public void doCrearUsuario() throws IOException {
+        gestorUsuariosDAO.crearNuevoUsuario(login, password, tipo1);
+        anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
+        login="";
+        password="";
+        tipo1=null;
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context.redirect("usuarios.xhtml");
     }
     
     public String doActualizarUsuario() {
@@ -119,8 +135,8 @@ public class GestionUsuarioController implements Serializable {
     }
 
     public String doVerPerfil() {
-        login = loginController.getUsuarioActual().getLogin();
-        password = loginController.getUsuarioActual().getPassword();
+        //login = loginController.getUsuarioActual().getLogin();
+        //password = loginController.getUsuarioActual().getPassword();
         password2 = password;
         return "usuario.perfil";
     }

@@ -43,7 +43,7 @@ template="/templates/plantilla.xhtml">
             </h:selectOneMenu>     
             
         </h:panelGrid>  
-        <p:commandButton value="#{msg.GUA}" update=" :growl" actionListener="#{proyectoController.doCrearProyecto()}" styleClass="boton" /> 
+        <p:commandButton value="#{msg.GUA}" update=" :growl" action="#{proyectoController.doProyecto()}" styleClass="boton" /> 
         <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/>  
     </p:panel>
 </h:form>  

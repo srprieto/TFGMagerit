@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.uvigo.esei.tfg.controladores.administrador;
+package es.uvigo.esei.tfg.controladores.editor;
 /**
  *
  * @author Saul
  */
+import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.modelos.UsuarioModel;
+import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
 import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.Serializable;  
@@ -21,9 +23,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
   
-@Named(value = "tablaUsuariosController")
+@Named(value = "tablaUsuariosProyectoController")
 @SessionScoped 
-public class TablaUsuariosController implements Serializable { 
+public class TablaUsuariosProyectoController implements Serializable { 
 
     private Usuario usuario;
     private List<Usuario> usuarios;
@@ -36,9 +38,15 @@ public class TablaUsuariosController implements Serializable {
     UsuarioDAO usuarioDAO;
     
     @Inject
+    ProyectoController proyecto;
+    
+    @Inject
     GestorUsuariosDAO gestorDAO;
     
-    public TablaUsuariosController() {
+    @Inject
+    GestorProyectosDAO gestorProDAO;
+    
+    public TablaUsuariosProyectoController() {
         
     }
     
@@ -97,7 +105,16 @@ public class TablaUsuariosController implements Serializable {
     }
     
     public UsuarioModel getUsuarioModel() {
-        usuarios = usuarioDAO.buscarTodos();
+        usuarios = gestorProDAO.editores(proyecto.getProyectoActual());
+        usuarioModel = new UsuarioModel(usuarios);
+        return usuarioModel;  
+    }  
+    
+    public UsuarioModel getUsuarioModelNuevo() {
+        usuarios = usuarioDAO.buscarPorTipo(TipoUsuario.EDITOR);
+        Usuario creador = proyecto.getCreador();
+        usuarios.remove(creador);
+        List<Usuario> actuales = gestorProDAO.editores(proyecto.getProyectoActual());
         usuarioModel = new UsuarioModel(usuarios);
         return usuarioModel;  
     }  

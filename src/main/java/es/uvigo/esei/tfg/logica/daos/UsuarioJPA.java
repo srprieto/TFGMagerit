@@ -8,8 +8,10 @@ package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
+import es.uvigo.esei.tfg.controladores.Credenciales;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.Query;
 
 
@@ -20,7 +22,10 @@ import javax.persistence.Query;
 
 @Stateless
 public class UsuarioJPA extends GenericoJPA<Usuario> implements UsuarioDAO {
-
+        
+     @Inject 
+     Credenciales credenciales;
+    
      @Override
      public Usuario buscarPorLogin(String login) {
         Query q = em.createQuery("SELECT object(u) FROM Usuario AS u " +
@@ -62,5 +67,14 @@ public class UsuarioJPA extends GenericoJPA<Usuario> implements UsuarioDAO {
     public int contador() {
         Query q = em.createQuery("SELECT count(u) FROM Usuario as u");
         return q.getFirstResult();
+    }
+    
+    @Override
+    public List<Usuario> usuario(){
+        Query q =em.createQuery("SELECT object(u) FROM Usuario as u "+
+                                " WHERE u.login=:login AND u.password=:password");
+           q.setParameter("login", credenciales.getLogin());
+           q.setParameter("password", credenciales.getPassword());
+           return q.getResultList();
     }
 }

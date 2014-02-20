@@ -9,15 +9,14 @@ package es.uvigo.esei.tfg.controladores.editor;
  *
  * @author Saul
  */
-import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
-import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.UsuarioModel;
+import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
+import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -26,9 +25,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 
-@Named(value = "tablaUsuariosProyectoController")
+@Named(value = "tablaUsuarioProyectoController")
 @SessionScoped
-public class TablaUsuariosProyectoController implements Serializable {
+public class TablaUsuarioProyectoController implements Serializable {
 
     private Usuario usuario;
     private List<Usuario> usuarios;
@@ -47,10 +46,16 @@ public class TablaUsuariosProyectoController implements Serializable {
     ProyectoController proyecto;
 
     @Inject
+    GestorUsuariosDAO gestorDAO;
+
+    @Inject
+    GestorProyectosDAO gestorProDAO;
+
+    @Inject
     @LoggedIn
     Usuario usuarioActual;
 
-    public TablaUsuariosProyectoController() {
+    public TablaUsuarioProyectoController() {
 
     }
 
@@ -111,19 +116,12 @@ public class TablaUsuariosProyectoController implements Serializable {
     }
 
     public UsuarioModel getUsuarioModel() {
-        usuarios = usuarioDAO.buscarPorTipo(TipoUsuario.EDITOR);
-        Usuario creador = usuarioActual;
-        usuarios.remove(creador);
-        List<Usuario> editores = proyecto.getProyectoActual().getEditores();
-        int tamano = editores.size();
-        for (int i = 0; i < tamano; i++) {
-            usuarios.remove(editores.get(i));
-        }
+        usuarios = proyecto.getProyectoActual().getEditores();
         usuarioModel = new UsuarioModel(usuarios);
         return usuarioModel;
     }
 
-    public void update() {
+    public void eliminar() {
         Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
         if (tamano == 0) {
@@ -133,20 +131,18 @@ public class TablaUsuariosProyectoController implements Serializable {
         }
     }
 
-    public void aceptarUsuarios() {
-        List<Proyecto> proyectos = new ArrayList<>();
-        usuarios = new ArrayList<>();
-        Usuario[] lista = this.getSelectedUsuarios();
-        int tamano = lista.length;
-        Proyecto pro = proyecto.getProyectoActual();
-        proyectos.add(pro);
+    public void eliminarUsuario() {
+        Usuario[] seleccionados = this.getSelectedUsuarios();
+        int tamano = seleccionados.length;
         for (int i = 0; i < tamano; i++) {
-            Usuario usu = lista[i];
-            usuarios.add(usu);
-            usu.setProyectos(proyectos);
-            usuarioDAO.actualizar(usu);
+            Usuario seleccionado = seleccionados[i];
+            proyecto.getProyectoActual().getEditores().remove(seleccionado);
+            seleccionado.getProyectos().remove(proyecto.getProyectoActual());
+            proyectoDAO.actualizar(proyecto.getProyectoActual());
+            usuarioDAO.actualizar(seleccionado);
         }
-        pro.setEditores(usuarios);
-        proyectoDAO.actualizar(pro);
+        anadirMensajeCorrecto("El usuario ha sido eliminado correctamente");
+        RequestContext.getCurrentInstance().update("form");
     }
+
 }

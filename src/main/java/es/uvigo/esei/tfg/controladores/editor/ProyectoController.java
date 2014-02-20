@@ -47,7 +47,8 @@ public class ProyectoController implements Serializable {
     @Inject
     MarcoTrabajoDAO marcoTrabajoDAO;
 
-    @LoggedIn Usuario usuarioActual;
+    @LoggedIn 
+    Usuario usuarioActual;
 
     @Inject
     TablaProyectosController tablaProyectosController;
@@ -95,7 +96,8 @@ public class ProyectoController implements Serializable {
     }
 
     public Proyecto getProyectoActual() {
-        proyectoActual = tablaProyectosController.getSelectedProyecto();
+        Proyecto[] pro= tablaProyectosController.getSelectedProyectos();
+        proyectoActual = pro[0];
         return proyectoActual;
     }
 

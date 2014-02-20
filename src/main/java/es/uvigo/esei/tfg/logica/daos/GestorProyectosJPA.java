@@ -38,7 +38,7 @@ public class GestorProyectosJPA implements GestorProyectosDAO {
     
     @Override
     public List<Usuario> editores(Proyecto proyecto){
-        return (proyectoDAO.editores(proyecto));
+        return (proyectoDAO.buscarEditores(proyecto));
     }
     
 }

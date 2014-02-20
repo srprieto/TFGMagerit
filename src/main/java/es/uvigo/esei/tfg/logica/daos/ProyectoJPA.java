@@ -54,7 +54,7 @@ public class ProyectoJPA extends GenericoJPA<Proyecto> implements ProyectoDAO {
     }
      
      @Override
-     public List<Usuario> editores(Proyecto editores){
+     public List<Usuario> buscarEditores(Proyecto editores){
         Query q = em.createQuery("SELECT object(u) FROM Proyecto AS u " +
                                  "  WHERE u.editores = :editores");
         q.setParameter("editores", editores);

@@ -41,7 +41,7 @@ public class TablaProyectosController implements Serializable {
     @Inject
     GestorProyectosDAO gestorDAO;
      
-     @Inject @LoggedIn Usuario usuarioActual;
+    @Inject @LoggedIn Usuario usuarioActual;
 
     public TablaProyectosController() {
 
@@ -105,7 +105,6 @@ public class TablaProyectosController implements Serializable {
 
     public ProyectoModel getProyectoModel() {
         Usuario creador = usuarioActual;
-        System.out.println("hola" + creador);
         proyectos = proyectoDAO.buscarPorCreador(creador);
         proyectoModel = new ProyectoModel(proyectos);
         return proyectoModel;

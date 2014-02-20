@@ -28,10 +28,10 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="multiUsuarios" emptyMessage="#{msg.ERR1}" var="usuario" value="#{tablaUsuariosProyectoController.usuarioModel}"  paginator="true" rows="10" selection="#{tablaUsuariosController.selectedUsuarios}">  
+                <p:dataTable id="multiUsuarios" emptyMessage="#{msg.ERR1}" var="usuario" value="#{tablaUsuarioProyectoController.usuarioModel}"  paginator="true" rows="10" selection="#{tablaUsuarioProyectoController.selectedUsuarios}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="#{msg.LIS}"/>   
+                            <h:outputText value="Editores del proyecto: &#160;#{proyectoController.proyectoActual.nombre}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
@@ -59,39 +59,20 @@
 
                     <f:facet id="pie" name="footer">  
                         <div style="izquierda">
-                            <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
-                                             update=":form:displayEdit, :growl" actionListener="#{tablaUsuariosController.update()}"/>
                             <p:commandButton id="multiViewButton" value="Borrar" icon="ui-icon-trash"  
-                                             update=":form:displayMulti, :growl" actionListener="#{tablaUsuariosController.eliminar()}"/>
+                                             update=":form:displayMulti, :growl" actionListener="#{tablaUsuarioProyectoController.eliminar()}"/>
                         </div>
                     </f:facet> 
 
-                </p:dataTable>   
-                <p:dialog id="multiEditDialog" header="#{msg.ELI2}" widgetVar="multiEditDialog"  
-                          height="200" width="500" showEffect="fade" hideEffect="explode">  
-                    <div class="datalist-noborder margin-bot">
-                        <p:dataList id="displayEdit" value="#{tablaUsuariosController.selectedUsuarios}" type="none" var="selectedUsuarioEdit">  
-                            <p><h:outputLabel for="nombre" value="#{msg.LOG}"  styleClass="negrita"/> 
-                                <p:inputText id="nombre" value="#{selectedUsuarioEdit.login}"/></p>
-
-
-                            <h:outputLabel for="tipo" value="#{msg.TIP}" styleClass="negrita"/>                     
-                            <h:selectOneMenu id="tipo" value="#{selectedUsuarioEdit.tipo}"> 
-                                <f:selectItems value="#{tipoUsuarioController.tipoValues}" />  
-                            </h:selectOneMenu> 
-                        </p:dataList>  
-                    </div>
-                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaUsuariosController.updateUsuario()}" icon="ui-icon-check"/> 
-                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                </p:dialog>
-                <p:dialog id="multiDialog" header="#{msg.ELI}" widgetVar="multiUsuarioDialog"  
+                </p:dataTable>
+                <p:dialog id="multiDialog" header="#{msg.ELI}" widgetVar="multiDialog"  
                           height="200" width="300" showEffect="fade" hideEffect="explode">  
 
-                    <p:dataList id="displayMulti" value="#{tablaUsuariosController.selectedUsuarios}" var="selectedUsuario">  
+                    <p:dataList id="displayMulti" value="#{tablaUsuarioProyectoController.selectedUsuarios}" var="selectedUsuario">  
                         <h:outputText value="#{msg.LOG1}&#160;#{selectedUsuario.login}"/>
                     </p:dataList>  
-                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaUsuariosController.eliminarUsuarios()}" icon="ui-icon-check"/> 
-                    <p:commandButton value="#{msg.CAN}" onclick="multiUsuarioDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaUsuarioProyectoController.eliminarUsuario()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>  
             </h:form>
         </div>

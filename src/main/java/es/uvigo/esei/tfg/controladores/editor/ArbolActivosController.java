@@ -10,18 +10,15 @@ package es.uvigo.esei.tfg.controladores.editor;
  *
  * @author Saul
  */
-import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import java.io.Serializable;  
-import java.util.Iterator;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;  
 import javax.faces.context.FacesContext;  
-import javax.faces.event.ActionEvent;  
 import javax.inject.Inject;
 import javax.inject.Named;
   
@@ -31,8 +28,6 @@ import org.primefaces.model.TreeNode;
 @Named(value = "arbolActivosController")
 @SessionScoped
 public class ArbolActivosController implements Serializable {  
-    
-    
     
     
     @Inject
@@ -53,7 +48,6 @@ public class ArbolActivosController implements Serializable {
     }  
   
     public TreeNode getRoot() {
-        
         Proyecto actual= proyectoController.getProyectoActual();
         List<Activo> activos = activoDAO.buscarActivosProyecto(actual);
         

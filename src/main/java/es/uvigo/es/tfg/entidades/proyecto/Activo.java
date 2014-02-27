@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -23,7 +22,7 @@ public class Activo implements Serializable {
     String nombre;
     String descripcion;
     String responsable;
-    String propietario;  // TODO es lo mismo que propietario ¿?
+    String propietario;  
     String ubicacion;
     Double valorBase;
     Long cantidad;
@@ -46,7 +45,7 @@ public class Activo implements Serializable {
     public Activo() {
     }
 
-    public Activo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad, Proyecto proyecto) {
+    public Activo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad, Proyecto proyecto,TipoActivo tipo, GrupoActivos grupo) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -56,6 +55,8 @@ public class Activo implements Serializable {
         this.valorBase = valorBase;
         this.cantidad = cantidad;
         this.proyecto = proyecto;
+        this.tipoActivo = tipo;
+        this.grupoActivos = grupo;
     }
 
     public Long getId() {

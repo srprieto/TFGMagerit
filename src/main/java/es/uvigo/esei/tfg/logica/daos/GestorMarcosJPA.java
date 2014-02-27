@@ -32,4 +32,10 @@ public class GestorMarcosJPA implements GestorMarcosDAO {
     public boolean existeMarco(String nombre) {
         return (marcoDAO.buscarPorNombre(nombre) != null);
     }
+    
+     @Override
+    public Long existeId (String nombre){
+        MarcoTrabajo principal = marcoDAO.buscarPorNombre(nombre);
+        return principal.getId();
+    }
 }

@@ -16,4 +16,5 @@ import javax.ejb.Local;
 public interface GestorMarcosDAO {
     public void crearNuevoMarco(String nombre, String descripcion);
     public boolean existeMarco(String nombre);
+    public Long existeId (String nombre);
 }

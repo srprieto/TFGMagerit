@@ -21,5 +21,6 @@ public interface ActivoDAO extends GenericoDAO<Activo>{
 
     List<Activo> buscarPorTipoActivo(TipoActivo tipo);
     List<Activo> buscarActivosProyecto(Proyecto proyecto);
+    Activo buscarPorNombre(String nombre);
     
 }

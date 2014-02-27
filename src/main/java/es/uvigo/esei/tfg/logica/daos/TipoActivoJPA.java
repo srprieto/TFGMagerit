@@ -34,5 +34,25 @@ public class TipoActivoJPA extends GenericoJPA<TipoActivo> implements TipoActivo
                                  "  WHERE u.tipoActivoPadre = null");
         return q.getResultList();
     }
+    
+    @Override
+     public TipoActivo buscarPorNombre(String nombre) {
+        Query q = em.createQuery("SELECT object(u) FROM TipoActivo AS u " +
+                                 "  WHERE u.nombre = :nombre");
+        q.setParameter("nombre", nombre);
+
+        List<TipoActivo> resultados = q.getResultList();
+
+        if (resultados ==null) {
+            return null;  // No encontrado
+        }
+        else if (resultados.size() != 1){
+            return null; // No encontrado
+        }
+        else {
+            return resultados.get(0);  // Devuelve el encontrado
+        }
+    }
+    
  
 }

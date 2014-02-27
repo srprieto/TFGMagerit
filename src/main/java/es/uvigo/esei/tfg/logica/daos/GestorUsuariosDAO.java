@@ -27,4 +27,5 @@ public interface GestorUsuariosDAO {
      public TipoUsuario tipoUsuario(String login);
      public void eliminarUsuario(Usuario usuario); 
      public List<Usuario> usuario();
+     public Long existeId (String nombre);
 }

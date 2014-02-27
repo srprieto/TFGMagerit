@@ -125,19 +125,20 @@ public class TablaProyectosController implements Serializable {
     public void updateProyecto() {
         Proyecto[] seleccionados = this.getSelectedProyectos();
         int tamano = seleccionados.length;
-
         Proyecto seleccionado = seleccionados[0];
+        Long id = seleccionado.getId();
+        
         if (seleccionado.getNombre().equals("")) {
             anadirMensajeError("Tienes que introducir un nombre para el proyecto");
         } else if (seleccionado.getDescripcion().equals("")) {
             anadirMensajeError("Tienes que introducir una descripción para el proyecto");
-        } else if (gestorDAO.existeProyecto(seleccionado.getNombre()) == true) {
+        } else if (gestorDAO.existeProyecto(seleccionado.getNombre()) == true && gestorDAO.existeId(seleccionado.getNombre()) != id) {
             anadirMensajeError("Ya existe un Proyecto con ese nombre");
         } else {
             proyectoDAO.actualizar(seleccionado);
             anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
-            RequestContext.getCurrentInstance().update("form");
         }
+        
     }
 
     public void eliminar() {

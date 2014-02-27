@@ -128,13 +128,14 @@ public class TablaMarcosController implements Serializable {
     public void updateMarco() {
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
-
         MarcoTrabajo seleccionado = seleccionados[0];
+        Long id = seleccionado.getId();
+        
         if (seleccionado.getNombre().equals("")) {
             anadirMensajeError("Tienes que introducir un nombre para el marco");
         } else if (seleccionado.getDescripcion().equals("")) {
             anadirMensajeError("Tienes que introducir una descripcion para el marco");
-        } else if (gestorMarcoDAO.existeMarco(seleccionado.getNombre()) == true) {
+        } else if (gestorMarcoDAO.existeMarco(seleccionado.getNombre()) == true && gestorMarcoDAO.existeId(seleccionado.getNombre()) != id) {
             anadirMensajeError("Ya existe un marco con ese nombre");
         } else {
             marcoDAO.actualizar(seleccionado);

@@ -88,5 +88,11 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
     public List<Usuario> usuario(){
         return usuarioDAO.usuario();
     }
+    
+    @Override
+    public Long existeId (String nombre){
+        Usuario principal = usuarioDAO.buscarPorLogin(nombre);
+        return principal.getId();
+    }
 
 }

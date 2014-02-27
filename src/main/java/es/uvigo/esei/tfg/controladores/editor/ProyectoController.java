@@ -47,8 +47,7 @@ public class ProyectoController implements Serializable {
     @Inject
     MarcoTrabajoDAO marcoTrabajoDAO;
 
-    @LoggedIn 
-    Usuario usuarioActual;
+    @Inject @LoggedIn Usuario usuarioActual;
 
     @Inject
     TablaProyectosController tablaProyectosController;

@@ -44,7 +44,11 @@
 
                     <p:column id="descripcion" styleClass="tabla1" headerText="#{msg.DES1}">  
                         <h:outputText value="#{proyecto.descripcion}" />    
-                    </p:column>  
+                    </p:column> 
+
+                    <p:column id="marco" styleClass="tabla1" headerText="#{msg.MAR}">  
+                        <h:outputText value="#{proyecto.marcoTrabajo.nombre}" />    
+                    </p:column> 
 
                     <p:column id="fechaCreacion" styleClass="tabla1" headerText="#{msg.FEC1}">  
                         <h:outputText value="#{proyecto.fechaCreacion}">
@@ -67,32 +71,37 @@
                                          update=":growl" action="#{proyectoController.doDestino()}"/>  
                     </f:facet>
                 </p:dataTable> 
-                <p:dialog id="multiEditDialog" header="#{msg.ELI2}" widgetVar="multiEditDialog"  
+                <p:dialog id="multiEditDialog" header="#{msg.EDI1}" widgetVar="multiEditDialog"  
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
                     <div class="datalist-noborder">
                         <p:dataList id="displayEdit" value="#{tablaProyectosController.selectedProyectos}" type="none" var="selectedEdit">  
-                            <p><h:outputLabel for="nombre" value="#{msg.NOM}"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="nombre" value="#{msg.NOM1}"  styleClass="negrita"/> 
                                 <p:inputText id="nombre" value="#{selectedEdit.nombre}"/></p>
 
-                            <p><h:outputLabel for="descripcion" value="#{msg.DES}"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="descripcion" value="#{msg.DES1}"  styleClass="negrita"/> 
                                 <p:inputText id="descripcion" value="#{selectedEdit.descripcion}"/></p>
+
+                            <p><h:outputLabel for="marco" value="#{msg.MAR}"  styleClass="negrita"/>                     
+                                <h:selectOneMenu id="marco" value="#{selectedEdit.marcoTrabajo}" converter="omnifaces.SelectItemsConverter" required="true">  
+                                    <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{proyectoController.marco}" />  
+                                </h:selectOneMenu></p>
                         </p:dataList>  
                     </div>
-                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaProyectosController.updateProyecto()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.ACE}" update=":form,  :growl" actionListener="#{tablaProyectosController.updateProyecto()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 
-                <p:dialog id="multiDialog" header="#{msg.ELI1}" widgetVar="multiDialog"  
+                <p:dialog id="multiDialog" header="#{msg.ELI3}" widgetVar="multiDialog"  
                           height="200" width="300" showEffect="fade" hideEffect="explode">  
 
                     <p:dataList id="displayMulti" value="#{tablaProyectosController.selectedProyectos}" var="selected">  
-                        <h:outputText value="#{msg.NOM}&#160;#{selected.nombre}"/>
+                        <h:outputText value="#{msg.NOM1}&#160;#{selected.nombre}"/>
                     </p:dataList>  
                     <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaProyectosController.eliminarProyectos()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>  
             </h:form>
         </div>
-        <p:growl id="growl" life="3000" />
+        <p:growl id="growl" life="3000" /> 
     </ui:define>
 </ui:composition>

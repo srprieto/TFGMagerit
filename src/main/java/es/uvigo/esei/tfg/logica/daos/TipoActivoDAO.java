@@ -19,5 +19,5 @@ public interface TipoActivoDAO extends GenericoDAO<TipoActivo>{
 
  public List<TipoActivo> buscarTodos();
  public List<TipoActivo> buscarTipoActivosSinPadre();
-    
+ public TipoActivo buscarPorNombre(String nombre);
 }

@@ -52,13 +52,4 @@ public class ProyectoJPA extends GenericoJPA<Proyecto> implements ProyectoDAO {
             return resultados.get(0);  // Devuelve el encontrado
         }
     }
-     
-     @Override
-     public List<Usuario> buscarEditores(Proyecto editores){
-        Query q = em.createQuery("SELECT object(u) FROM Proyecto AS u " +
-                                 "  WHERE u.editores = :editores");
-        q.setParameter("editores", editores);
-        List<Usuario> resultados = q.getResultList(); 
-        return resultados;
-     }
 }

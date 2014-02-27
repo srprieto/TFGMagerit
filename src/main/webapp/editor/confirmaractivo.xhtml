@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="crearproyecto.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" url="crearactivo.xhtml" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -28,10 +28,15 @@
         <div class="tabla">
             <h:form id="form" >
                 <p:panel header="Confirmar datos">
-                    <p><h:outputText value="Nombre del Proyecto:&#160;#{proyectoController.nombre}"/></p>
-                    <p><h:outputText value="Descripcion del Proyecto:&#160;#{proyectoController.descripcion}"/></p>
-                    <p><h:outputText value="Marco del Proyecto:&#160;#{proyectoController.proyectoEnEdicion.marcoTrabajo.nombre}"/></p>
-                    <p:commandButton value="Guardar" actionListener="#{proyectoController.doCrearProyecto()}"/>
+                    <p><h:outputText value="Codigo del Activo:&#160;#{activoController.codigo}"/></p>
+                    <p><h:outputText value="Nombre del Activo:&#160;#{activoController.nombre}"/></p>
+                    <p><h:outputText value="Descripcion del Activo:&#160;#{activoController.descripcion}"/></p>
+                    <p><h:outputText value="Responsable del Activo:&#160;#{activoController.responsable}"/></p>
+                    <p><h:outputText value="Ubicacion del Activo:&#160;#{activoController.ubicacion}"/></p>
+                    <p><h:outputText value="Cantidad del Activo:&#160;#{activoController.cantidad}"/></p>
+                    <p><h:outputText value="Tipo de Activo:&#160;#{activoController.activoEnEdicion.tipoActivo.nombre}"/></p>
+                    <p><h:outputText value="Grupo del Activo:&#160;#{activoController.activoEnEdicion.grupoActivos.nombre}"/></p>
+                    <p:commandButton value="Guardar" actionListener="#{activoController.guardarActivo()}"/>
                     <p:commandButton value="Cancelar" action="crearusuario.xhtml"/>
                 </p:panel>
             </h:form>  

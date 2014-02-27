@@ -20,5 +20,4 @@ public interface ProyectoDAO extends GenericoDAO<Proyecto>{
     public List<Proyecto> buscarTodos();
     public List<Proyecto> buscarPorCreador(Usuario creador);
     public Proyecto buscarPorNombre(String nombre);
-    public List<Usuario> buscarEditores(Proyecto editores);
 }

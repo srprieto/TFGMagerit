@@ -20,5 +20,5 @@ import javax.ejb.Local;
 public interface GestorProyectosDAO {
     public void crearNuevoProyecto(String nombre, String descripcion, MarcoTrabajo marcoTrabajo, Usuario creador);
     public boolean existeProyecto(String nombre);
-    public List<Usuario> editores(Proyecto proyecto);
+    public Long existeId (String nombre);
 }

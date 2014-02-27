@@ -18,8 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="proyecto.xhtml" />  
-                        <p:menuitem value="#{msg.ANA}" url="crearusuarioproyecto.xhtml"/> 
+                        <p:menuitem value="#{msg.ATR}" url="usuarios.xhtml" />  
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -59,12 +58,12 @@
 
                     <f:facet id="pie" name="footer">  
                         <div style="izquierda">
-                            <p:commandButton id="multiEditButton" value="#{msg.EDI}"   
+                            <p:commandButton id="multiEditButton" value="Asignar" icon="ui-icon-add"   
                                              update=":form:displayMulti, :growl" actionListener="#{tablaUsuariosProyectoController.update()}"/>
                         </div>
                     </f:facet> 
                 </p:dataTable>   
-                <p:dialog id="multiDialog" header="#{msg.ELI}" widgetVar="multiDialog"  
+                <p:dialog id="multiDialog" header="Desea asignar a los usuarios al proyecto: #{proyectoController.proyectoActual.nombre} ?" widgetVar="multiDialog"  
                           height="200" width="300" showEffect="fade" hideEffect="explode">  
 
                     <p:dataList id="displayMulti" value="#{tablaUsuariosProyectoController.selectedUsuarios}" var="selectedUsuario">  

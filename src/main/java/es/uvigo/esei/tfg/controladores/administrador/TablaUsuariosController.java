@@ -117,11 +117,12 @@ public class TablaUsuariosController implements Serializable {
      public void updateUsuario() {
         Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
-
         Usuario seleccionado = seleccionados[0];
+        Long id = seleccionado.getId();
+                 
         if (seleccionado.getLogin().equals("")) {
             anadirMensajeError("Tienes que introducir un login para el usuario");
-        } else if (gestorDAO.existeUsuario(seleccionado.getLogin()) == true) {
+        } else if (gestorDAO.existeUsuario(seleccionado.getLogin()) == true && gestorDAO.existeId(seleccionado.getLogin()) != id) {
             anadirMensajeError("Ya existe un usuario con ese login");
         } else {
             usuarioDAO.actualizar(seleccionado);

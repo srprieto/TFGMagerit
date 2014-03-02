@@ -15,11 +15,13 @@ import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.GestorActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,6 +36,7 @@ public class ArbolActivosController implements Serializable {
 
     private TreeNode root;
     private TreeNode[] selectedNodes;
+    private Activo activoActual;
 
     @Inject
     ProyectoController proyecto;
@@ -74,6 +77,14 @@ public class ArbolActivosController implements Serializable {
 
         }
         return root;
+    }
+
+    public Activo getActivoActual() {
+        return activoActual;
+    }
+
+    public void setActivoActual(Activo activoActual) {
+        this.activoActual = activoActual;
     }
 
     public void setRoot(TreeNode root) {
@@ -199,4 +210,48 @@ public class ArbolActivosController implements Serializable {
         }
     }
 
+    public void doDestino() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        int valor = 0;
+        if (selectedNodes == null) {
+            anadirMensajeError("Tienes que seleccionar al menos un activo para editarlo");
+            context.redirect("proyecto.xhtml");
+            valor = 2;
+        } else {
+            int tamano = selectedNodes.length;
+            if (tamano != 1) {
+                valor = 3;
+            }
+            for (int i = 0; i < tamano; i++) {
+                if (selectedNodes[i].getParent().equals(root)) {
+                    valor = 1;
+                }
+            }
+        }
+        if (valor == 0) {
+            String builder;
+            TreeNode node = selectedNodes[0];
+            builder = node.getData().toString();
+            String[] separadas1 = builder.split(" ", 2);
+            builder = separadas1[1];
+            activoActual = activoDAO.buscarPorNombre(builder);
+            context.redirect("dependencias.xhtml");
+
+        } else if (valor == 1) {
+            anadirMensajeError("No puedes seleccionar un Tipo");
+            context.redirect("proyecto.xhtml");
+        } else if (valor == 3) {
+            anadirMensajeError("Solo puede seleccionar un activo para editarlo");
+            context.redirect("proyecto.xhtml");
+        }
+    }
+    
+        
+    public void atras() throws IOException
+    {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();  
+        this.setSelectedNodes(null);
+        context.redirect("proyecto.xhtml");
+    }
 }

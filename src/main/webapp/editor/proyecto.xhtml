@@ -1,12 +1,104 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        <meta http-equiv="Refresh" content="0; URL=proyectonuevo.xhtml"/>
-    </h:body>
-</html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaProyectosController.atras()}"/>  
+                        <p:menuitem value="Añadir Activo" url="crearactivo.xhtml"/> 
+                        <p:menuitem value="Gestión Usuarios" url="usuarios.xhtml"/>
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+                <p:treeTable id="multiSelect" emptyMessage="No existen activos asignados al proyecto" value="#{arbolActivosController.root}" var="node" 
+                             selection="#{arbolActivosController.selectedNodes}" selectionMode="multiple">  
+                    <p:column>  
+                        <f:facet name="header">  
+                            <h:outputText value="Activos del proyecto: &#160;#{proyectoController.proyectoActual.nombre}"/>   
+                        </f:facet>  
+                        <h:outputText value="#{node}"/>  
+                    </p:column>  
 
+                    <f:facet name="footer"> 
+                        <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
+                                         update=":form:displayEdit, :growl" actionListener="#{arbolActivosController.update()}"/>
+                        <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
+                                         update=":form:displayMulti, :growl" actionListener="#{arbolActivosController.eliminar()}"/>
+                         <p:commandButton id="dependencias" value="#{msg.DEP}" icon="ui-icon-search"  
+                                          update=":growl" actionListener="#{arbolActivosController.doDestino()}"/> 
+                    </f:facet>  
+                </p:treeTable>
+                <p:dialog id="multiEditDialog" header="#{msg.EDI2}" widgetVar="multiEditDialog"  
+                          height="500" width="500" showEffect="fade" hideEffect="explode">  
+                    <div class="datalist-noborder">
+                        <p:dataList id="displayEdit" value="#{arbolActivosController.selectedNodes}" type="none" var="selectedEdit">  
+                            <p><h:outputLabel for="codigo" value="#{msg.COD}" />  
+                                <p:inputText id="codigo" value="#{activoController.codigo}"  label="Codigo"/></p>
+
+                            <p><h:outputLabel for="nombre" value="#{msg.NOM}" />  
+                                <p:inputText id="nombre" value="#{activoController.nombre}"  label="Nombre"/></p>    
+
+                            <p><h:outputLabel for="descripcion" value="#{msg.DES}" />  
+                                <p:inputText id="descripcion" value="#{activoController.descripcion}"  label="Descripcion"/></p>  
+
+                            <p><h:outputLabel for="responsable" value="#{msg.RES}" />  
+                                <p:inputText id="responsable" value="#{activoController.responsable}"  label="Responsable"/></p>  
+
+                            <p><h:outputLabel for="ubicacion" value="#{msg.UBI}" />  
+                                <p:inputText id="ubicacion" value="#{activoController.ubicacion}"  label="Ubicacion"/></p>  
+
+                            <p><h:outputLabel for="cantidad" value="#{msg.CANT}" />  
+                                <p:inputText id="cantidad" value="#{activoController.cantidad}"  label="Cantidad"/></p> 
+
+                            <p><h:outputLabel for="tipo" value="#{msg.TIP}" />  
+                                <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
+                                </h:selectOneMenu></p>  
+
+                            <p><h:outputLabel for="grupo" value="#{msg.GRU}" />  
+                                <h:selectOneMenu id="grupo" value="#{activoController.activoEnEdicion.grupoActivos}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
+                                </h:selectOneMenu></p>  
+
+                            <p><p:commandButton value="#{msg.NG}" /><br/></p>
+
+                            <h:outputText value="(*) Campos obligatorios" />  
+                        </p:dataList>  
+                    </div>
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl" actionListener="#{arbolActivosController.updateActivo()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>
+
+                <p:dialog id="multiDialog" header="#{msg.ELI4}" widgetVar="multiDialog"  
+                          height="200" width="300" showEffect="fade" hideEffect="explode">  
+
+                    <p:dataList id="displayMulti" value="#{arbolActivosController.selectedNodes}" var="selected">  
+                        <h:outputText value="#{selected}"/>
+                    </p:dataList>  
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{arbolActivosController.eliminarActivo()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog> 
+            </h:form>
+        </div>
+        <p:growl id="growl" life="3000" /> 
+    </ui:define> 
+</ui:composition>

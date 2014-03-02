@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="indexadministrador.xhtml" />  
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaUsuariosController.atras1()}" />  
                         <p:menuitem value="#{msg.ANA}" url="crearusuario.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
@@ -69,6 +69,9 @@
                 </p:dataTable>   
                 <p:dialog id="multiEditDialog" header="#{msg.ELI2}" widgetVar="multiEditDialog"  
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
+                    
+                    <p:ajax event="close" listener="#{tablaUsuariosController.cancelar()}"/>
+                     
                     <div class="datalist-noborder margin-bot">
                         <p:dataList id="displayEdit" value="#{tablaUsuariosController.selectedUsuarios}" type="none" var="selectedUsuarioEdit">  
                             <p><h:outputLabel for="nombre" value="#{msg.LOG}"  styleClass="negrita"/> 
@@ -81,8 +84,8 @@
                             </h:selectOneMenu> 
                         </p:dataList>  
                     </div>
-                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaUsuariosController.updateUsuario()}" icon="ui-icon-check"/> 
-                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    <p:commandButton value="#{msg.ACE}" update=":form,:growl" actionListener="#{tablaUsuariosController.updateUsuario()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" actionListener="#{tablaUsuariosController.cancelar()}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
                 <p:dialog id="multiDialog" header="#{msg.ELI}" widgetVar="multiUsuarioDialog"  
                           height="200" width="300" showEffect="fade" hideEffect="explode">  

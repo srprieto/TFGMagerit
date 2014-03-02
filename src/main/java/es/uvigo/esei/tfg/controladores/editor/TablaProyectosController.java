@@ -15,10 +15,12 @@ import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.ProyectoModel;
 import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,11 +39,13 @@ public class TablaProyectosController implements Serializable {
 
     @Inject
     ProyectoDAO proyectoDAO;
-    
+
     @Inject
     GestorProyectosDAO gestorDAO;
-     
-    @Inject @LoggedIn Usuario usuarioActual;
+
+    @Inject
+    @LoggedIn
+    Usuario usuarioActual;
 
     public TablaProyectosController() {
 
@@ -99,7 +103,7 @@ public class TablaProyectosController implements Serializable {
         return proyectos;
     }
 
-    public void setUsuarios(List<Proyecto> proyectos) {
+    public void setProyectos(List<Proyecto> proyectos) {
         this.proyectos = proyectos;
     }
 
@@ -114,8 +118,10 @@ public class TablaProyectosController implements Serializable {
         Proyecto[] seleccionados = this.getSelectedProyectos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
+            this.setSelectedProyectos(null);
             anadirMensajeError("No ha seleccionado ningun proyecto");
         } else if (tamano != 1) {
+            this.setSelectedProyectos(null);
             anadirMensajeError("Solo puede seleccionar un proyecto para editarlo");
         } else {
             RequestContext.getCurrentInstance().execute("multiEditDialog.show();");
@@ -127,18 +133,20 @@ public class TablaProyectosController implements Serializable {
         int tamano = seleccionados.length;
         Proyecto seleccionado = seleccionados[0];
         Long id = seleccionado.getId();
-        
+
         if (seleccionado.getNombre().equals("")) {
             anadirMensajeError("Tienes que introducir un nombre para el proyecto");
         } else if (seleccionado.getDescripcion().equals("")) {
             anadirMensajeError("Tienes que introducir una descripción para el proyecto");
         } else if (gestorDAO.existeProyecto(seleccionado.getNombre()) == true && gestorDAO.existeId(seleccionado.getNombre()) != id) {
             anadirMensajeError("Ya existe un Proyecto con ese nombre");
-        } else {
+        } else { 
             proyectoDAO.actualizar(seleccionado);
+            this.setSelectedProyectos(null);
             anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
+            RequestContext.getCurrentInstance().execute("multiEditDialog.hide();");
         }
-        
+
     }
 
     public void eliminar() {
@@ -150,19 +158,29 @@ public class TablaProyectosController implements Serializable {
             RequestContext.getCurrentInstance().execute("multiDialog.show();");
         }
     }
-    
-     public void eliminarProyectos(){
+
+    public void eliminarProyectos() {
         Proyecto[] lista = this.getSelectedProyectos();
         int tamano = lista.length;
-        for (int i=0; i<tamano; i++)
-        {
-            Proyecto pro= lista[i];
+        for (int i = 0; i < tamano; i++) {
+            Proyecto pro = lista[i];
             proyectoDAO.eliminar(pro);
         }
-        if(tamano == 1){
+        if (tamano == 1) {
             anadirMensajeCorrecto("El proyecto ha sido eliminado correctamente");
-        }else{
+        } else {
             anadirMensajeCorrecto("Los proyectos fueron eliminados correctamente");
         }
+    }
+
+    public void cancelar() throws IOException {
+        this.setSelectedProyectos(null);
+        RequestContext.getCurrentInstance().execute("multiEditDialog.hide();");
+    }
+
+    public void atras() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        this.setSelectedProyectos(null);
+        context.redirect("misproyectos.xhtml");
     }
 }

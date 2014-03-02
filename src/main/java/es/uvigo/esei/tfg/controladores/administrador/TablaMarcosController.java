@@ -4,10 +4,12 @@ import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
 import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -117,8 +119,10 @@ public class TablaMarcosController implements Serializable {
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
+            this.setSelectedMarcos(null);
             anadirMensajeError("No ha seleccionado ningun marco");
         } else if (tamano != 1) {
+            this.setSelectedMarcos(null);
             anadirMensajeError("Solo puede seleccionar un marco para editarlo");
         } else {
             RequestContext.getCurrentInstance().execute("multiMarcoEditDialog.show();");
@@ -130,6 +134,7 @@ public class TablaMarcosController implements Serializable {
         int tamano = seleccionados.length;
         MarcoTrabajo seleccionado = seleccionados[0];
         Long id = seleccionado.getId();
+        this.setSelectedMarcos(null);
         
         if (seleccionado.getNombre().equals("")) {
             anadirMensajeError("Tienes que introducir un nombre para el marco");
@@ -139,9 +144,29 @@ public class TablaMarcosController implements Serializable {
             anadirMensajeError("Ya existe un marco con ese nombre");
         } else {
             marcoDAO.actualizar(seleccionado);
-            anadirMensajeCorrecto("El marco ha sido modificado correctamente");
-            RequestContext.getCurrentInstance().update("form");
+            anadirMensajeCorrecto("El marco ha sido modificado correctamente"); 
         }
     }
+    
+    public void atras() throws IOException
+    {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();  
+        this.setSelectedMarcos(null);
+        context.redirect("marcos.xhtml");
+    }
+    
+    public void cancelar() throws IOException
+    { 
+        this.setSelectedMarcos(null);
+        RequestContext.getCurrentInstance().execute("multiMarcoEditDialog.hide();");
+    }
+    
+    public void atras1() throws IOException
+    {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();  
+        this.setSelectedMarcos(null);
+        context.redirect("indexadministrador.xhtml");
+    }
+    
 
 }

@@ -8,7 +8,6 @@ package es.uvigo.esei.tfg.controladores.editor;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
-import es.uvigo.esei.tfg.controladores.LoginController;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
@@ -95,8 +94,6 @@ public class ProyectoController implements Serializable {
     }
 
     public Proyecto getProyectoActual() {
-        Proyecto[] pro= tablaProyectosController.getSelectedProyectos();
-        proyectoActual = pro[0];
         return proyectoActual;
     }
 
@@ -163,23 +160,21 @@ public class ProyectoController implements Serializable {
         context.redirect("misproyectos.xhtml");
     }
 
-    public String doDestino() {
-        String destino;
+    public void doDestino() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         Proyecto[] lista = tablaProyectosController.getSelectedProyectos();
         int tamano = lista.length;
         if (tamano == 0) {
-            destino = "misproyectos.xhtml";
             anadirMensajeError("debe seleccionar un proyecto");
-            return destino;
+            context.redirect("misproyectos.xhtml");
         } else if (tamano != 1) {
-            destino = "misproyectos.xhtml";
             anadirMensajeError("Solo puede seleccionar un proyecto para trabajar sobre el");
-            return destino;
+            context.redirect("misproyectos.xhtml");
         } else {
             proyectoActual = lista[0];
             creador = usuarioActual;
-            destino = "proyecto.xhtml";
-            return destino;
+            context.redirect("proyecto.xhtml");
         }
     }
 }

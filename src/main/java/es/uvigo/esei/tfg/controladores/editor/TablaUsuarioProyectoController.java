@@ -16,10 +16,12 @@ import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
 import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -143,6 +145,13 @@ public class TablaUsuarioProyectoController implements Serializable {
         }
         anadirMensajeCorrecto("El usuario ha sido eliminado correctamente");
         RequestContext.getCurrentInstance().update("form");
+    }
+    
+     public void atras() throws IOException
+    {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();  
+        this.setSelectedUsuarios(null);
+        context.redirect("usuarios.xhtml");
     }
 
 }

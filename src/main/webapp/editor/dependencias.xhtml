@@ -19,8 +19,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="Atras" url="indexeditor.xhtml" />  
-                        <p:menuitem value="Crear Proyecto" url="crearproyecto.xhtml" /> 
+                        <p:menuitem value="Atras" actionListener="#{arbolActivosController.atras()}" />
+                        <p:menuitem value="Añadir Dependencia" url="dependenciasnueva.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -29,37 +29,21 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="No has creado ningun proyecto" var="proyecto" value="#{tablaProyectosController.proyectoModel}"  paginator="true" rows="10" selection="#{tablaProyectosController.selectedProyectos}">  
+                <p:dataTable id="Proyectos" emptyMessage="No existen activos dependientes" var="dependiente" value="#{tablaDependientesController.dependienteModel}"  paginator="true" rows="10" selection="#{tablaDependientesController.selectedDependientes}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="#{msg.PRO}"/>   
+                            <h:outputText value="Activo actual #{arbolActivosController.activoActual.nombre}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
                     <p:column styleClass="tabla2" selectionMode="multiple"/> 
 
                     <p:column id="nombre" styleClass="tabla1"  headerText="#{msg.NOM1}">  
-                        <h:outputText value="#{proyecto.nombre}" />   
+                        <h:outputText value="#{dependiente.activoDependiente.codigo}" />   
                     </p:column>  
 
                     <p:column id="descripcion" styleClass="tabla1" headerText="#{msg.DES1}">  
-                        <h:outputText value="#{proyecto.descripcion}" />    
-                    </p:column> 
-
-                    <p:column id="marco" styleClass="tabla1" headerText="#{msg.MAR}">  
-                        <h:outputText value="#{proyecto.marcoTrabajo.nombre}" />    
-                    </p:column> 
-
-                    <p:column id="fechaCreacion" styleClass="tabla1" headerText="#{msg.FEC1}">  
-                        <h:outputText value="#{proyecto.fechaCreacion}">
-                            <f:convertDateTime dateStyle="short" locale="es" type="date" />
-                        </h:outputText>
-                    </p:column> 
-
-                    <p:column id="fechaModificacion" styleClass="tabla1"  headerText="#{msg.FEC2}"> 
-                        <h:outputText value="#{proyecto.fechaModificacion}"> 
-                            <f:convertDateTime dateStyle="short" locale="es" type="date" />
-                        </h:outputText>
+                        <h:outputText value="#{dependiente.activoDependiente.nombre}" />    
                     </p:column> 
 
                     <f:facet name="footer">  
@@ -73,15 +57,12 @@
                 </p:dataTable> 
                 <p:dialog id="multiEditDialog" header="#{msg.EDI1}" widgetVar="multiEditDialog"  
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
-
-                    <p:ajax event="close" listener="#{tablaProyectosController.cancelar()}"/> 
-
                     <div class="datalist-noborder">
                         <p:dataList id="displayEdit" value="#{tablaProyectosController.selectedProyectos}" type="none" var="selectedEdit">  
-                            <p><h:outputLabel for="nombre" value="#{msg.NOM2}"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="nombre" value="#{msg.NOM1}"  styleClass="negrita"/> 
                                 <p:inputText id="nombre" value="#{selectedEdit.nombre}"/></p>
 
-                            <p><h:outputLabel for="descripcion" value="#{msg.DES2}"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="descripcion" value="#{msg.DES1}"  styleClass="negrita"/> 
                                 <p:inputText id="descripcion" value="#{selectedEdit.descripcion}"/></p>
 
                             <p><h:outputLabel for="marco" value="#{msg.MAR}"  styleClass="negrita"/>                     
@@ -90,8 +71,8 @@
                                 </h:selectOneMenu></p>
                         </p:dataList>  
                     </div>
-                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaProyectosController.updateProyecto()}" icon="ui-icon-check"/> 
-                    <p:commandButton value="#{msg.CAN}" actionListener="#{tablaProyectosController.cancelar()}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    <p:commandButton value="#{msg.ACE}" update=":form,  :growl" actionListener="#{tablaProyectosController.updateProyecto()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 
                 <p:dialog id="multiDialog" header="#{msg.ELI3}" widgetVar="multiDialog"  

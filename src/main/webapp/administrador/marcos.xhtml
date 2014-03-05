@@ -75,8 +75,8 @@
                                 <p:inputText id="descripcion" value="#{selectedMarcoEdit.descripcion}"/></p>
                         </p:dataList>  
                     </div>
-                    <p:commandButton value="#{msg.ACE}" update=":form, :growl" actionListener="#{tablaMarcosController.updateMarco()}" icon="ui-icon-check"/> 
-                    <p:commandButton value="#{msg.CAN}" update=":growl" actionListener="#{tablaMarcosController.cancelar()}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaMarcosController.updateMarco()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" actionListener="#{tablaMarcosController.cancelar()}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 
                 <p:dialog id="multiDialog" header="#{msg.ELI1}" widgetVar="multiMarcoDialog"  

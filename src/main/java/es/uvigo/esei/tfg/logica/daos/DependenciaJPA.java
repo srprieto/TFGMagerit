@@ -8,7 +8,6 @@ package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
-import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -34,4 +33,5 @@ public class DependenciaJPA extends GenericoJPA<Dependencia> implements Dependen
         List<Dependencia> resultados = q.getResultList(); 
         return resultados;
     }
+   
 }

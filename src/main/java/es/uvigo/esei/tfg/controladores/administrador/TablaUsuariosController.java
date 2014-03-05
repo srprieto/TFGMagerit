@@ -136,6 +136,7 @@ public class TablaUsuariosController implements Serializable {
         } else {
             usuarioDAO.actualizar(seleccionado);
             anadirMensajeCorrecto("El usuario ha sido modificado correctamente");
+            RequestContext.getCurrentInstance().update("form");
         }
     }
 

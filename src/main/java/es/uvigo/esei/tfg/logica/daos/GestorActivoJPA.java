@@ -40,4 +40,5 @@ public class GestorActivoJPA implements GestorActivoDAO {
         Activo principal = activoDAO.buscarPorNombre(nombre);
         return principal.getId();
     }
+    
 }

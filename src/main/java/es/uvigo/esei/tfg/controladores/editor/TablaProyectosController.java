@@ -133,6 +133,7 @@ public class TablaProyectosController implements Serializable {
         int tamano = seleccionados.length;
         Proyecto seleccionado = seleccionados[0];
         Long id = seleccionado.getId();
+        this.setSelectedProyectos(null);
 
         if (seleccionado.getNombre().equals("")) {
             anadirMensajeError("Tienes que introducir un nombre para el proyecto");
@@ -142,9 +143,8 @@ public class TablaProyectosController implements Serializable {
             anadirMensajeError("Ya existe un Proyecto con ese nombre");
         } else { 
             proyectoDAO.actualizar(seleccionado);
-            this.setSelectedProyectos(null);
             anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
-            RequestContext.getCurrentInstance().execute("multiEditDialog.hide();");
+            RequestContext.getCurrentInstance().update("form");
         }
 
     }

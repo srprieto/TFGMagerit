@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
@@ -17,6 +16,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface DependenciaDAO extends GenericoDAO<Dependencia> {
+
     public List<Dependencia> buscarTodos();
-     public List<Dependencia> buscarPorPrincipal(Activo activoPrincipal);
+
+    public List<Dependencia> buscarPorPrincipal(Activo activoPrincipal);
+
 }

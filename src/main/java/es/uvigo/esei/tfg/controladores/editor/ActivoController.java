@@ -188,10 +188,14 @@ public class ActivoController implements Serializable {
         } else if (responsable.equals("")) {
             anadirMensajeError("No se ha indicado un responsable para el activo");
             destino = "crearactivo.xhtml";
-        } else if (gestorActivoDAO.existeActivo(nombre) == true) {
-            anadirMensajeError("El nombre introducido ya esta almacenado, no pueden existir dos activos con el mismo nombre");
-            destino = "crearactivo.xhtml";
         } else {
+            int valor = 1;
+            List <Activo> lista = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+            for(int i = 0;i<lista.size();i++){
+                if(lista.get(i).getNombre().equals(nombre)){
+                     valor=0;
+                }
+            }
             StringBuilder sb = new StringBuilder();
             for (int x = 0; x < codigo.length(); x++) {
                 if (codigo.charAt(x) != ' ') {
@@ -201,7 +205,12 @@ public class ActivoController implements Serializable {
                 }
             }
             setCodigo(sb.toString());
-            destino = "confirmaractivo.xhtml";
+            if(valor==1){
+                destino = "confirmaractivo.xhtml";
+            }else{
+                anadirMensajeError("Ya existe un Activo con ese nombre");
+                destino = "crearactivo.xhtml";
+            }
         }
         return destino;
     }
@@ -217,7 +226,6 @@ public class ActivoController implements Serializable {
         cantidad = null;
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        context.redirect("proyectonuevo.xhtml");
+        context.redirect("proyecto.xhtml");
     }
-
 }

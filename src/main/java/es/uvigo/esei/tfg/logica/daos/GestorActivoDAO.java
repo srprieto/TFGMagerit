@@ -17,7 +17,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface GestorActivoDAO {
-    public void crearNuevoActivo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad,Proyecto proyecto, TipoActivo tipo, GrupoActivos grupo);
-    public Long existeId (String nombre);
-    public boolean existeActivo(String nombre);
+     void crearNuevoActivo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad,Proyecto proyecto, TipoActivo tipo, GrupoActivos grupo);
+     Long existeId (String nombre);
+     boolean existeActivo(String nombre);
 }

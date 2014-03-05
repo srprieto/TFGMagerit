@@ -145,6 +145,7 @@ public class TablaMarcosController implements Serializable {
         } else {
             marcoDAO.actualizar(seleccionado);
             anadirMensajeCorrecto("El marco ha sido modificado correctamente"); 
+            RequestContext.getCurrentInstance().update("form");
         }
     }
     

@@ -41,7 +41,7 @@ public class TablaDependientesController implements Serializable {
     DependenciaDAO dependenciaDAO;
     
     @Inject
-    ArbolActivosController activos;
+    ArbolActivosController arbolActivosController;
 
     public TablaDependientesController() {
 
@@ -104,7 +104,7 @@ public class TablaDependientesController implements Serializable {
     }
 
     public DependientesModel getDependienteModel() {
-        Activo actual = activos.getActivoActual();
+        Activo actual = arbolActivosController.getActivoActual();
         dependientes = dependenciaDAO.buscarPorPrincipal(actual);
         dependientesModel = new DependientesModel(dependientes);
         return dependientesModel;

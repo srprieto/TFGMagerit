@@ -19,8 +19,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="Atras" actionListener="#{arbolActivosController.atras()}" />
-                        <p:menuitem value="Añadir Dependencia" url="dependenciasnueva.xhtml"/> 
+                        <p:menuitem value="Atras" url="proyecto.xhtml" />
+                        <p:menuitem value="Añadir Dependencia" url="dependencianueva.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -38,11 +38,11 @@
 
                     <p:column styleClass="tabla2" selectionMode="multiple"/> 
 
-                    <p:column id="nombre" styleClass="tabla1"  headerText="#{msg.NOM1}">  
+                    <p:column id="nombre" styleClass="tabla1"  headerText="#{msg.COD1}">  
                         <h:outputText value="#{dependiente.activoDependiente.codigo}" />   
                     </p:column>  
 
-                    <p:column id="descripcion" styleClass="tabla1" headerText="#{msg.DES1}">  
+                    <p:column id="descripcion" styleClass="tabla1" headerText="#{msg.NOM1}">  
                         <h:outputText value="#{dependiente.activoDependiente.nombre}" />    
                     </p:column> 
 

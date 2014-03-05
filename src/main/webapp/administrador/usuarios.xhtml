@@ -84,7 +84,7 @@
                             </h:selectOneMenu> 
                         </p:dataList>  
                     </div>
-                    <p:commandButton value="#{msg.ACE}" update=":form,:growl" actionListener="#{tablaUsuariosController.updateUsuario()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaUsuariosController.updateUsuario()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" actionListener="#{tablaUsuariosController.cancelar()}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
                 <p:dialog id="multiDialog" header="#{msg.ELI}" widgetVar="multiUsuarioDialog"  

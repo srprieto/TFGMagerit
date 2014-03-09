@@ -173,7 +173,7 @@ public class TablaMarcosController implements Serializable {
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         MarcoTrabajo seleccionado = seleccionados[0];
         cargadorCatalogoDAO.inicializar();
-        cargadorCatalogoDAO.cargarRecurso("C:/Users/Saul/Downloads/magerit_completo.xml", seleccionado);
+        cargadorCatalogoDAO.cargarRecurso(ficherosController.getRuta(), seleccionado);
         cargadorCatalogoDAO.alamacenarElementos();
     }
 

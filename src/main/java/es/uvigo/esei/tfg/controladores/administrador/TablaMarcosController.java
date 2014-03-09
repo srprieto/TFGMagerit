@@ -2,6 +2,7 @@ package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
+import es.uvigo.esei.tfg.logica.daos.CargadorCatalogoDAO;
 import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import java.io.IOException;
@@ -27,9 +28,15 @@ public class TablaMarcosController implements Serializable {
 
     @Inject
     MarcoTrabajoDAO marcoDAO;
-    
+
     @Inject
     GestorMarcosDAO gestorMarcoDAO;
+
+    @Inject
+    FicherosController ficherosController;
+
+    @Inject
+    CargadorCatalogoDAO cargadorCatalogoDAO;
 
     public TablaMarcosController() {
 
@@ -135,7 +142,7 @@ public class TablaMarcosController implements Serializable {
         MarcoTrabajo seleccionado = seleccionados[0];
         Long id = seleccionado.getId();
         this.setSelectedMarcos(null);
-        
+
         if (seleccionado.getNombre().equals("")) {
             anadirMensajeError("Tienes que introducir un nombre para el marco");
         } else if (seleccionado.getDescripcion().equals("")) {
@@ -144,30 +151,47 @@ public class TablaMarcosController implements Serializable {
             anadirMensajeError("Ya existe un marco con ese nombre");
         } else {
             marcoDAO.actualizar(seleccionado);
-            anadirMensajeCorrecto("El marco ha sido modificado correctamente"); 
+
+            anadirMensajeCorrecto("El marco ha sido modificado correctamente");
             RequestContext.getCurrentInstance().update("form");
         }
     }
-    
-    public void atras() throws IOException
-    {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();  
+    public void fichero() {
+        MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        int tamano = seleccionados.length;
+        if (tamano == 0) {
+            this.setSelectedMarcos(null);
+            anadirMensajeError("No ha seleccionado ningun marco");
+        } else if (tamano != 1) {
+            this.setSelectedMarcos(null);
+            anadirMensajeError("Solo puede seleccionar un marco para editarlo");
+        } else {
+            RequestContext.getCurrentInstance().execute("multiUpdate.show();");
+        }
+    }
+    public void updateFichero() {
+        MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        MarcoTrabajo seleccionado = seleccionados[0];
+        cargadorCatalogoDAO.inicializar();
+        cargadorCatalogoDAO.cargarRecurso("C:/Users/Saul/Downloads/magerit_completo.xml", seleccionado);
+        cargadorCatalogoDAO.alamacenarElementos();
+    }
+
+    public void atras() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         this.setSelectedMarcos(null);
         context.redirect("marcos.xhtml");
     }
-    
-    public void cancelar() throws IOException
-    { 
+
+    public void cancelar() throws IOException {
         this.setSelectedMarcos(null);
         RequestContext.getCurrentInstance().execute("multiMarcoEditDialog.hide();");
     }
-    
-    public void atras1() throws IOException
-    {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();  
+
+    public void atras1() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         this.setSelectedMarcos(null);
         context.redirect("indexadministrador.xhtml");
     }
-    
 
 }

@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" update="form" url="dependencias.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" url="dependencias.xhtml" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -32,24 +32,21 @@
                     <p:messages id="messages" />  
 
                     <h:panelGrid columns="2">  
-                        <h:outputLabel for="grado" value="#{msg.COD}" />  
+                        <h:outputLabel for="grado" value="Grado" />  
                         <p:inputText id="grado" value="#{dependenciaController.grado}"  label="grado"/> 
                         
 
-                        <h:outputLabel for="justificante" value="#{msg.NOM}" />  
+                        <h:outputLabel for="justificante" value="Justificante" />  
                         <p:inputText id="justificante" value="#{dependenciaController.justificante}"  label="justificante"/>    
 
-                        <h:outputLabel for="tipo" value="#{msg.TIP}" />  
-                        <h:selectOneMenu id="tipo" value="#{dependenciaController.dependenciaEnEdicion.activoDependiente}" converter="omnifaces.SelectItemsConverter" >  
-                            <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{dependenciaController.activos}" />  
+                        <h:outputLabel for="dependiente" value="Activo Dependiente" />  
+                        <h:selectOneMenu id="dependiente" value="#{dependenciaController.nombre}" converter="omnifaces.SelectItemsConverter" > 
+                            <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{dependenciaController.activos}" />  
                         </h:selectOneMenu>  
 
-                        <p:commandButton value="#{msg.NG}" /><br/>
-
-                        <h:outputText value="(*) Campos obligatorios" />  
                     </h:panelGrid>  
                 </p:panel>  
-                <p:commandButton update=" :growl" action="#{activoController.doGuargar()}" value="#{msg.GUA}" /> 
+                <p:commandButton update=" :growl" action="#{dependenciaController.doGuardar()}" value="#{msg.GUA}" /> 
                 <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
             </h:form>  
         </div>

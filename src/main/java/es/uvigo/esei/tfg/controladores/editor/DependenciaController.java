@@ -6,14 +6,16 @@
 package es.uvigo.esei.tfg.controladores.editor;
 
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
-import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
-import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
+import es.uvigo.esei.tfg.logica.daos.GestorDependenciaDAO;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -29,11 +31,13 @@ public class DependenciaController implements Serializable {
     private Activo dependiente;
     private Double grado;
     private String justificante;
+    private String nombre;
 
-    List<Activo> activos;
+    private List<String> activos;
 
-    private Dependencia dependenciaEnEdicion;
-
+    @Inject
+    GestorDependenciaDAO gestorDependenciaDAO;
+    
     @Inject
     ProyectoController proyectoController;
 
@@ -50,45 +54,40 @@ public class DependenciaController implements Serializable {
 
     }
 
-    @PostConstruct
-    private void inicializar() {
-        dependenciaEnEdicion = new Dependencia();
-        activos = this.getActivos();
-
+    /**
+     * Añade un mensaje de error a la jeraquia de componetes de la página JSF
+     *
+     * @param mensaje
+     */
+    protected void anadirMensajeError(String mensaje) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
     }
 
-    public List<Activo> getActivos() {
-        Proyecto actual = proyectoController.getProyectoActual();
-        activos = activoDAO.buscarActivosProyecto(actual);
-        Activo seleccionado = arbolActivoController.getActivoActual();
-        for (int i = 0; i < activos.size(); i++) {
-            if (activos.get(i).getNombre().equals(seleccionado.getNombre())) {
-                activos.remove(i);
-            }
-        }
-        List<Dependencia> asociados = dependenciaDAO.buscarPorPrincipal(seleccionado);
-        for (int i = 0; i < activos.size(); i++) {
-            for (int j = 0; j < asociados.size(); j++) {
-                if (asociados.get(j).getActivoDependiente().getNombre().equals(activos.get(i).getNombre())) {
-                    activos.remove(i);
-                }
-            }
-        }
+    protected void anadirMensajeCorrecto(String mensaje) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+    }
 
-            return activos;
-        }
+    public String getNombre() {
+        return nombre;
+    }
 
-    public void setActivos(List<Activo> activos) {
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    
+    
+    public List<String> getActivos() {
+        activos = gestorDependenciaDAO.devolverPosiblesDependencias();
+        return activos;
+    }
+
+
+    public void setActivos(List<String> activos) {
         this.activos = activos;
     }
 
-    public Dependencia getDependenciaEnEdicion() {
-        return dependenciaEnEdicion;
-    }
-
-    public void setDependenciaEnEdicion(Dependencia dependenciaEnEdicion) {
-        this.dependenciaEnEdicion = dependenciaEnEdicion;
-    }
 
     public Activo getPrincipal() {
         return principal;
@@ -120,6 +119,42 @@ public class DependenciaController implements Serializable {
 
     public void setJustificante(String justificante) {
         this.justificante = justificante;
+    }
+
+    public String doGuardar() {
+        String destino;
+        if (grado == null) {
+            anadirMensajeError("No se ha indicado un grado para la dependencia");
+            destino = "dependencianueva.xhtml";
+        } else if (justificante.equals("")) {
+            anadirMensajeError("No se ha indicado una justificación");
+            destino = "dependencianueva.xhtml";
+        } else if (this.getActivos() == null) {
+            anadirMensajeError("No se pueden asignar una dpendencia");
+            destino = "dependencias.xhtml";
+        } else if (grado < 0 || grado > 100) {
+            anadirMensajeError("Tiene que introducir un grado entre 0 y 100");
+            destino = "dependencianueva.xhtml";
+        } else {
+            destino = "confirmardependencia.xhtml";
+        }
+        return destino;
+    }
+
+    public void guardarDependencia() throws IOException {
+        List<Activo> act = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+        for(int i=0;i<act.size();i++){
+            if(act.get(i).getNombre().equals(nombre)){
+                dependiente = act.get(i);
+            }
+        }
+        gestorDependenciaDAO.crearNuevaDependencia(justificante,grado,arbolActivoController.getActivoActual(),dependiente);
+        anadirMensajeCorrecto("La dependencia  ha sido guardado correctamente");
+        justificante = "";
+        grado = null;
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context.redirect("dependencias.xhtml");
     }
 
 }

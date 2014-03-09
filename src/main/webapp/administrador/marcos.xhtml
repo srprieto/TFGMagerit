@@ -15,7 +15,7 @@
     </ui:define>
     <ui:define name="sidebar1">  
         <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
-            <h:form id="frmMenu" prependId="false" >
+            <h:form id="frmMenu" prependId="false">
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
                         <p:menuitem value="#{msg.ATR}" actionListener="#{tablaMarcosController.atras1()}" />  
@@ -57,15 +57,17 @@
                                              update=":form:displayEdit, :growl" actionListener="#{tablaMarcosController.update()}"/>
                             <p:commandButton id="multiViewButton" value="#{msg.BOR}" icon="ui-icon-trash"  
                                              update=":form:displayMulti, :growl" actionListener="#{tablaMarcosController.eliminar()}"/>
+                            <p:commandButton id="multiFicheroButton" value="fichero" 
+                                             update=":form:displayFichero, :growl" actionListener="#{tablaMarcosController.fichero()}"/>
                         </div>
                     </f:facet> 
 
                 </p:dataTable>   
                 <p:dialog id="multiEditDialog" header="#{msg.ELI2}" widgetVar="multiMarcoEditDialog"  
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
-                    
+
                     <p:ajax event="close" listener="#{tablaMarcosController.cancelar()}"/> 
-                    
+
                     <div class="datalist-noborder">
                         <p:dataList id="displayEdit" value="#{tablaMarcosController.selectedMarcos}" type="none" var="selectedMarcoEdit">  
                             <p><h:outputLabel for="nombre" value="#{msg.NOM2}"  styleClass="negrita"/> 
@@ -73,9 +75,29 @@
 
                             <p><h:outputLabel for="descripcion" value="#{msg.DES2}"  styleClass="negrita"/> 
                                 <p:inputText id="descripcion" value="#{selectedMarcoEdit.descripcion}"/></p>
+                                
+                            
                         </p:dataList>  
                     </div>
                     <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaMarcosController.updateMarco()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" actionListener="#{tablaMarcosController.cancelar()}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>
+                
+                 <p:dialog id="multiUpdate" header="#{msg.ELI2}" widgetVar="multiUpdate"  
+                          height="200" width="500" showEffect="fade" hideEffect="explode">  
+
+                    <p:ajax event="close" listener="#{tablaMarcosController.cancelar()}"/> 
+
+                    <div class="datalist-noborder">
+                        <p:dataList id="displayFichero" value="#{tablaMarcosController.selectedMarcos}" type="none" var="selectedMarcoEdit">  
+                            <h:form id="form1"  enctype="multipart/form-data">  
+                                <h:panelGrid id="grid" columns="2" cellpadding="5"> 
+                                    <p:fileUpload value="#{ficherosController.file}" mode="simple"/>  
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dataList>  
+                    </div>
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaMarcosController.updateFichero()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" actionListener="#{tablaMarcosController.cancelar()}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 

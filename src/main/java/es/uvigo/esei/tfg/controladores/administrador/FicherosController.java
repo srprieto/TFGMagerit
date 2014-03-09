@@ -6,6 +6,7 @@
 
 package es.uvigo.esei.tfg.controladores.administrador;
 
+import java.io.File;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;  
@@ -23,11 +24,23 @@ import org.primefaces.model.UploadedFile;
 public class FicherosController implements Serializable{
     
 private UploadedFile file;  
+private String ruta;
   
     public UploadedFile getFile() {  
+        
         return file;  
     }  
-  
+
+    public String getRuta() {
+        File f = new File(file.getFileName()); 
+	ruta = f.getAbsolutePath();
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
+    
     public void setFile(UploadedFile file) {  
         this.file = file;  
     }  

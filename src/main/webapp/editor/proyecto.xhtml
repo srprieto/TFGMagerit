@@ -45,6 +45,8 @@
                                          update=":form:displayMulti, :growl" actionListener="#{arbolActivosController.eliminar()}"/>
                          <p:commandButton id="dependencias" value="#{msg.DEP}" icon="ui-icon-search"  
                                           update=":growl" actionListener="#{arbolActivosController.doDestino()}"/> 
+                         <p:commandButton id="valoracion" value="Valoración" icon="ui-icon-search"  
+                                          update=":growl" actionListener="#{arbolActivosController.valoracion()}"/>
                     </f:facet>  
                 </p:treeTable>
                 <p:dialog id="multiEditDialog" header="#{msg.EDI2}" widgetVar="multiEditDialog"  

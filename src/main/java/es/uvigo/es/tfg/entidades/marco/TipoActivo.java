@@ -3,6 +3,7 @@ package es.uvigo.es.tfg.entidades.marco;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +21,9 @@ public class TipoActivo implements Serializable {
     Long id;
     String abreviatura;
     String nombre;
-    String descripción;
+    @Column(length = 1000)
+    String descripcion;
+
     
     @ManyToOne
     MarcoTrabajo marcoTrabajo;
@@ -40,10 +43,10 @@ public class TipoActivo implements Serializable {
     public TipoActivo() {
     }
 
-    public TipoActivo(String abreviatura, String nombre, String descripción, MarcoTrabajo marcoTrabajo) {
+    public TipoActivo(String abreviatura, String nombre, String descripcion, MarcoTrabajo marcoTrabajo) {
         this.abreviatura = abreviatura;
         this.nombre = nombre;
-        this.descripción = descripción;
+        this.descripcion = descripcion;
         this.marcoTrabajo = marcoTrabajo;
     }
 
@@ -71,12 +74,12 @@ public class TipoActivo implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getDescripción() {
-        return descripción;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setDescripción(String descripción) {
-        this.descripción = descripción;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public MarcoTrabajo getMarcoTrabajo() {

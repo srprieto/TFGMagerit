@@ -383,6 +383,47 @@ public class ArbolActivosController implements Serializable {
             context.redirect("proyecto.xhtml");
         }
     }
+    
+    public void valoracion() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        int valor = 0;
+        if (selectedNodes == null) {
+            anadirMensajeError("Tienes que seleccionar al menos un activo para valorarlo");
+            context.redirect("proyecto.xhtml");
+            valor = 2;
+        } else {
+            int tamano = selectedNodes.length;
+            if (tamano != 1) {
+                valor = 3;
+            }
+            for (int i = 0; i < tamano; i++) {
+                if (selectedNodes[i].getParent().equals(root)) {
+                    valor = 1;
+                }
+            }
+        }
+        if (valor == 0) {
+            String builder;
+            TreeNode node = selectedNodes[0];
+            builder = node.getData().toString();
+            String[] separadas1 = builder.split(" ", 2);
+            builder = separadas1[1];
+            List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+            for (int j = 0; j < listanueva.size(); j++) {
+                if (listanueva.get(j).getNombre().equals(builder)) {
+                    activoActual = listanueva.get(j);
+                    context.redirect("valoraciones.xhtml");
+                }
+            }
+        } else if (valor == 1) {
+            anadirMensajeError("No puedes seleccionar un Tipo");
+            context.redirect("proyecto.xhtml");
+        } else if (valor == 3) {
+            anadirMensajeError("Solo puede seleccionar un activo para valorarlo");
+            context.redirect("proyecto.xhtml");
+        }
+    }
 
     public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();

@@ -20,7 +20,7 @@
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
                         <p:menuitem value="Atras" actionListener="#{tablaDependientesController.atras()}" />
-                        <p:menuitem value="Añadir Dependencia" url="dependencianueva.xhtml"/> 
+                        <p:menuitem value="Añadir valoracion" url="valoracionnueva.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -29,33 +29,27 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="No existen activos dependientes" var="dependiente" value="#{tablaDependientesController.dependienteModel}"  paginator="true" rows="10" selection="#{tablaDependientesController.selectedDependientes}">  
+                <p:dataTable id="Proyectos" emptyMessage="No existen valoraciones para el activo #{arbolActivosController.activoActual.nombre} en las dimensiones" 
+                             var="valoracion" value="#{tablaValoracionController.valoracionModel}"  paginator="true" rows="10" selection="#{tablaValoracionController.selectedValoraciones}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="Activo dependientes de: #{arbolActivosController.activoActual.nombre}"/>   
+                            <h:outputText value="Valoraciones del Activo #{arbolActivosController.activoActual.nombre}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
                     <p:column styleClass="tabla2" selectionMode="multiple"/> 
 
-                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.NOM1}">  
-                        <h:outputText value="#{dependiente.activoDependiente.nombre}" />    
+                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.NOM1} Dimension">  
+                        <h:outputText value="#{valoracion.dimension.nombre}" />    
                     </p:column> 
-                    
-                     <p:column id="grado" styleClass="tabla1" headerText="Grado">  
-                        <h:outputText value="#{dependiente.grado}" />    
+
+                    <p:column id="abreviatura" styleClass="tabla1" headerText="Valor">  
+                        <h:outputText value="#{valoracion.valor}" />    
                     </p:column> 
-                    
-                     <p:column id="justificante" styleClass="tabla1" headerText="Justificante">  
-                         <h:outputText value="#{dependiente.justificacion}" />    
-                    </p:column> 
-                    
 
                     <f:facet name="footer">  
                         <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
                                          update=":form:displayEdit, :growl" actionListener="#{tablaDependientesController.update()}"/>
-                        <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
-                                         update=":form:displayMulti, :growl" actionListener="#{tablaDependientesController.eliminar()}"/> 
                     </f:facet>
                 </p:dataTable> 
                 <p:dialog id="multiEditDialog" header="#{msg.EDI1}" widgetVar="multiEditDialog"  

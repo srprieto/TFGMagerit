@@ -5,6 +5,7 @@
  */
 package es.uvigo.esei.tfg.controladores.administrador;
 
+import es.uvigo.esei.tfg.logica.daos.CargadorCatalogoDAO;
 import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
 import java.io.IOException;
 import java.io.Serializable;
@@ -28,6 +29,8 @@ public class MarcosController implements Serializable {
 
     @Inject
     GestorMarcosDAO gestorMarcoDAO;
+
+   
 
     public MarcosController() {
 
@@ -83,7 +86,7 @@ public class MarcosController implements Serializable {
 
     public void doCrear() throws IOException {
         gestorMarcoDAO.crearNuevoMarco(nombre, descripcion);
-        anadirMensajeCorrecto("El marco de trabajo " +nombre+ " ha sido creado correctamente");
+        anadirMensajeCorrecto("El marco de trabajo " + nombre + " ha sido creado correctamente");
         nombre = "";
         descripcion = "";
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);

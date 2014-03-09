@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="crearmarco.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" url="dependencianueva.xhtml" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -26,11 +26,13 @@
     </ui:define>
     <ui:define name="content">
         <div class="tabla">
-            <h:form id="form" enctype="multipart/form-data">
+            <h:form id="form" >
                 <p:panel header="Confirmar datos">
-                    <p><h:outputText value="Nombre del Marco:&#160;#{marcosController.nombre}"/></p>
-                    <p><h:outputText value="Descripción del Marco:&#160;#{marcosController.descripcion}"/></p>
-                    <p:commandButton value="Guardar" ajax="false"  actionListener="#{marcosController.doCrear()}"/>
+                    <p><h:outputText value="Grado de la Dependencia:&#160;#{dependenciaController.grado}"/></p>
+                    <p><h:outputText value="Justificante de la Dependencia:&#160;#{dependenciaController.justificante}"/></p>
+                    <p><h:outputText value="Nombre Activo Dependiente:&#160;#{dependenciaController.nombre}"/></p>
+                    <p:commandButton value="Guardar" actionListener="#{dependenciaController.guardarDependencia()}"/>
+                    <p:commandButton value="Cancelar" action="dependencianueva.xhtml"/>
                 </p:panel>
             </h:form>  
         </div>

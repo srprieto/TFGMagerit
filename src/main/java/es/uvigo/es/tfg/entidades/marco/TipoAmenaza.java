@@ -3,6 +3,7 @@ package es.uvigo.es.tfg.entidades.marco;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +21,9 @@ public class TipoAmenaza implements Serializable {
     Long id;
     String abreviatura;
     String nombre;
+    @Column(length = 1000)
     String descripcion;
+
     String origen;
 
     @ManyToOne

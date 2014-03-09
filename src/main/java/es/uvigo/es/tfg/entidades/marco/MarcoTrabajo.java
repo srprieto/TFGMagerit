@@ -3,6 +3,7 @@ package es.uvigo.es.tfg.entidades.marco;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,9 @@ public class MarcoTrabajo implements Serializable {
 
     String nombre;
 
+    @Column(length = 1000)
     String descripcion;
+
 
     @Temporal(javax.persistence.TemporalType.DATE)
     Date fechaCreacion;

@@ -1,6 +1,7 @@
 package es.uvigo.es.tfg.entidades.marco;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +16,9 @@ public class Dimension implements Serializable {
     Long id;
     String abreviatura;
     String nombre;
+    @Column(length = 1000)
     String descripcion;
+
     
     @ManyToOne
     MarcoTrabajo marcoTrabajo;

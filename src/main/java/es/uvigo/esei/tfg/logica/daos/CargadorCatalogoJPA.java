@@ -30,11 +30,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnit;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -47,7 +50,7 @@ import javax.xml.bind.Unmarshaller;
 public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
 
 
-    // @PersistenceUnit // Cuando sea un EJB, se inyectarÃ¡, no se crearÃ¡ con EntityManagerFactory en inicializar()
+    @PersistenceUnit // Cuando sea un EJB, se inyectarÃ¡, no se crearÃ¡ con EntityManagerFactory en inicializar()
     private EntityManager em;
     
     private MageritExtension mageritExtension;
@@ -88,6 +91,7 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
     }
     
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void alamacenarElementos() {              
 
         for (Dimension dimension : tablaDimensiones.values()) {

@@ -27,7 +27,6 @@ private UploadedFile file;
 private String ruta;
   
     public UploadedFile getFile() {  
-        
         return file;  
     }  
 

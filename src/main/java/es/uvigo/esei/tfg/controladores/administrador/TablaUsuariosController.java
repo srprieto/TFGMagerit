@@ -11,7 +11,7 @@ package es.uvigo.esei.tfg.controladores.administrador;
  */
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.modelos.UsuarioModel;
-import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorUsuariosService;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,7 +39,7 @@ public class TablaUsuariosController implements Serializable {
     UsuarioDAO usuarioDAO;
 
     @Inject
-    GestorUsuariosDAO gestorDAO;
+    GestorUsuariosService gestorDAO;
 
     public TablaUsuariosController() {
 

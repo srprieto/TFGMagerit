@@ -10,7 +10,7 @@ import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
-import es.uvigo.esei.tfg.logica.daos.GestorActivoDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorActivoService;
 import es.uvigo.esei.tfg.logica.daos.GrupoActivosDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class ActivoController implements Serializable {
     TipoActivoDAO tipoActivoDAO;
 
     @Inject
-    GestorActivoDAO gestorActivoDAO;
+    GestorActivoService gestorActivoDAO;
 
     @Inject
     ProyectoController proyecto;

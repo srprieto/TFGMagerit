@@ -8,7 +8,7 @@ package es.uvigo.esei.tfg.controladores;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
-import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorUsuariosService;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -47,7 +47,7 @@ public class LoginController implements Serializable {
     Credenciales credenciales;
     
     @Inject
-    GestorUsuariosDAO gestorUsuariosDAO;
+    GestorUsuariosService gestorUsuariosDAO;
     
     public LoginController() {
     }

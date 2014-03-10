@@ -9,7 +9,7 @@ import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
-import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorProyectosService;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import java.io.IOException;
 import javax.inject.Named;
@@ -41,7 +41,7 @@ public class ProyectoController implements Serializable {
     private MarcoTrabajo marcoelegido;
 
     @Inject
-    GestorProyectosDAO gestorProyectosDAO;
+    GestorProyectosService gestorProyectosDAO;
 
     @Inject
     MarcoTrabajoDAO marcoTrabajoDAO;

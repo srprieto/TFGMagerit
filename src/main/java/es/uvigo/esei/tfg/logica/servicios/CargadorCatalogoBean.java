@@ -3,8 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
 import es.uvigo.es.tfg.entidades.marco.Dimension;
@@ -23,7 +22,6 @@ import es.uvigo.esei.tfg.logica.daos.xml.MageritExtension;
 import es.uvigo.esei.tfg.logica.daos.xml.ThreatType;
 import es.uvigo.esei.tfg.logica.daos.xml.ThreatsType;
 import java.io.File;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,12 +30,8 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -47,23 +41,21 @@ import javax.xml.bind.Unmarshaller;
  * @author Saul
  */
 @Stateless
-public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
+public class CargadorCatalogoBean implements CargadorCatalogoService {
 
-
-    @PersistenceUnit // Cuando sea un EJB, se inyectarÃ¡, no se crearÃ¡ con EntityManagerFactory en inicializar()
+    @PersistenceContext // Cuando sea un EJB, se inyectarÃƒÂ¡, no se crearÃƒÂ¡ con EntityManagerFactory en inicializar()
     private EntityManager em;
-    
+
     private MageritExtension mageritExtension;
-    
+
     private Map<String, Dimension> tablaDimensiones;
     private Map<String, CriterioValoracion> tablaCriterios;
     private Map<String, TipoActivo> tablaTiposActivos;
     private Map<String, TipoAmenaza> tablaTiposAmenazas;
     private Map<String, TipoSalvaguarda> tablaTiposSalvaguardas;
-     
-    @Override
-    public void inicializar() {
-        
+
+    private void inicializar() {
+
         // Tablas temporales
         tablaDimensiones = new HashMap<String, Dimension>();
         tablaCriterios = new HashMap<String, CriterioValoracion>();
@@ -73,44 +65,45 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void cargarRecurso(String localizacionRecurso, MarcoTrabajo marcoTrabajo) {
+        inicializar();
         try {
             JAXBContext context = JAXBContext.newInstance(MageritExtension.class);
             Unmarshaller um = context.createUnmarshaller();
             mageritExtension = (MageritExtension) um.unmarshal(new File(localizacionRecurso));
-            
+
             cargarDimensiones(marcoTrabajo);
             cargarCriterios(marcoTrabajo);
             cargarTiposActivos(marcoTrabajo);
             cargarTiposAmenazas(marcoTrabajo);
             cargarTiposSalvaguardas(marcoTrabajo);
-            
+
         } catch (JAXBException e) {
             System.out.println("Error cargando Catalogo MAGERIT desde " + localizacionRecurso);
         }
+        alamacenarElementos();
     }
-    
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void alamacenarElementos() {              
+
+    private void alamacenarElementos() {
 
         for (Dimension dimension : tablaDimensiones.values()) {
             em.persist(dimension);
         }
-        
+
         for (CriterioValoracion criterio : tablaCriterios.values()) {
             em.persist(criterio);
         }
-        
+
         for (TipoActivo tipoActivo : tablaTiposActivos.values()) {
             em.persist(tipoActivo);
         }
-        
+
         for (TipoAmenaza tipoAmenaza : tablaTiposAmenazas.values()) {
             em.persist(tipoAmenaza);
         }
     }
-    
+
     private void cargarDimensiones(MarcoTrabajo marcoTrabajo) {
         for (DimensionsType dimensiones : mageritExtension.getDimensions()) {
             for (DimensionType dimension : dimensiones.getDimension()) {
@@ -119,7 +112,7 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
             }
         }
     }
-    
+
     private void cargarCriterios(MarcoTrabajo marcoTrabajo) {
         for (CriteriaType criterios : mageritExtension.getCriteria()) {
             // Primer nivel define nombre de los criterios
@@ -136,7 +129,7 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
             }
         }
     }
-    
+
     private void cargarTiposActivos(MarcoTrabajo marcoTrabajo) {
         for (ClassesType clases : mageritExtension.getClasses()) {
             String etiquetaPadre = clases.getUnder();
@@ -149,7 +142,7 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
             }
         }
     }
-    
+
     private void cargarTipoActivoRecursivo(ClassType clase, TipoActivo tipoActivoPadre, MarcoTrabajo marcoTrabajo) {
         TipoActivo tipoActivo = new TipoActivo(clase.getCode(), clase.getName(), clase.getDescription(), marcoTrabajo);
         if (tipoActivoPadre != null) {
@@ -167,7 +160,7 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
             }
         }
     }
-    
+
     private void cargarTiposAmenazas(MarcoTrabajo marcoTrabajo) {
         for (ThreatsType threats : mageritExtension.getThreats()) {
             String etiquetaPadre = threats.getUnder();
@@ -180,7 +173,7 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
             }
         }
     }
-    
+
     private void cargarTipoAmenazaRecursivo(ThreatType threat, TipoAmenaza tipoAmenazaPadre, MarcoTrabajo marcoTrabajo) {
         TipoAmenaza tipoAmenaza = new TipoAmenaza(threat.getCode(), threat.getName(), threat.getDescription(), threat.getTho().name(), marcoTrabajo);
         if (tipoAmenazaPadre != null) {
@@ -209,7 +202,7 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
                 }
             }
         }
-        
+
         Set<String> activos = new HashSet<String>();
 
         // Vincular con activos
@@ -219,19 +212,17 @@ public class CargadorCatalogoJPA implements CargadorCatalogoDAO {
                 TipoActivo tipoActivo = tablaTiposActivos.get(refTipoActivo);
                 if (tipoActivo != null) {
                     activos.add(tipoActivo.getAbreviatura());
-                    
+
                     tipoAmenaza.anadirTipoActivo(tipoActivo);
                     tipoActivo.anadirTipoAmenaza(tipoAmenaza);
                 }
             }
         }
-      
+
     }
-    
+
     private void cargarTiposSalvaguardas(MarcoTrabajo marcoTrabajo) {
         // PENDIENTE
     }
-    
-    
-}
 
+}

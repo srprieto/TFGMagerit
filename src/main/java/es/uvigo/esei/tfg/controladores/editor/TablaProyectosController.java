@@ -13,7 +13,7 @@ import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.ProyectoModel;
-import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorProyectosService;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,7 +41,7 @@ public class TablaProyectosController implements Serializable {
     ProyectoDAO proyectoDAO;
 
     @Inject
-    GestorProyectosDAO gestorDAO;
+    GestorProyectosService gestorDAO;
 
     @Inject
     @LoggedIn

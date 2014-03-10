@@ -2,8 +2,8 @@ package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
-import es.uvigo.esei.tfg.logica.daos.CargadorCatalogoDAO;
-import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
+import es.uvigo.esei.tfg.logica.servicios.CargadorCatalogoService;
+import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,13 +30,13 @@ public class TablaMarcosController implements Serializable {
     MarcoTrabajoDAO marcoDAO;
 
     @Inject
-    GestorMarcosDAO gestorMarcoDAO;
+    GestorMarcosService gestorMarcoDAO;
 
     @Inject
     FicherosController ficherosController;
 
     @Inject
-    CargadorCatalogoDAO cargadorCatalogoDAO;
+    CargadorCatalogoService cargadorCatalogoDAO;
 
     public TablaMarcosController() {
 
@@ -151,12 +151,11 @@ public class TablaMarcosController implements Serializable {
             anadirMensajeError("Ya existe un marco con ese nombre");
         } else {
             marcoDAO.actualizar(seleccionado);
-
             anadirMensajeCorrecto("El marco ha sido modificado correctamente");
             RequestContext.getCurrentInstance().update("form");
         }
     }
-    public void fichero() {
+    public void fichero() throws IOException {
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
@@ -164,19 +163,13 @@ public class TablaMarcosController implements Serializable {
             anadirMensajeError("No ha seleccionado ningun marco");
         } else if (tamano != 1) {
             this.setSelectedMarcos(null);
-            anadirMensajeError("Solo puede seleccionar un marco para editarlo");
+            anadirMensajeError("Solo puede seleccionar un marco para cargar un fichero xml");
         } else {
-            RequestContext.getCurrentInstance().execute("multiUpdate.show();");
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.redirect("marcoxml.xhtml");
         }
     }
-    public void updateFichero() {
-        MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
-        MarcoTrabajo seleccionado = seleccionados[0];
-        cargadorCatalogoDAO.inicializar();
-        cargadorCatalogoDAO.cargarRecurso(ficherosController.getRuta(), seleccionado);
-        cargadorCatalogoDAO.alamacenarElementos();
-    }
-
+ 
     public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         this.setSelectedMarcos(null);
@@ -193,5 +186,4 @@ public class TablaMarcosController implements Serializable {
         this.setSelectedMarcos(null);
         context.redirect("indexadministrador.xhtml");
     }
-
 }

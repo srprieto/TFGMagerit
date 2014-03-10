@@ -5,8 +5,8 @@
  */
 package es.uvigo.esei.tfg.controladores.administrador;
 
-import es.uvigo.esei.tfg.logica.daos.CargadorCatalogoDAO;
-import es.uvigo.esei.tfg.logica.daos.GestorMarcosDAO;
+import es.uvigo.esei.tfg.logica.servicios.CargadorCatalogoService;
+import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
@@ -28,7 +28,7 @@ public class MarcosController implements Serializable {
     private String descripcion = "";
 
     @Inject
-    GestorMarcosDAO gestorMarcoDAO;
+    GestorMarcosService gestorMarcoDAO;
 
    
 

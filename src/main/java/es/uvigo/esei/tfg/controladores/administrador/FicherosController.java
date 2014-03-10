@@ -1,54 +1,66 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package es.uvigo.esei.tfg.controladores.administrador;
 
+import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.esei.tfg.logica.servicios.CargadorCatalogoService;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;  
-import javax.faces.context.FacesContext; 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 
 import org.primefaces.model.UploadedFile;
-/**
- *
- * @author Saul
- */
 
 @Named(value = "ficherosController")
 @SessionScoped
-public class FicherosController implements Serializable{
-    
-private UploadedFile file;  
-private String ruta;
-  
-    public UploadedFile getFile() {  
-        return file;  
-    }  
+public class FicherosController implements Serializable {
 
-    public String getRuta() {
-        File f = new File(file.getFileName()); 
-	ruta = f.getAbsolutePath();
-        return ruta;
+    private UploadedFile file;
+    
+    @Inject
+    TablaMarcosController tablaMarcosController;
+    
+    @Inject
+    CargadorCatalogoService cargadorCatalogoDAO;
+
+    public UploadedFile getFile() {
+        return file;
     }
 
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
+    public void setFile(UploadedFile file) {
+        this.file = file;
     }
-    
-    public void setFile(UploadedFile file) {  
-        this.file = file;  
-    }  
-  
-    public void upload() {  
-        if(file != null) {  
-            FacesMessage msg = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");  
-            FacesContext.getCurrentInstance().addMessage(null, msg);  
-        }  
-    }  
-}  
-          
+
+    public void upload() throws IOException {
+        if (file != null) {
+            File folder = new File("C:/Users/Saul/Downloads/uploads");
+            InputStream stream = file.getInputstream();
+            String prefix = FilenameUtils.getBaseName(file.getFileName());
+            String suffix = FilenameUtils.getExtension(file.getFileName());
+            File file1 = File.createTempFile(prefix + "-", "." + suffix, folder);
+            InputStream input = file.getInputstream();
+            OutputStream output = new FileOutputStream(file1);
+
+            try {
+                IOUtils.copy(input, output);
+            } finally {
+                IOUtils.closeQuietly(output);
+                IOUtils.closeQuietly(input);
+            }
+            MarcoTrabajo[] seleccionados = tablaMarcosController.getSelectedMarcos();
+            MarcoTrabajo seleccionado = seleccionados[0];
+            cargadorCatalogoDAO.cargarRecurso(file1.getAbsolutePath(), seleccionado);
+        }
+    }
+
+    private MarcoTrabajo[] getSelectedMarcos() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+}

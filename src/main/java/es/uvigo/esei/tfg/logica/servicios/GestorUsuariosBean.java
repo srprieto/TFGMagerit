@@ -1,19 +1,20 @@
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
+import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 
 /**
  *
  * @author Saul
  */
-
 @Stateless
-public class GestorUsuariosJPA implements GestorUsuariosDAO {
+public class GestorUsuariosBean implements GestorUsuariosService {
 
     @Inject
     UsuarioDAO usuarioDAO;
@@ -22,17 +23,35 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
     public boolean autenticarUsuario(String login, String passwordPlano) {
         Usuario usuario;
         boolean resultado = false;
-        
 
         usuario = usuarioDAO.buscarPorLogin(login);
         if (usuario != null) {
-            if (usuario.getPassword().equals(passwordPlano)) {
-                resultado = true;
-               
+            if (passwordPlano.equals("") && !usuario.getPassword().equals("")) {
+                resultado = false;
+            } else {
+                if (comprobarPassword(passwordPlano, usuario.getPassword()) == true) {
+                    resultado = true;
+                }
             }
         }
-
         return resultado;
+    }
+    
+    @Override
+    public boolean comprobarPassword(String passwordPlano, String passwordEncriptado) {
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        return (passwordEncryptor.checkPassword(passwordPlano, passwordEncriptado));
+    }
+    
+    @Override
+    public Usuario actualizarPassword(long idUsuario, String passwordPlano) {
+        Usuario usuario = usuarioDAO.buscarPorId(idUsuario);
+
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        String passwordEncriptado = passwordEncryptor.encryptPassword(passwordPlano);
+
+        usuario.setPassword(passwordEncriptado);
+        return usuarioDAO.actualizar(usuario);
     }
 
     @Override
@@ -43,10 +62,10 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
     @Override
     public void crearNuevoUsuario(String login, String password, TipoUsuario tipusu) {
         // Crear el usuario 
-        Usuario nuevo = new Usuario(login, password, tipusu, Calendar.getInstance().getTime(),null);
+        Usuario nuevo = new Usuario(login, password, tipusu, Calendar.getInstance().getTime(), Calendar.getInstance().getTime());
         usuarioDAO.crear(nuevo);
     }
-    
+
     @Override
     public void eliminarUsuario(Usuario usuario) {
         // Crear el usuario 
@@ -56,13 +75,6 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
     @Override
     public Usuario actualizarDatosCliente(Usuario datosUsuario) {
         return usuarioDAO.actualizar(datosUsuario);
-    }
-
-    @Override
-    public Usuario actualizarPassword(long idUsuario, String password) {
-        Usuario usuario = usuarioDAO.buscarPorId(idUsuario);
-        usuario.setPassword(password);
-        return usuarioDAO.actualizar(usuario);
     }
 
     @Override
@@ -76,21 +88,21 @@ public class GestorUsuariosJPA implements GestorUsuariosDAO {
     public boolean existeUsuario(String login) {
         return (usuarioDAO.buscarPorLogin(login) != null);
     }
-    
+
     @Override
-    public TipoUsuario tipoUsuario(String login){
+    public TipoUsuario tipoUsuario(String login) {
         Usuario usuario = usuarioDAO.buscarPorLogin(login);
         return usuario.getTipo();
-    
+
     }
-    
+
     @Override
-    public List<Usuario> usuario(){
+    public List<Usuario> usuario() {
         return usuarioDAO.usuario();
     }
-    
+
     @Override
-    public Long existeId (String nombre){
+    public Long existeId(String nombre) {
         Usuario principal = usuarioDAO.buscarPorLogin(nombre);
         return principal.getId();
     }

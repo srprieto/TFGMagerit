@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
@@ -16,7 +16,7 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface GestorUsuariosDAO {
+public interface GestorUsuariosService {
      public boolean autenticarUsuario(String login, String passwordPlano);
      public Usuario recuperarDatosUsuario(String login);
      public void crearNuevoUsuario(String login, String password, TipoUsuario tipusu);
@@ -28,4 +28,5 @@ public interface GestorUsuariosDAO {
      public void eliminarUsuario(Usuario usuario); 
      public List<Usuario> usuario();
      public Long existeId (String nombre);
+     boolean comprobarPassword(String passwordPlano, String passwordEncriptado);
 }

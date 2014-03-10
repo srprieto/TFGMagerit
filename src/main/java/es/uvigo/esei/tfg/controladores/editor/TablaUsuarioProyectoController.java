@@ -12,8 +12,8 @@ package es.uvigo.esei.tfg.controladores.editor;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.UsuarioModel;
-import es.uvigo.esei.tfg.logica.daos.GestorProyectosDAO;
-import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorProyectosService;
+import es.uvigo.esei.tfg.logica.servicios.GestorUsuariosService;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.IOException;
@@ -48,10 +48,10 @@ public class TablaUsuarioProyectoController implements Serializable {
     ProyectoController proyecto;
 
     @Inject
-    GestorUsuariosDAO gestorDAO;
+    GestorUsuariosService gestorDAO;
 
     @Inject
-    GestorProyectosDAO gestorProDAO;
+    GestorProyectosService gestorProDAO;
 
     @Inject
     @LoggedIn

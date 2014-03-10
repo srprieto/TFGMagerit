@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
@@ -16,7 +16,7 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface GestorActivoDAO {
+public interface GestorActivoService {
      void crearNuevoActivo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad,Proyecto proyecto, TipoActivo tipo, GrupoActivos grupo);
      Long existeId (String nombre);
      boolean existeActivo(String nombre);

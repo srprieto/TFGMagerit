@@ -14,7 +14,7 @@ import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
-import es.uvigo.esei.tfg.logica.daos.GestorActivoDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorActivoService;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import java.io.IOException;
 import java.io.Serializable;
@@ -62,7 +62,7 @@ public class ArbolActivosController implements Serializable {
     TipoActivoDAO tipoActivoDAO;
 
     @Inject
-    GestorActivoDAO gestorDAO;
+    GestorActivoService gestorDAO;
 
     public ArbolActivosController() {
 

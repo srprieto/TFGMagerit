@@ -4,11 +4,12 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
+import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ import javax.inject.Inject;
  * @author Saul
  */
 @Stateless
-public class GestorProyectosJPA implements GestorProyectosDAO {
+public class GestorProyectosBean implements GestorProyectosService {
 
     @Inject
     ProyectoDAO proyectoDAO;

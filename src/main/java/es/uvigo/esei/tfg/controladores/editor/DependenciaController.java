@@ -8,7 +8,7 @@ package es.uvigo.esei.tfg.controladores.editor;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
-import es.uvigo.esei.tfg.logica.daos.GestorDependenciaDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorDependenciaService;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -36,7 +36,7 @@ public class DependenciaController implements Serializable {
     private List<String> activos;
 
     @Inject
-    GestorDependenciaDAO gestorDependenciaDAO;
+    GestorDependenciaService gestorDependenciaDAO;
     
     @Inject
     ProyectoController proyectoController;

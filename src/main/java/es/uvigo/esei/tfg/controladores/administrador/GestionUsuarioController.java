@@ -8,7 +8,7 @@ package es.uvigo.esei.tfg.controladores.administrador;
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController;
-import es.uvigo.esei.tfg.logica.daos.GestorUsuariosDAO;
+import es.uvigo.esei.tfg.logica.servicios.GestorUsuariosService;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.IOException;
 import javax.inject.Named;
@@ -23,90 +23,87 @@ import javax.inject.Inject;
  *
  * @author Saul
  */
-
 @Named(value = "usuarioController")
 @SessionScoped
 public class GestionUsuarioController implements Serializable {
 
      // Atributos
-   
-    
     private TipoUsuario tipo1;
     private String login = "";
     private String password = "";
     private String password2 = "";
     private boolean nuevoUsuario = true;
-    
-    
+
     @Inject
-    GestorUsuariosDAO gestorUsuariosDAO;
-    
+    GestorUsuariosService gestorUsuariosService;
+
     @Inject
     UsuarioDAO usuarioDAO;
-    
-    @Inject
-    TablaUsuariosController tabla;
-    
-    @Inject @LoginController.LoggedIn Usuario usuarioActual;
-    
-    
-    public GestionUsuarioController() {
-        
-    }
-    
 
-     /**
+    @Inject
+    TablaUsuariosController tablaUsuariosController;
+
+    @Inject
+    @LoginController.LoggedIn
+    Usuario usuarioActual;
+
+    public GestionUsuarioController() {
+
+    }
+
+    /**
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
+     *
      * @param mensaje
      */
-    protected void anadirMensajeError(String mensaje){
+    protected void anadirMensajeError(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
     }
-    protected void anadirMensajeCorrecto(String mensaje){
+
+    protected void anadirMensajeCorrecto(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
-    
-    public String doUsuario(){
-        
-        String destino;
-         if (login.equals("")) {
-            anadirMensajeError("No se ha indicado un nombre de usuario");
-            destino= "crearusuario.xhtml";
-        } else if (password.equals("")) {
-            anadirMensajeError("No se ha indicado una contraseña");
-            destino= "crearusuario.xhtml";
-        } else if (password2.equals("")) {
-            anadirMensajeError("No se ha repetido la contraseña");
-            destino= "crearusuario.xhtml";
-        } else if (!password.equals(password2)) {
-            anadirMensajeError("Las contraseñas introducidas no coinciden");
-            destino= "crearusuario.xhtml";
-        } else if (gestorUsuariosDAO.existeUsuario(login)) {
-            anadirMensajeError("El nombre de usuario " + login + " ya existe");
-            destino= "crearusuario.xhtml";
-        }else {
-             destino= "confirmarusuario.xhtml";
-        }
-         return destino;
-    }
-    
-    public void doCrearUsuario() throws IOException {
-        gestorUsuariosDAO.crearNuevoUsuario(login, password, tipo1);
-        anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
-        login="";
-        password="";
-        tipo1=null;
+
+    public void doUsuario() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        tabla.setSelectedUsuarios(null);
+
+        if (login.equals("")) {
+            anadirMensajeError("No se ha indicado un nombre de usuario");
+            context.redirect("crearusuario.xhtml");
+        } else if (password.equals("")) {
+            anadirMensajeError("No se ha indicado una contraseña");
+            context.redirect("crearusuario.xhtml");
+        } else if (password2.equals("")) {
+            anadirMensajeError("No se ha repetido la contraseña");
+            context.redirect("crearusuario.xhtml");
+        } else if (!password.equals(password2)) {
+            anadirMensajeError("Las contraseñas introducidas no coinciden");
+            context.redirect("crearusuario.xhtml");
+        } else if (gestorUsuariosService.existeUsuario(login)) {
+            anadirMensajeError("El nombre de usuario " + login + " ya existe");
+            context.redirect("crearusuario.xhtml");
+        } else {
+            context.redirect("confirmarusuario.xhtml");
+        }
+    }
+
+    public void doCrearUsuario() throws IOException {
+        gestorUsuariosService.crearNuevoUsuario(login, password, tipo1);
+        anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
+        login = "";
+        password = "";
+        tipo1 = null;
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        tablaUsuariosController.setSelectedUsuarios(null);
         context.redirect("usuarios.xhtml");
     }
-    
+
     public String doActualizarUsuario() {
         String destino = null;
-
         if (password.equals("")) {
             anadirMensajeError("No se ha indicado una contraseña");
         } else if (password2.equals("")) {
@@ -114,25 +111,23 @@ public class GestionUsuarioController implements Serializable {
         } else if (!password.equals(password2)) {
             anadirMensajeError("Las contraseñas introducidas no coinciden");
         } else {
-            gestorUsuariosDAO.actualizarPassword(usuarioActual.getId(), password);
-            gestorUsuariosDAO.actualizarDatosCliente(usuarioActual);
+            gestorUsuariosService.actualizarPassword(usuarioActual.getId(), password);
+            gestorUsuariosService.actualizarDatosCliente(usuarioActual);
             destino = "usuario.actualizado";
         }
         return destino;
     }
-    
-   
-    
+
     public String doCancelarModificacionUsuario() {
         String destino;
         if (nuevoUsuario) {
             // Anular los datos del nuevo cliente no guardado
             usuarioActual = null;
-           
+
         } else {
             // Recuperar los datos originales del cliente
-            usuarioActual = gestorUsuariosDAO.recuperarDatosUsuario(usuarioActual.getLogin()); // El login nunca se edita
-            
+            usuarioActual = gestorUsuariosService.recuperarDatosUsuario(usuarioActual.getLogin()); // El login nunca se edita
+
         }
         destino = "usuario.cancelado";
         return destino;
@@ -144,7 +139,7 @@ public class GestionUsuarioController implements Serializable {
         password2 = password;
         return "usuario.perfil";
     }
-   
+
     // Metodos get y set
     public Usuario getUsuarioActual() {
         return usuarioActual;
@@ -185,12 +180,20 @@ public class GestionUsuarioController implements Serializable {
     public void setNuevoUsuario(boolean nuevoUsuario) {
         this.nuevoUsuario = nuevoUsuario;
     }
-    
-     public TipoUsuario getTipo() {
+
+    public TipoUsuario getTipo() {
         return tipo1;
     }
 
     public void setTipo(TipoUsuario tipo1) {
         this.tipo1 = tipo1;
+    }
+    
+    public void atras() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        login = "";
+        password = "";
+        tipo1 = null;
+        context.redirect("crearusuario.xhtml");
     }
 }

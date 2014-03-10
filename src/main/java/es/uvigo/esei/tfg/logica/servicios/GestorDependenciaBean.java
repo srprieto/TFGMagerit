@@ -4,13 +4,15 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.esei.tfg.controladores.editor.ArbolActivosController;
 import es.uvigo.esei.tfg.controladores.editor.ProyectoController;
+import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -21,7 +23,7 @@ import javax.inject.Inject;
  * @author Saul
  */
 @Stateless
-public class GestorDependenciaJPA implements GestorDependenciaDAO {
+public class GestorDependenciaBean implements GestorDependenciaService {
 
     @Inject
     DependenciaDAO dependenciaDAO;

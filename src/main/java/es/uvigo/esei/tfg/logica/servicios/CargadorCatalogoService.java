@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import javax.ejb.Local;
@@ -13,10 +13,10 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface CargadorCatalogoDAO {
+public interface CargadorCatalogoService {
 
-    public void inicializar();
+//    public void inicializar();
     public void cargarRecurso(String localizacionRecurso, MarcoTrabajo marcoTrabajo);
-    public void alamacenarElementos();
+//    public void alamacenarElementos();
 
 }

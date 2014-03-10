@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -15,7 +16,7 @@ import javax.inject.Inject;
  * @author Saul
  */
 @Stateless
-public class GestorMarcosJPA implements GestorMarcosDAO {
+public class GestorMarcosBean implements GestorMarcosService {
 
    @Inject
     MarcoTrabajoDAO marcoDAO;

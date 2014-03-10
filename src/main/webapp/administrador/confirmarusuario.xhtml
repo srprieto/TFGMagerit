@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="crearusuario.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{usuarioController.atras()}" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -27,11 +27,11 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form" >
-                <p:panel header="Confirmar datos">
-                    <p><h:outputText value="Login del Usuario:&#160;#{usuarioController.login}"/></p>
-                    <p><h:outputText value="Tipo de Usuario:&#160;#{usuarioController.tipo}"/></p>
-                    <p:commandButton value="Guardar" actionListener="#{usuarioController.doCrearUsuario()}"/>
-                    <p:commandButton value="Cancelar" action="crearusuario.xhtml"/>
+                <p:panel header="#{msg.CON}">
+                    <p><h:outputText value="#{msg.LOG2}&#160;#{usuarioController.login}"/></p>
+                    <p><h:outputText value="#{msg.TIP2}&#160;#{usuarioController.tipo}"/></p>
+                    <p:commandButton value="#{msg.GUA}" ajax="false" actionListener="#{usuarioController.doCrearUsuario()}"/>
+                    <p:commandButton value="#{msg.CAN}" actionListener="#{usuarioController.atras()}"/>
                 </p:panel>
             </h:form>  
         </div>

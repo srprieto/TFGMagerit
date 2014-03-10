@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
@@ -17,7 +17,7 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface GestorProyectosDAO {
+public interface GestorProyectosService {
     public void crearNuevoProyecto(String nombre, String descripcion, MarcoTrabajo marcoTrabajo, Usuario creador);
     public boolean existeProyecto(String nombre);
     public Long existeId (String nombre);

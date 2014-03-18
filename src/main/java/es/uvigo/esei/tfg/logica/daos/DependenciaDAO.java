@@ -17,8 +17,8 @@ import javax.ejb.Local;
 @Local
 public interface DependenciaDAO extends GenericoDAO<Dependencia> {
 
-    public List<Dependencia> buscarTodos();
-
-    public List<Dependencia> buscarPorPrincipal(Activo activoPrincipal);
+    List<Dependencia> buscarTodos();
+    List<Dependencia> buscarporDependiente(Activo activoDependiente);
+    List<Dependencia> buscarPorPrincipal(Activo activoPrincipal);
 
 }

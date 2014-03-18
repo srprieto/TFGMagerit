@@ -6,17 +6,23 @@
 package es.uvigo.esei.tfg.controladores.editor;
 
 import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
+import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
+import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorActivoService;
 import es.uvigo.esei.tfg.logica.daos.GrupoActivosDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.ValoracionDAO;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -37,6 +43,8 @@ public class ActivoController implements Serializable {
     private List<TipoActivo> tiposActivos;
     private List<CriterioValoracion> valorBase;
     private List<GrupoActivos> grupoActivos;
+
+    private String nombreGrupo;
     private String codigo;
     private String nombre;
     private String descripcion;
@@ -52,13 +60,19 @@ public class ActivoController implements Serializable {
     TipoActivoDAO tipoActivoDAO;
 
     @Inject
-    GestorActivoService gestorActivoDAO;
+    GestorActivoService gestorActivoService;
 
     @Inject
-    ProyectoController proyecto;
+    ProyectoController proyectoController;
 
     @Inject
     GrupoActivosDAO grupoActivoDAO;
+
+    @Inject
+    DependenciaDAO dependenciaDAO;
+
+    @Inject
+    ValoracionDAO valoracionDAO;
 
     public ActivoController() {
 
@@ -68,7 +82,7 @@ public class ActivoController implements Serializable {
     private void inicializar() {
         activoEnEdicion = new Activo();
         tiposActivos = tipoActivoDAO.buscarTodos();
-        grupoActivos = grupoActivoDAO.buscarTodos();
+
     }
 
     /**
@@ -84,6 +98,14 @@ public class ActivoController implements Serializable {
     protected void anadirMensajeCorrecto(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+    }
+
+    public String getNombreGrupo() {
+        return nombreGrupo;
+    }
+
+    public void setNombreGrupo(String nombreGrupo) {
+        this.nombreGrupo = nombreGrupo;
     }
 
     public String getCodigo() {
@@ -166,10 +188,6 @@ public class ActivoController implements Serializable {
         this.valorBase = valorBase;
     }
 
-    public List<GrupoActivos> getGrupoActivos() {
-        return grupoActivos;
-    }
-
     public void setGrupoActivos(List<GrupoActivos> grupoActivos) {
         this.grupoActivos = grupoActivos;
     }
@@ -188,26 +206,29 @@ public class ActivoController implements Serializable {
         } else if (responsable.equals("")) {
             anadirMensajeError("No se ha indicado un responsable para el activo");
             destino = "crearactivo.xhtml";
+        } else if (nombreGrupo.equals("")) {
+            anadirMensajeError("No se ha indicado un grupo para el activo, si no existe uno puede crear uno nuevo");
+            destino = "crearactivo.xhtml";
         } else {
             int valor = 1;
-            List <Activo> lista = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
-            for(int i = 0;i<lista.size();i++){
-                if(lista.get(i).getNombre().equals(nombre)){
-                     valor=0;
+            List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+            for (int i = 0; i < lista.size(); i++) {
+                if (lista.get(i).getNombre().equals(nombre)) {
+                    valor = 0;
                 }
             }
             StringBuilder sb = new StringBuilder();
             for (int x = 0; x < codigo.length(); x++) {
                 if (codigo.charAt(x) != ' ') {
                     sb.append(codigo.charAt(x));
-                }else{
+                } else {
                     sb.append("_");
                 }
             }
             setCodigo(sb.toString());
-            if(valor==1){
+            if (valor == 1) {
                 destino = "confirmaractivo.xhtml";
-            }else{
+            } else {
                 anadirMensajeError("Ya existe un Activo con ese nombre");
                 destino = "crearactivo.xhtml";
             }
@@ -216,16 +237,114 @@ public class ActivoController implements Serializable {
     }
 
     public void guardarActivo() throws IOException {
-        gestorActivoDAO.crearNuevoActivo(codigo, nombre, descripcion, responsable, propietario, ubicacion, null, cantidad, proyecto.getProyectoActual(), activoEnEdicion.getTipoActivo(), activoEnEdicion.getGrupoActivos());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        gestorActivoService.crearNuevoActivo(codigo, nombre, descripcion, responsable, propietario, ubicacion, null, cantidad, proyectoController.getProyectoActual(), activoEnEdicion.getTipoActivo(), grupoActivoDAO.buscarPorNombre(nombreGrupo));
         anadirMensajeCorrecto("El Activo " + nombre + " ha sido guardado correctamente");
         nombre = "";
         descripcion = "";
         codigo = "";
         responsable = "";
-        ubicacion ="";
+        ubicacion = "";
         cantidad = null;
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        context.redirect("proyecto.xhtml");
+        nombreGrupo = "";
+        context.redirect("activos.xhtml");
     }
+
+    public List<String> getGrupoActivos() {
+        grupoActivos = grupoActivoDAO.buscarTodos();
+        List<String> grupos = new ArrayList<>();
+        for (int i = 0; i < grupoActivos.size(); i++) {
+            grupos.add(grupoActivos.get(i).getNombre());
+        }
+
+        return grupos;
+    }
+
+    public List<Valoracion> getModeloValor() {
+        //buscar activos superiores
+        List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+        List<Valoracion> resultado = new ArrayList<>();
+        List<Valoracion> valores = new ArrayList<>();
+        List<Valoracion> depen = new ArrayList<>();
+        List<Valoracion> provisional = new ArrayList<>();
+        for (int x = 0; x < activos.size(); x++) {
+            Activo activo = activoDAO.buscarPorNombre(activos.get(x).getNombre());
+            List<Dependencia> superior = dependenciaDAO.buscarporDependiente(activo);
+            if (superior.isEmpty()) {
+                valores = valoracionDAO.buscarPorActivo(activo);
+                for (int i = 0; i < valores.size(); i++) {
+                    resultado.add(valores.get(i));
+                }
+            } else {
+                valores = valoracionDAO.buscarPorActivo(activo);
+                if (valores.isEmpty()) {
+                    for (int j = 0; j < superior.size(); j++) {
+                        if (superior.get(j).getGrado() > 20) {
+                            Activo principal = superior.get(j).getActivoPrincipal();
+                            depen = valoracionDAO.buscarPorActivo(principal);
+                            for (int z = 0; z < depen.size(); z++) {
+                                Valoracion valorNuevo = new Valoracion();
+                                valorNuevo.setDimension(depen.get(z).getDimension());
+                                valorNuevo.setActivo(activo);
+                                valorNuevo.setValor(depen.get(z).getValor());
+                                provisional.add(valorNuevo);
+                            }
+                        }
+                    }
+                    for (int s = 0; s < provisional.size(); s++) {
+                        Valoracion inicial = provisional.get(s);
+
+                        for (int f = s + 1; f < provisional.size(); f++) {
+                            if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
+                                inicial.setValor(provisional.get(f).getValor());
+                                provisional.remove(f);
+                                f--;
+                            } else if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() >= provisional.get(f).getValor()) {
+                                provisional.remove(f);
+                                f--;
+                            }
+                        }
+                        resultado.add(inicial);
+                    }
+                    provisional.clear();
+                } else {
+                    for (int r = 0; r < valores.size(); r++) {
+
+                    }
+                    for (int j = 0; j < superior.size(); j++) {
+                        if (superior.get(j).getGrado() > 20) {
+                            Activo principal = superior.get(j).getActivoPrincipal();
+                            depen = valoracionDAO.buscarPorActivo(principal);
+                            for (int z = 0; z < depen.size(); z++) {
+                                Valoracion valorNuevo = new Valoracion();
+                                valorNuevo.setDimension(depen.get(z).getDimension());
+                                valorNuevo.setActivo(activo);
+                                valorNuevo.setValor(depen.get(z).getValor());
+                                provisional.add(valorNuevo);
+                            }
+                        }
+                    }
+                    for (int s = 0; s < provisional.size(); s++) {
+                        Valoracion inicial = provisional.get(s);
+
+                        for (int f = s + 1; f < provisional.size(); f++) {
+                            if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
+                                inicial.setValor(provisional.get(f).getValor());
+                                provisional.remove(f);
+                                f--;
+                            } else if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() >= provisional.get(f).getValor()) {
+                                provisional.remove(f);
+                                f--;
+                            }
+                        }
+                        resultado.add(inicial);
+                    }
+                    provisional.clear();
+                }
+            }
+        }
+        return resultado;
+    }
+
 }

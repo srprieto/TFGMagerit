@@ -10,7 +10,7 @@ template="/templates/plantilla.xhtml">
 <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
 <ui:define name="sidebar">
     <h:form id="logout">
-        <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+        <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
     </h:form>
 </ui:define>
 <ui:define name="sidebar1">  
@@ -27,14 +27,14 @@ template="/templates/plantilla.xhtml">
 <ui:define name="content">
 <div class="tabla">
 <h:form id="form">
-    <p:panel header="Crear Proyecto">
+    <p:panel header="#{msg.CRE2}">
         <h:panelGrid id="grid" columns="2" cellpadding="5"> 
             
-            <h:outputLabel for="nombre" value="#{msg.NOM}"  styleClass="negrita"/>                      
+            <h:outputLabel for="nombre" value="#{msg.NOM2}"  styleClass="negrita"/>                      
             <p:inputText id="nombre" value="#{proyectoController.nombre}"/>  
               
   
-            <h:outputLabel for="descripcion" value="#{msg.DES}" styleClass="negrita"/>                      
+            <h:outputLabel for="descripcion" value="#{msg.DES2}" styleClass="negrita"/>                      
             <p:inputText id="descripcion" value="#{proyectoController.descripcion}"/>
                           
             <h:outputLabel for="marco" value="#{msg.MAR}"  styleClass="negrita"/>                     

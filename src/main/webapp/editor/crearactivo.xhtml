@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" update="form" url="proyecto.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" url="activos.xhtml" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -28,13 +28,12 @@
         <div class="tabla">
             <h:form id="form">  
 
-                <p:panel id="panel" header="Nuevo activo" style="margin-bottom:10px;">  
-                    <p:messages id="messages" />  
+                <p:panel id="panel" header="#{msg.NUE}" style="margin-bottom:10px;">  
 
                     <h:panelGrid columns="2">  
                         <h:outputLabel for="codigo" value="#{msg.COD}" />  
                         <p:inputText id="codigo" value="#{activoController.codigo}"  label="Codigo"/> 
-                        
+
 
                         <h:outputLabel for="nombre" value="#{msg.NOM}" />  
                         <p:inputText id="nombre" value="#{activoController.nombre}"  label="Nombre"/>    
@@ -57,18 +56,19 @@
                             <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
                         </h:selectOneMenu>  
 
-                        <h:outputLabel for="grupo" value="#{msg.GRU}" />  
-                        <h:selectOneMenu id="grupo" value="#{activoController.activoEnEdicion.grupoActivos}" converter="omnifaces.SelectItemsConverter" >  
-                            <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
+                        <h:outputLabel for="grupo" value="#{msg.GRU3}" />  
+                        <h:selectOneMenu id="grupo" value="#{activoController.nombreGrupo}" converter="omnifaces.SelectItemsConverter" >  
+                            <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
                         </h:selectOneMenu>  
 
-                        <p:commandButton value="#{msg.NG}" /><br/>
+                        <p:commandButton value="#{msg.NG}" action="nuevogrupo.xhtml"/><br/>
 
-                        <h:outputText value="(*) Campos obligatorios" />  
+                        <h:outputText value="#{msg.OBL}" />  
                     </h:panelGrid>  
+
+                    <p:commandButton update=" :growl" action="#{activoController.doGuargar()}" value="#{msg.GUA}" /> 
+                    <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
                 </p:panel>  
-                <p:commandButton update=" :growl" action="#{activoController.doGuargar()}" value="#{msg.GUA}" /> 
-                <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
             </h:form>  
         </div>
         <p:growl id="growl" life="3000" />

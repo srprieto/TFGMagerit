@@ -28,10 +28,10 @@
         <div class="tabla">
             <h:form id="form" >
                 <p:panel header="#{msg.CON}">
-                    <p><h:outputText value="#{msg.NOM7}&#160;#{proyectoController.nombre}"/></p>
-                    <p><h:outputText value="#{msg.DES5}&#160;#{proyectoController.descripcion}"/></p>
-                    <p><h:outputText value="#{msg.MAR3}&#160;#{proyectoController.proyectoEnEdicion.marcoTrabajo.nombre}"/></p>
-                    <p:commandButton value="#{msg.GUA}" actionListener="#{proyectoController.doCrearProyecto()}"/>
+                    <p><h:outputText value="#{msg.VAL}&#160;#{valoracionController.valor}"/></p>
+                    <p><h:outputText value="#{msg.DIM}&#160;#{valoracionController.nomDimension}"/></p>
+                    <p><h:outputText value="#{msg.JUS3}&#160;#{valoracionController.justificacion}"/></p>
+                    <p:commandButton value="#{msg.GUA}" actionListener="#{valoracionController.doCrear()}"/>
                     <p:commandButton value="#{msg.CAN}" action="crearusuario.xhtml"/>
                 </p:panel>
             </h:form>  

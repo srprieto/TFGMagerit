@@ -14,7 +14,7 @@ import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
-import es.uvigo.esei.tfg.logica.servicios.GestorActivoService;
+import es.uvigo.esei.tfg.logica.daos.GrupoActivosDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import java.io.IOException;
 import java.io.Serializable;
@@ -45,12 +45,14 @@ public class ArbolActivosController implements Serializable {
     private String propietario;
     private String ubicacion;
     private Long cantidad;
+    private String nombreGrupo;
+    
 
     private TipoActivo tiposActivos;
     private GrupoActivos grupoActivos;
 
     @Inject
-    ProyectoController proyecto;
+    ProyectoController proyectoController;
 
     @Inject
     TablaProyectosController tablaProyectoController;
@@ -60,17 +62,18 @@ public class ArbolActivosController implements Serializable {
 
     @Inject
     TipoActivoDAO tipoActivoDAO;
-
+    
     @Inject
-    GestorActivoService gestorDAO;
-
+    GrupoActivosDAO grupoActivosDAO;
+   
+            
     public ArbolActivosController() {
 
     }
 
     public TreeNode getRoot() {
         root = new DefaultTreeNode("root", null);
-        Proyecto actual = proyecto.getProyectoActual();
+        Proyecto actual = proyectoController.getProyectoActual();
         List<TipoActivo> tipos = new ArrayList<>();
         List<Activo> activos = activoDAO.buscarActivosProyecto(actual);
         int tamano = activos.size();
@@ -91,6 +94,14 @@ public class ArbolActivosController implements Serializable {
 
         }
         return root;
+    }
+
+    public String getNombreGrupo() {
+        return nombreGrupo;
+    }
+
+    public void setNombreGrupo(String nombreGrupo) {
+        this.nombreGrupo = nombreGrupo;
     }
 
     public TipoActivo getTiposActivos() {
@@ -227,7 +238,7 @@ public class ArbolActivosController implements Serializable {
             builder = node.getData().toString();
             String[] separadas1 = builder.split(" ", 2);
             builder = separadas1[1];
-            List<Activo> lista = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+            List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
             for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getNombre().equals(builder)) {
                     Activo seleccionado = lista.get(i);
@@ -274,7 +285,7 @@ public class ArbolActivosController implements Serializable {
             builder = node.getData().toString();
             String[] separadas1 = builder.split(" ", 2);
             builder = separadas1[1];
-            List<Activo> lista = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+            List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
             for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getNombre().equals(builder)) {
                     Activo seleccionado = lista.get(i);
@@ -302,7 +313,7 @@ public class ArbolActivosController implements Serializable {
         builder = node.getData().toString();
         String[] separadas1 = builder.split(" ", 2);
         builder = separadas1[1];
-        List<Activo> lista = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+        List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).getNombre().equals(builder)) {
                 Activo seleccionado = lista.get(i);
@@ -317,7 +328,7 @@ public class ArbolActivosController implements Serializable {
                     anadirMensajeError("Tienes que introducir un responsable para el activo");
                 } else {
                     int valor = 1;
-                    List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+                    List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
                     for (int j = 0; j < listanueva.size(); j++) {
                         if (listanueva.get(j).getNombre().equals(nombre)) {
                             valor = 0;
@@ -333,7 +344,7 @@ public class ArbolActivosController implements Serializable {
                         seleccionado.setResponsable(responsable);
                         seleccionado.setUbicacion(ubicacion);
                         seleccionado.setTipoActivo(tiposActivos);
-                        seleccionado.setGrupoActivos(grupoActivos);
+                        seleccionado.setGrupoActivos(grupoActivosDAO.buscarPorNombre(nombreGrupo));
                         activoDAO.actualizar(seleccionado);
                         anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
                         RequestContext.getCurrentInstance().update("form");
@@ -349,7 +360,7 @@ public class ArbolActivosController implements Serializable {
         int valor = 0;
         if (selectedNodes == null) {
             anadirMensajeError("Tienes que seleccionar al menos un activo para editarlo");
-            context.redirect("proyecto.xhtml");
+            context.redirect("activos.xhtml");
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -368,7 +379,7 @@ public class ArbolActivosController implements Serializable {
             builder = node.getData().toString();
             String[] separadas1 = builder.split(" ", 2);
             builder = separadas1[1];
-            List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+            List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
             for (int j = 0; j < listanueva.size(); j++) {
                 if (listanueva.get(j).getNombre().equals(builder)) {
                     activoActual = listanueva.get(j);
@@ -377,20 +388,20 @@ public class ArbolActivosController implements Serializable {
             }
         } else if (valor == 1) {
             anadirMensajeError("No puedes seleccionar un Tipo");
-            context.redirect("proyecto.xhtml");
+            context.redirect("activos.xhtml");
         } else if (valor == 3) {
             anadirMensajeError("Solo puede seleccionar un activo para editarlo");
-            context.redirect("proyecto.xhtml");
+            context.redirect("activos.xhtml");
         }
     }
-    
+
     public void valoracion() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         int valor = 0;
         if (selectedNodes == null) {
             anadirMensajeError("Tienes que seleccionar al menos un activo para valorarlo");
-            context.redirect("proyecto.xhtml");
+            context.redirect("activos.xhtml");
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -409,7 +420,7 @@ public class ArbolActivosController implements Serializable {
             builder = node.getData().toString();
             String[] separadas1 = builder.split(" ", 2);
             builder = separadas1[1];
-            List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyecto.getProyectoActual());
+            List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
             for (int j = 0; j < listanueva.size(); j++) {
                 if (listanueva.get(j).getNombre().equals(builder)) {
                     activoActual = listanueva.get(j);
@@ -418,10 +429,51 @@ public class ArbolActivosController implements Serializable {
             }
         } else if (valor == 1) {
             anadirMensajeError("No puedes seleccionar un Tipo");
-            context.redirect("proyecto.xhtml");
+            context.redirect("activos.xhtml");
         } else if (valor == 3) {
             anadirMensajeError("Solo puede seleccionar un activo para valorarlo");
-            context.redirect("proyecto.xhtml");
+            context.redirect("activos.xhtml");
+        }
+    }
+    
+    public void amenazas() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        int valor = 0;
+        if (selectedNodes == null) {
+            anadirMensajeError("Tienes que seleccionar al menos un activo para valorarlo");
+            context.redirect("activos.xhtml");
+            valor = 2;
+        } else {
+            int tamano = selectedNodes.length;
+            if (tamano != 1) {
+                valor = 3;
+            }
+            for (int i = 0; i < tamano; i++) {
+                if (selectedNodes[i].getParent().equals(root)) {
+                    valor = 1;
+                }
+            }
+        }
+        if (valor == 0) {
+            String builder;
+            TreeNode node = selectedNodes[0];
+            builder = node.getData().toString();
+            String[] separadas1 = builder.split(" ", 2);
+            builder = separadas1[1];
+            List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+            for (int j = 0; j < listanueva.size(); j++) {
+                if (listanueva.get(j).getNombre().equals(builder)) {
+                    activoActual = listanueva.get(j);
+                    context.redirect("amenazas.xhtml");
+                }
+            }
+        } else if (valor == 1) {
+            anadirMensajeError("No puedes seleccionar un Tipo");
+            context.redirect("activos.xhtml");
+        } else if (valor == 3) {
+            anadirMensajeError("Solo puede seleccionar un activo para valorarlo");
+            context.redirect("activos.xhtml");
         }
     }
 

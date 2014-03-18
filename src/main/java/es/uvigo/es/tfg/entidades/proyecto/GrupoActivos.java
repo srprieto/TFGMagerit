@@ -1,4 +1,3 @@
-
 package es.uvigo.es.tfg.entidades.proyecto;
 
 import java.io.Serializable;
@@ -13,15 +12,16 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class GrupoActivos implements Serializable {
-     @Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-     
-     String abreviatura;
-     String nombre;
-     
-     @OneToMany(mappedBy = "grupoActivos")
-     Set<Activo> activos;
+
+    String abreviatura;
+    String nombre;
+
+    @OneToMany(mappedBy = "grupoActivos")
+    Set<Activo> activos;
 
     public GrupoActivos() {
     }
@@ -62,12 +62,12 @@ public class GrupoActivos implements Serializable {
     public void setActivos(Set<Activo> activos) {
         this.activos = activos;
     }
-     
+
     public void anadirActivo(Activo activo) {
         if (activos == null) {
             activos = new HashSet<Activo>();
         }
         activo.setGrupoActivos(this);
         activos.add(activo);
-    }     
+    }
 }

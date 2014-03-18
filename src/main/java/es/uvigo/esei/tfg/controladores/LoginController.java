@@ -47,7 +47,7 @@ public class LoginController implements Serializable {
     Credenciales credenciales;
     
     @Inject
-    GestorUsuariosService gestorUsuariosDAO;
+    GestorUsuariosService gestorUsuariosService;
     
     public LoginController() {
     }
@@ -64,7 +64,7 @@ public class LoginController implements Serializable {
     public String doLogin() {
         String destino;
         TipoUsuario tipo;
-        List<Usuario> results = gestorUsuariosDAO.usuario();
+        List<Usuario> results = gestorUsuariosService.usuario();
         if(!results.isEmpty()){
             usuarioActual = results.get(0);
         }
@@ -89,7 +89,7 @@ public class LoginController implements Serializable {
     
     
     public void doLogout() throws IOException {
-        gestorUsuariosDAO.actualizarUltimoAcceso(usuarioActual.getId());
+        gestorUsuariosService.actualizarUltimoAcceso(usuarioActual.getId());
         usuarioActual = null;
         autenticado= false;
         ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();

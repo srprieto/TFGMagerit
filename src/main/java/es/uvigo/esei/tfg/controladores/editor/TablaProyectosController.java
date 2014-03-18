@@ -17,6 +17,7 @@ import es.uvigo.esei.tfg.logica.servicios.GestorProyectosService;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -41,8 +42,8 @@ public class TablaProyectosController implements Serializable {
     ProyectoDAO proyectoDAO;
 
     @Inject
-    GestorProyectosService gestorDAO;
-
+    GestorProyectosService gestorProyectosService;
+    
     @Inject
     @LoggedIn
     Usuario usuarioActual;
@@ -139,14 +140,14 @@ public class TablaProyectosController implements Serializable {
             anadirMensajeError("Tienes que introducir un nombre para el proyecto");
         } else if (seleccionado.getDescripcion().equals("")) {
             anadirMensajeError("Tienes que introducir una descripción para el proyecto");
-        } else if (gestorDAO.existeProyecto(seleccionado.getNombre()) == true && gestorDAO.existeId(seleccionado.getNombre()) != id) {
+        } else if (gestorProyectosService.existeProyecto(seleccionado.getNombre()) == true && gestorProyectosService.existeId(seleccionado.getNombre()) != id) {
             anadirMensajeError("Ya existe un Proyecto con ese nombre");
         } else { 
+            seleccionado.setFechaModificacion(Calendar.getInstance().getTime());
             proyectoDAO.actualizar(seleccionado);
             anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
             RequestContext.getCurrentInstance().update("form");
         }
-
     }
 
     public void eliminar() {

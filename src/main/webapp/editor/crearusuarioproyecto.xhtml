@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.GES1}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -30,7 +30,7 @@
                 <p:dataTable id="multiUsuarios" emptyMessage="#{msg.ERR1}" var="usuario" value="#{tablaUsuariosProyectoController.usuarioModel}"  paginator="true" rows="10" selection="#{tablaUsuariosProyectoController.selectedUsuarios}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="Lista de Editores asignables al proyecto"/>   
+                            <h:outputText value="#{msg.LIS1}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
@@ -63,7 +63,7 @@
                         </div>
                     </f:facet> 
                 </p:dataTable>   
-                <p:dialog id="multiDialog" header="Desea asignar a los usuarios al proyecto: #{proyectoController.proyectoActual.nombre} ?" widgetVar="multiDialog"  
+                <p:dialog id="multiDialog" header="#{msg.DES6} #{proyectoController.proyectoActual.nombre} ?" widgetVar="multiDialog"  
                           height="200" width="300" showEffect="fade" hideEffect="explode">  
 
                     <p:dataList id="displayMulti" value="#{tablaUsuariosProyectoController.selectedUsuarios}" var="selectedUsuario">  

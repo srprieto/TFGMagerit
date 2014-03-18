@@ -11,7 +11,7 @@
     <ui:define name="head"><h:outputText value="#{msg.MIS}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -19,8 +19,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="Atras" url="indexeditor.xhtml" />  
-                        <p:menuitem value="Crear Proyecto" url="crearproyecto.xhtml" /> 
+                        <p:menuitem value="#{msg.ATR}" url="indexeditor.xhtml" />  
+                        <p:menuitem value="#{msg.CRE2}" url="crearproyecto.xhtml" /> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -29,7 +29,7 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="No has creado ningun proyecto" var="proyecto" value="#{tablaProyectosController.proyectoModel}"  paginator="true" rows="10" selection="#{tablaProyectosController.selectedProyectos}">  
+                <p:dataTable id="Proyectos" emptyMessage="#{msg.ERR}" var="proyecto" value="#{tablaProyectosController.proyectoModel}"  paginator="true" rows="10" selection="#{tablaProyectosController.selectedProyectos}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.PRO}"/>   

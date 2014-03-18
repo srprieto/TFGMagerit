@@ -28,10 +28,9 @@
         <div class="tabla">
             <h:form id="form" >
                 <p:panel header="#{msg.CON}">
-                    <p><h:outputText value="#{msg.NOM7}&#160;#{proyectoController.nombre}"/></p>
-                    <p><h:outputText value="#{msg.DES5}&#160;#{proyectoController.descripcion}"/></p>
-                    <p><h:outputText value="#{msg.MAR3}&#160;#{proyectoController.proyectoEnEdicion.marcoTrabajo.nombre}"/></p>
-                    <p:commandButton value="#{msg.GUA}" actionListener="#{proyectoController.doCrearProyecto()}"/>
+                    <p><h:outputText value="#{msg.NOM4}&#160;#{gruposController.nombre}"/></p>
+                    <p><h:outputText value="#{msg.ABR1}&#160;#{gruposController.abreviatura}"/></p>
+                    <p:commandButton value="#{msg.GUA}" actionListener="#{gruposController.doCrear()}"/>
                     <p:commandButton value="#{msg.CAN}" action="crearusuario.xhtml"/>
                 </p:panel>
             </h:form>  

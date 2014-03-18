@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" url="valoraciones.xhtml" />   
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+
+                <p:panel id="panel" header="#{msg.VAL1}" style="margin-bottom:10px;">  
+
+                    <h:panelGrid columns="3">  
+
+                        <h:outputLabel for="valor" value="#{msg.VAL}" />  
+                        <p:inputText id="valor" value="#{valoracionController.valor}"  label="Valor"/>  
+
+                        <p:graphicImage id="img" value="../images/icono.jpg" style="cursor:pointer" title="Valores posibles"/> 
+                        <p:overlayPanel id="imgPanel" for="img" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown"  
+                                        dismissable="false" showCloseIcon="true">  
+                            <p:imageSwitch id="imgSwitch" effect="fade" style="width:500px;height:200px;">  
+                                <p:graphicImage value="../images/info.jpeg" width="500"/>  
+                            </p:imageSwitch>  
+                        </p:overlayPanel> 
+
+                    </h:panelGrid>  
+
+                    <h:panelGrid columns="2"> 
+                        
+                        <h:outputLabel for="justificacion" value="#{msg.JUS2}" />  
+                        <p:inputText id="justificacion" value="#{valoracionController.justificacion}"  label="Justificacion"/>
+                        
+                        <h:outputLabel for="dimension" value="#{msg.DIM}" />  
+                        <h:selectOneMenu id="dimension" value="#{valoracionController.nomDimension}" converter="omnifaces.SelectItemsConverter" >  
+                            <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{valoracionController.dimensiones}" />  
+                        </h:selectOneMenu>  
+
+                    </h:panelGrid>  
+
+                    <p:commandButton update=" :growl" action="#{valoracionController.doGuardar()}" value="#{msg.GUA}" /> 
+                    <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
+                </p:panel> 
+                <!-- criterios de valoracion
+                <p:panel header="Criterios de Valoración" style="margin-bottom:10px;">
+                    
+                    <p:accordionPanel>  
+                        <ui:repeat value="" var="criterios">
+                            <p:tab title="Godfather Part I">  
+                                <h:panelGrid columns="2" cellpadding="10">  
+                                    <h:outputText value=""/> 
+                                    <h:outputText  
+                                        value="The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.   
+                                        His beloved son Michael has just come home from the war, but does not intend to become part of his father's business. T  
+                                        hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect,   
+                                        but given to ruthless violence whenever anything stands against the good of the family." />  
+                                </h:panelGrid>  
+                            </p:tab>  
+                        </ui:repeat>  
+                    </p:accordionPanel>  
+                    
+                </p:panel> 
+                -->
+            </h:form>  
+        </div>
+        <p:growl id="growl" life="3000" />
+    </ui:define>
+</ui:composition>
+

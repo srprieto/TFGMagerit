@@ -39,7 +39,7 @@ public class TablaUsuariosController implements Serializable {
     UsuarioDAO usuarioDAO;
 
     @Inject
-    GestorUsuariosService gestorDAO;
+    GestorUsuariosService gestorUsuariosService;
 
     public TablaUsuariosController() {
 
@@ -131,7 +131,7 @@ public class TablaUsuariosController implements Serializable {
 
         if (seleccionado.getLogin().equals("")) {
             anadirMensajeError("Tienes que introducir un login para el usuario");
-        } else if (gestorDAO.existeUsuario(seleccionado.getLogin()) == true && gestorDAO.existeId(seleccionado.getLogin()) != id) {
+        } else if (gestorUsuariosService.existeUsuario(seleccionado.getLogin()) == true && gestorUsuariosService.existeId(seleccionado.getLogin()) != id) {
             anadirMensajeError("Ya existe un usuario con ese login");
         } else {
             usuarioDAO.actualizar(seleccionado);

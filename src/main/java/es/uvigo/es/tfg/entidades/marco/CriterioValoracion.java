@@ -1,5 +1,6 @@
 package es.uvigo.es.tfg.entidades.marco;
 
+import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class CriterioValoracion implements Serializable {
     @ManyToOne
     MarcoTrabajo marcoTrabajo;
     
+    
     @OneToMany(mappedBy = "criterioValoracion", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     List<ItemValoracion> itemsValoracion;
 
@@ -44,7 +46,8 @@ public class CriterioValoracion implements Serializable {
         this.marcoTrabajo = marcoTrabajo;
         this.itemsValoracion = itemsValoracion;
     }
-
+    
+    
     public Long getId() {
         return id;
     }

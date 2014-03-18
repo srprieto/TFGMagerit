@@ -11,7 +11,7 @@
     <ui:define name="head"><h:outputText value="#{msg.MIS}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -19,8 +19,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="Atras" actionListener="#{tablaDependientesController.atras()}" />
-                        <p:menuitem value="Añadir Dependencia" url="dependencianueva.xhtml"/> 
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaDependientesController.atras()}" />
+                        <p:menuitem value="#{msg.ANA3}" url="dependencianueva.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -29,10 +29,10 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="No existen activos dependientes" var="dependiente" value="#{tablaDependientesController.dependienteModel}"  paginator="true" rows="10" selection="#{tablaDependientesController.selectedDependientes}">  
+                <p:dataTable id="Proyectos" emptyMessage="#{msg.VAC1}" var="dependiente" value="#{tablaDependientesController.dependienteModel}"  paginator="true" rows="10" selection="#{tablaDependientesController.selectedDependientes}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="Activo dependientes de: #{arbolActivosController.activoActual.nombre}"/>   
+                            <h:outputText value="#{msg.ACT2} #{arbolActivosController.activoActual.nombre}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
@@ -62,10 +62,10 @@
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
                     <div class="datalist-noborder">
                         <p:dataList id="displayEdit" value="#{tablaDependientesController.selectedDependientes}" type="none" var="selectedEdit">  
-                            <p><h:outputLabel for="grado" value="grado"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="grado" value="#{msg.GRA1}"  styleClass="negrita"/> 
                                 <p:inputText id="grado" value="#{selectedEdit.grado}"/></p>
 
-                            <p><h:outputLabel for="descripcion" value="justificacion"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="descripcion" value="#{msg.JUS1}"  styleClass="negrita"/> 
                                 <p:inputText id="descripcion" value="#{selectedEdit.justificacion}"/></p>
 
                         </p:dataList>  

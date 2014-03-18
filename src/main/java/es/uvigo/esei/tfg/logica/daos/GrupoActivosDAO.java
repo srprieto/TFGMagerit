@@ -17,6 +17,7 @@ import javax.ejb.Local;
 @Local
 public interface GrupoActivosDAO extends GenericoDAO<GrupoActivos>{
      
-    public List<GrupoActivos> buscarTodos();
+    List<GrupoActivos> buscarTodos();
+    GrupoActivos buscarPorNombre(String nombre);
    
 }

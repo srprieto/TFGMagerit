@@ -28,7 +28,7 @@ public class MarcosController implements Serializable {
     private String descripcion = "";
 
     @Inject
-    GestorMarcosService gestorMarcoDAO;
+    GestorMarcosService gestorMarcoService;
 
    
 
@@ -75,7 +75,7 @@ public class MarcosController implements Serializable {
         } else if (descripcion.equals("")) {
             anadirMensajeError("No se ha indicado una descripción");
             destino = "crearmarco.xhtml";
-        } else if (gestorMarcoDAO.existeMarco(nombre) == true) {
+        } else if (gestorMarcoService.existeMarco(nombre) == true) {
             anadirMensajeError("Ya existe un marco con ese nombre");
             destino = "crearmarco.xhtml";
         } else {
@@ -85,7 +85,7 @@ public class MarcosController implements Serializable {
     }
 
     public void doCrear() throws IOException {
-        gestorMarcoDAO.crearNuevoMarco(nombre, descripcion);
+        gestorMarcoService.crearNuevoMarco(nombre, descripcion);
         anadirMensajeCorrecto("El marco de trabajo " + nombre + " ha sido creado correctamente");
         nombre = "";
         descripcion = "";

@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,12 +24,27 @@ import org.primefaces.model.UploadedFile;
 public class FicherosController implements Serializable {
 
     private UploadedFile file;
-    
+
     @Inject
     TablaMarcosController tablaMarcosController;
-    
+
     @Inject
-    CargadorCatalogoService cargadorCatalogoDAO;
+    CargadorCatalogoService cargadorCatalogoService;
+
+    /**
+     * Añade un mensaje de error a la jeraquia de componetes de la página JSF
+     *
+     * @param mensaje
+     */
+    protected void anadirMensajeError(String mensaje) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
+    }
+
+    protected void anadirMensajeCorrecto(String mensaje) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+    }
 
     public UploadedFile getFile() {
         return file;
@@ -39,6 +55,8 @@ public class FicherosController implements Serializable {
     }
 
     public void upload() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         if (file != null) {
             File folder = new File("C:/Users/Saul/Downloads/uploads");
             InputStream stream = file.getInputstream();
@@ -56,7 +74,9 @@ public class FicherosController implements Serializable {
             }
             MarcoTrabajo[] seleccionados = tablaMarcosController.getSelectedMarcos();
             MarcoTrabajo seleccionado = seleccionados[0];
-            cargadorCatalogoDAO.cargarRecurso(file1.getAbsolutePath(), seleccionado);
+            cargadorCatalogoService.cargarRecurso(file1.getAbsolutePath(), seleccionado);
+            anadirMensajeCorrecto("El archivo xml ha sido cargado correctamente");
+            context.redirect("marcos.xhtml");
         }
     }
 

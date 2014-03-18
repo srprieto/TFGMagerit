@@ -41,7 +41,7 @@ public class ProyectoController implements Serializable {
     private MarcoTrabajo marcoelegido;
 
     @Inject
-    GestorProyectosService gestorProyectosDAO;
+    GestorProyectosService gestorProyectosService;
 
     @Inject
     MarcoTrabajoDAO marcoTrabajoDAO;
@@ -141,7 +141,7 @@ public class ProyectoController implements Serializable {
         } else if (descripcion.equals("")) {
             anadirMensajeError("No se ha indicado una descripción");
             destino= "crearproyecto.xhtml";
-        } else if(gestorProyectosDAO.existeProyecto(nombre)) {
+        } else if(gestorProyectosService.existeProyecto(nombre)) {
              anadirMensajeError("Ya existe un proyecto con ese nombre");
              destino= "crearproyecto.xhtml";
         }else{
@@ -151,7 +151,7 @@ public class ProyectoController implements Serializable {
     }
 
     public void doCrearProyecto() throws IOException {
-        gestorProyectosDAO.crearNuevoProyecto(nombre, descripcion, proyectoEnEdicion.getMarcoTrabajo(), proyectoEnEdicion.getCreador());
+        gestorProyectosService.crearNuevoProyecto(nombre, descripcion, proyectoEnEdicion.getMarcoTrabajo(), proyectoEnEdicion.getCreador());
         anadirMensajeCorrecto("El proyecto " + nombre + " ha sido guardado correctamente");
         nombre="";
         descripcion="";
@@ -174,7 +174,7 @@ public class ProyectoController implements Serializable {
         } else {
             proyectoActual = lista[0];
             creador = usuarioActual;
-            context.redirect("proyecto.xhtml");
+            context.redirect("activos.xhtml");
         }
     }
 }

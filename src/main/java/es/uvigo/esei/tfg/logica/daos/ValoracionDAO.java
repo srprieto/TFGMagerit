@@ -6,7 +6,6 @@
 
 package es.uvigo.esei.tfg.logica.daos;
 
-import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import java.util.List;
@@ -17,6 +16,7 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface ValoracionDAO {
+public interface ValoracionDAO extends GenericoDAO<Valoracion>{
     List<Valoracion> buscarTodos(Activo activo);
+    List<Valoracion> buscarPorActivo(Activo activo);
 }

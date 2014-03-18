@@ -91,13 +91,13 @@ public class GestionUsuarioController implements Serializable {
     }
 
     public void doCrearUsuario() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         gestorUsuariosService.crearNuevoUsuario(login, password, tipo1);
         anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
         login = "";
         password = "";
         tipo1 = null;
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         tablaUsuariosController.setSelectedUsuarios(null);
         context.redirect("usuarios.xhtml");
     }

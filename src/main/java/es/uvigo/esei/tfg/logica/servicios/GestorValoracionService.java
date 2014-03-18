@@ -4,11 +4,10 @@
  * and open the template in the editor.
  */
 
-package es.uvigo.esei.tfg.logica.daos;
+package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.Dimension;
-import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
-import java.util.List;
+import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import javax.ejb.Local;
 
 /**
@@ -16,7 +15,6 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface DimensionDAO extends GenericoDAO<Dimension>{
-    List<Dimension> buscarTodos(MarcoTrabajo marcoTrabajo);
-    Dimension buscarPorNombre(String nombre);
+public interface GestorValoracionService {
+    void crearNuevaValoracion(Double valor,String justificacion, Activo activo, Dimension dimension);
 }

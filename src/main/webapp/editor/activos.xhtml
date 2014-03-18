@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -19,8 +19,9 @@
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
                         <p:menuitem value="#{msg.ATR}" actionListener="#{arbolActivosController.atras()}"/>  
-                        <p:menuitem value="Añadir Activo" url="crearactivo.xhtml"/> 
-                        <p:menuitem value="Gestión Usuarios" url="usuarios.xhtml"/>
+                        <p:menuitem value="#{msg.ANA2}" url="crearactivo.xhtml"/> 
+                        <p:menuitem value="#{msg.GES}" url="usuarios.xhtml"/>
+                        <p:menuitem value="Modelo de Valor" url="modelovalor.xhtml"/>
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -29,11 +30,11 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:treeTable id="multiSelect" emptyMessage="No existen activos asignados al proyecto" value="#{arbolActivosController.root}" var="node" 
+                <p:treeTable id="multiSelect" emptyMessage="#{msg.VAC}" value="#{arbolActivosController.root}" var="node" 
                              selection="#{arbolActivosController.selectedNodes}" selectionMode="multiple">  
                     <p:column>  
                         <f:facet name="header">  
-                            <h:outputText value="Activos del proyecto: &#160;#{proyectoController.proyectoActual.nombre}"/>   
+                            <h:outputText value="#{msg.ACT}&#160;#{proyectoController.proyectoActual.nombre}"/>   
                         </f:facet>  
                         <h:outputText value="#{node}"/>  
                     </p:column>  
@@ -47,6 +48,8 @@
                                           update=":growl" actionListener="#{arbolActivosController.doDestino()}"/> 
                          <p:commandButton id="valoracion" value="Valoración" icon="ui-icon-search"  
                                           update=":growl" actionListener="#{arbolActivosController.valoracion()}"/>
+                         <p:commandButton id="amenazas" value="Amenazas" icon="ui-icon-search"  
+                                          update=":growl" actionListener="#{arbolActivosController.amenazas()}"/>
                     </f:facet>  
                 </p:treeTable>
                 <p:dialog id="multiEditDialog" header="#{msg.EDI2}" widgetVar="multiEditDialog"  
@@ -77,13 +80,13 @@
                                 </h:selectOneMenu></p>  
 
                             <p><h:outputLabel for="grupo" value="#{msg.GRU}" />  
-                                <h:selectOneMenu id="grupo" value="#{arbolActivosController.grupoActivos}" converter="omnifaces.SelectItemsConverter" >  
-                                    <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
+                                <h:selectOneMenu id="grupo" value="#{arbolActivosController.nombreGrupo}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
                                 </h:selectOneMenu></p>  
 
-                            <p><p:commandButton value="#{msg.NG}" /><br/></p>
+                            <p><p:commandButton value="#{msg.NG}" action="nuevogrupo.xhtml"/><br/></p>
 
-                            <h:outputText value="(*) Campos obligatorios" />  
+                            <h:outputText value="#{msg.OBL}" />  
                         </p:dataList>  
                     </div>
                     <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{arbolActivosController.updateActivo()}" icon="ui-icon-check"/> 

@@ -10,7 +10,7 @@ template="/templates/plantilla.xhtml">
 <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
 <ui:define name="sidebar">
     <h:form id="logout">
-        <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+        <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
     </h:form>
 </ui:define>
 <ui:define name="sidebar1">  
@@ -18,8 +18,8 @@ template="/templates/plantilla.xhtml">
         <h:form id="frmMenu" prependId="false" >
             <p:menu>  
                 <p:submenu label="#{msg.MEN}">   
-                    <p:menuitem value="Proyectos Propios" url="misproyectos.xhtml" /> 
-                    <p:menuitem value="Proyectos Colaborativos" url="otrosproyectos.xhtml" />   
+                    <p:menuitem value="#{msg.PRO1}" url="misproyectos.xhtml" /> 
+                    <p:menuitem value="#{msg.PRO2}" url="otrosproyectos.xhtml" />   
                 </p:submenu>  
             </p:menu>
         </h:form>  

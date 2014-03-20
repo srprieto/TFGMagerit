@@ -174,6 +174,7 @@ public class TablaDependientesController implements Serializable {
     public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         this.setSelectedDependientes(null);
+        arbolActivosController.setSelectedNodes(null);
         context.redirect("activos.xhtml");
     }
 }

@@ -11,7 +11,7 @@
     <ui:define name="head"><h:outputText value="#{msg.MIS}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="Cerrar conexión" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -19,8 +19,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="Atras" actionListener="#{tablaDependientesController.atras()}" />
-                        <p:menuitem value="Añadir valoracion" url="valoracionnueva.xhtml"/> 
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaDependientesController.atras()}" />
+                        <p:menuitem value="#{msg.ANA4}" url="valoracionnueva.xhtml"/> 
                     </p:submenu>  
                 </p:menu>
             </h:form>  

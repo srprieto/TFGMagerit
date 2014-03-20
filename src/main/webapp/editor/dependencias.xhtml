@@ -42,11 +42,11 @@
                         <h:outputText value="#{dependiente.activoDependiente.nombre}" />    
                     </p:column> 
                     
-                     <p:column id="grado" styleClass="tabla1" headerText="Grado">  
+                     <p:column id="grado" styleClass="tabla1" headerText="#{msg.GRA1}">  
                         <h:outputText value="#{dependiente.grado}" />    
                     </p:column> 
                     
-                     <p:column id="justificante" styleClass="tabla1" headerText="Justificante">  
+                     <p:column id="justificante" styleClass="tabla1" headerText="#{msg.JUS1}">  
                          <h:outputText value="#{dependiente.justificacion}" />    
                     </p:column> 
                     
@@ -74,11 +74,11 @@
                     <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 
-                <p:dialog id="multiDialog" header="Desea eliminar los activos dependientes seleccionados?" widgetVar="multiDialog"  
-                          height="200" width="300" showEffect="fade" hideEffect="explode">  
+                <p:dialog id="multiDialog" header="#{msg.ELI5}" widgetVar="multiDialog"  
+                          height="200" width="500" showEffect="fade" hideEffect="explode">  
 
                     <p:dataList id="displayMulti" value="#{tablaDependientesController.selectedDependientes}" var="selected">  
-                        <h:outputText value="Activo dependiente: &#160;#{selected.activoDependiente.nombre}"/>
+                        <h:outputText value="#{msg.ACT3} &#160;#{selected.activoDependiente.nombre}"/>
                     </p:dataList>  
                     <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaDependientesController.eliminarDependencias()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />

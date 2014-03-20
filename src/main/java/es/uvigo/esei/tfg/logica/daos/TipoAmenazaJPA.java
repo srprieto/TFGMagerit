@@ -6,6 +6,7 @@
 package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
+import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -15,30 +16,32 @@ import javax.persistence.Query;
  * @author Saul
  */
 @Stateless
-public class TipoActivoJPA extends GenericoJPA<TipoActivo> implements TipoActivoDAO {
+public class TipoAmenazaJPA extends GenericoJPA<TipoAmenaza> implements TipoAmenazaDAO {
 
     @Override
-    public List<TipoActivo> buscarTodos() {
+    public List<TipoAmenaza> buscarTodos() {
 
-        Query q = em.createQuery("SELECT object(p) FROM TipoActivo AS p");
+        Query q = em.createQuery("SELECT object(p) FROM TipoAmenaza AS p");
         return q.getResultList();
 
     }
 
     @Override
-    public List<TipoActivo> buscarTipoActivosSinPadre() {
-        Query q = em.createQuery("SELECT object(u) FROM TipoActivo as u "
-                + "  WHERE u.tipoActivoPadre = null");
+    public List<TipoAmenaza> buscarTipoActivo(TipoActivo tiposActivo) {
+
+        Query q = em.createQuery("SELECT object(p) FROM TipoAmenaza AS p"
+                + "  WHERE p.tiposActivo = :tiposActivo");
+        q.setParameter("tiposActivo", tiposActivo);
         return q.getResultList();
     }
 
     @Override
-    public TipoActivo buscarPorNombre(String nombre) {
-        Query q = em.createQuery("SELECT object(u) FROM TipoActivo AS u "
+    public TipoAmenaza buscarPorNombre(String nombre) {
+        Query q = em.createQuery("SELECT object(u) FROM TipoAmenaza AS u "
                 + "  WHERE u.nombre = :nombre");
         q.setParameter("nombre", nombre);
 
-        List<TipoActivo> resultados = q.getResultList();
+        List<TipoAmenaza> resultados = q.getResultList();
 
         if (resultados == null) {
             return null;  // No encontrado

@@ -1,16 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{arbolAmenazasController.atras()}"/>  
+                        <p:menuitem value="#{msg.ANA5}" url="crearamenaza.xhtml"/>
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+                <p:treeTable id="multiSelect" emptyMessage="#{msg.VAC}" value="#{arbolAmenazasController.root}" var="node" 
+                             selection="#{arbolAmenazasController.selectedNodes}" selectionMode="multiple">  
+                    <p:column>  
+                        <f:facet name="header">  
+                            <h:outputText value="#{msg.ACT}&#160;#{proyectoController.proyectoActual.nombre}"/>   
+                        </f:facet>  
+                        <h:outputText value="#{node}"/>  
+                    </p:column>  
+
+                    <f:facet name="footer"> 
+                        <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
+                                         update=":form:displayEdit, :growl" actionListener="#{arbolActivosController.update()}"/>
+                        <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
+                                         update=":form:displayMulti, :growl" actionListener="#{arbolActivosController.eliminar()}"/>
+                    </f:facet>  
+                </p:treeTable>
+                <p:dialog id="multiEditDialog" header="#{msg.EDI2}" widgetVar="multiEditDialog"  
+                          height="500" width="500" showEffect="fade" hideEffect="explode">  
+                    <div class="datalist-noborder">
+                        <p:dataList id="displayEdit" value="#{arbolActivosController.selectedNodes}" type="none" var="selectedEdit">  
+                            <p><h:outputLabel for="codigo" value="#{msg.COD}" />  
+                                <p:inputText id="codigo" value="#{arbolActivosController.codigo}"  label="Codigo"/></p>
+
+                            <p><h:outputLabel for="nombre" value="#{msg.NOM}" />  
+                                <p:inputText id="nombre" value="#{arbolActivosController.nombre}"  label="Nombre"/></p>    
+
+                            <p><h:outputLabel for="descripcion" value="#{msg.DES}" />  
+                                <p:inputText id="descripcion" value="#{arbolActivosController.descripcion}"  label="Descripcion"/></p>  
+
+                            <p><h:outputLabel for="responsable" value="#{msg.RES}" />  
+                                <p:inputText id="responsable" value="#{arbolActivosController.responsable}"  label="Responsable"/></p>  
+
+                            <p><h:outputLabel for="ubicacion" value="#{msg.UBI}" />  
+                                <p:inputText id="ubicacion" value="#{arbolActivosController.ubicacion}"  label="Ubicacion"/></p>  
+
+                            <p><h:outputLabel for="cantidad" value="#{msg.CANT}" />  
+                                <p:inputText id="cantidad" value="#{arbolActivosController.cantidad}"  label="Cantidad"/></p> 
+
+                            <p><h:outputLabel for="tipo" value="#{msg.TIP}" />  
+                                <h:selectOneMenu id="tipo" value="#{arbolActivosController.tiposActivos}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
+                                </h:selectOneMenu></p>  
+
+                            <p><h:outputLabel for="grupo" value="#{msg.GRU}" />  
+                                <h:selectOneMenu id="grupo" value="#{arbolActivosController.nombreGrupo}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
+                                </h:selectOneMenu></p>  
+
+                            <p><p:commandButton value="#{msg.NG}" action="nuevogrupo.xhtml"/><br/></p>
+
+                            <h:outputText value="#{msg.OBL}" />  
+                        </p:dataList>  
+                    </div>
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{arbolActivosController.updateActivo()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>
+
+                <p:dialog id="multiDialog" header="#{msg.ELI4}" widgetVar="multiDialog"  
+                          height="200" width="300" showEffect="fade" hideEffect="explode">  
+
+                    <p:dataList id="displayMulti" value="#{arbolActivosController.selectedNodes}" var="selected">  
+                        <h:outputText value="#{selected}"/>
+                    </p:dataList>  
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{arbolActivosController.eliminarActivo()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog> 
+            </h:form>
+        </div>
+        <p:growl id="growl" life="3000" /> 
+    </ui:define> 
+</ui:composition>

@@ -6,7 +6,6 @@
 package es.uvigo.esei.tfg.controladores.editor;
 
 import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
-import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
@@ -82,7 +81,6 @@ public class ActivoController implements Serializable {
     private void inicializar() {
         activoEnEdicion = new Activo();
         tiposActivos = tipoActivoDAO.buscarTodos();
-
     }
 
     /**

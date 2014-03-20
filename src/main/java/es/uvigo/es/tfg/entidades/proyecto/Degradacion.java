@@ -1,5 +1,6 @@
 package es.uvigo.es.tfg.entidades.proyecto;
 
+import es.uvigo.es.tfg.entidades.marco.Dimension;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +16,10 @@ public class Degradacion {
     Double probabilidad;
     
     @ManyToOne
-    Impacto impacto;  // TODO: Es necesaria ¿?
+    Impacto impacto; 
+    
+    @ManyToOne
+    Dimension dimension;
 
     public Degradacion() {
     }
@@ -57,6 +61,16 @@ public class Degradacion {
     public void setImpacto(Impacto impacto) {
         this.impacto = impacto;
     }
+
+    public Dimension getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension = dimension;
+    }
+    
+    
 
     
 }

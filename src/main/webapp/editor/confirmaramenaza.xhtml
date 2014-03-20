@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="activos.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" url="crearactivo.xhtml" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -26,27 +26,19 @@
     </ui:define>
     <ui:define name="content">
         <div class="tabla">
-            <h:form id="form">  
-
-                <p:panel id="panel" header="#{msg.GRU1}">  
-                    <p:messages id="messages" />  
-
-                      <h:panelGrid id="grid" columns="2" cellpadding="5"> 
-
-                        <h:outputLabel for="nombre" value="#{msg.NOM2}" />  
-                        <p:inputText id="nombre" value="#{gruposController.nombre}"  label="#{msg.NOM1}"/>    
-
-                        <h:outputLabel for="abreviatura" value="#{msg.ABR}" />  
-                        <p:inputText id="abreviatura" value="#{gruposController.abreviatura}"  label="#{msg.ABR2}"/>  
-
-                    </h:panelGrid>  
-
-                    <p:commandButton update=" :growl" action="#{gruposController.doGuardar()}" value="#{msg.GUA}" /> 
-                    <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
+            <h:form id="form" >
+                <p:panel header="#{msg.CON}">
+                    <p><h:outputText value="#{msg.COD4}&#160;#{amenazaController.codigo}"/></p>
+                    <p><h:outputText value="#{msg.NOM7}&#160;#{amenazaController.nombre}"/></p>
+                    <p><h:outputText value="#{msg.DES8}&#160;#{amenazaController.descripcion}"/></p>
+                    <p><h:outputText value="#{msg.OCU}&#160;#{amenazaController.probabilidadOcurrencia}"/></p>
+                    <p><h:outputText value="#{msg.DEG}&#160;#{amenazaController.gradoDegradacionBase}"/></p>
+                    <p><h:outputText value="#{msg.TIP4}&#160;#{amenazaController.nomTipo}"/></p>
+                    <p:commandButton value="#{msg.GUA}" actionListener="#{amenazaController.guardarAmenaza()}"/>
+                    <p:commandButton value="#{msg.CAN}" action="crearamenaza.xhtml"/>
                 </p:panel>
             </h:form>  
         </div>
         <p:growl id="growl" life="3000" />
     </ui:define>
 </ui:composition>
-

@@ -6,8 +6,8 @@
 
 package es.uvigo.esei.tfg.logica.daos;
 
-import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -36,5 +36,13 @@ public class AmenazaJPA extends GenericoJPA<Amenaza> implements AmenazaDAO {
         else {
             return resultados.get(0);  // Devuelve el encontrado
         }
+    }
+     
+    @Override
+    public List<Amenaza> buscarAmenazasProyecto(Proyecto proyecto){
+        Query q = em.createQuery("SELECT object(u) FROM Amenaza as u "+
+                                 "  WHERE u.proyecto = :proyecto");
+        q.setParameter("proyecto", proyecto);
+        return q.getResultList();
     }
 }

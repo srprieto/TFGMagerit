@@ -7,6 +7,8 @@
 package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,4 +18,5 @@ import javax.ejb.Local;
 @Local
 public interface AmenazaDAO extends GenericoDAO<Amenaza>{
     Amenaza buscarPorNombre(String nombre);
+    List<Amenaza> buscarAmenazasProyecto(Proyecto proyecto);
 }

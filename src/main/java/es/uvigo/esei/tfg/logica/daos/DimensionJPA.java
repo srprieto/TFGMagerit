@@ -7,6 +7,7 @@ package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -25,6 +26,7 @@ public class DimensionJPA extends GenericoJPA<Dimension> implements DimensionDAO
         q.setParameter("marcoTrabajo", marcoTrabajo);
         return q.getResultList();
     }
+    
 
     @Override
     public Dimension buscarPorNombre(String nombre) {

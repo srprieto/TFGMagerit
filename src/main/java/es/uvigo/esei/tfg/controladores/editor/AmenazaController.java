@@ -5,15 +5,18 @@
  */
 package es.uvigo.esei.tfg.controladores.editor;
 
+import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
+import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
+import es.uvigo.esei.tfg.logica.daos.DimensionDAO;
 import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoAmenazaDAO;
-import es.uvigo.esei.tfg.logica.servicios.GestorActivoBean;
-import es.uvigo.esei.tfg.logica.servicios.GestorAmenazasBean;
 import es.uvigo.esei.tfg.logica.servicios.GestorAmenazasService;
-import es.uvigo.esei.tfg.logica.servicios.GestorImpactoBean;
+import es.uvigo.esei.tfg.logica.servicios.GestorDegradacionService;
 import es.uvigo.esei.tfg.logica.servicios.GestorImpactoService;
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,26 +51,36 @@ public class AmenazaController implements Serializable {
     TipoAmenazaDAO tipoAmenazaDAO;
 
     @Inject
+    DimensionDAO dimensionDAO;
+
+    @Inject
     AmenazaDAO amenazaDAO;
+
+    @Inject
+    ImpactoDAO impactoDAO;
+
+    @Inject
+    ActivoDAO activoDAO;
 
     @Inject
     ArbolActivosController arbolActivosController;
 
     @Inject
-    ImpactoDAO impactoDAO;
-    
+    ProyectoController proyectoController;
+
     @Inject
     GestorAmenazasService gestorAmenazasService;
-    
+
     @Inject
-    ProyectoController proyectoController;
-    
+    GestorDegradacionService gestorDegradacionService;
+
     @Inject
     GestorImpactoService gestorImpactoService;
 
     public void AmenazaController() {
 
     }
+
     /**
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
      *
@@ -90,11 +103,11 @@ public class AmenazaController implements Serializable {
     public void setNomTipo(String nomTipo) {
         this.nomTipo = nomTipo;
     }
-    
+
     public List<TipoAmenaza> getTiposAmenazas() {
         return tiposAmenazas;
     }
-    
+
     public void setTiposAmenazas(List<TipoAmenaza> tiposAmenazas) {
         this.tiposAmenazas = tiposAmenazas;
     }
@@ -178,29 +191,43 @@ public class AmenazaController implements Serializable {
         return destino;
     }
 
-   public List<String> getTipos(){
-       List<TipoAmenaza> posibles = tipoAmenazaDAO.buscarTipoActivo(arbolActivosController.getActivoActual().getTipoActivo());
-       List<String> nombres = new ArrayList<>();
-       for(int i=0; i<posibles.size();i++){
-           nombres.add(posibles.get(i).getNombre());
-       }
-       return nombres;
-   }
-   
+    public List<String> getTipos() {
+        List<TipoAmenaza> posibles = tipoAmenazaDAO.buscarTipoActivo(arbolActivosController.getActivoActual().getTipoActivo());
+        List<String> nombres = new ArrayList<>();
+        for (int i = 0; i < posibles.size(); i++) {
+            nombres.add(posibles.get(i).getNombre());
+        }
+        return nombres;
+    }
+
     public void guardarAmenaza() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        gestorAmenazasService.crearNuevaAmenaza(codigo, nombre, descripcion, probabilidadOcurrencia, gradoDegradacionBase, tipoAmenazaDAO.buscarPorNombre(nomTipo),proyectoController.getProyectoActual());
-        gestorImpactoService.crearNuevoImpacto(Calendar.getInstance().getTime(), arbolActivosController.getActivoActual(), amenazaDAO.buscarPorNombre(nombre));
-        anadirMensajeCorrecto("El Activo " + nombre + " ha sido guardado correctamente");
+        Amenaza creada = gestorAmenazasService.crearAmenaza(codigo, nombre, descripcion, probabilidadOcurrencia, gradoDegradacionBase, tipoAmenazaDAO.buscarPorNombre(nomTipo), proyectoController.getProyectoActual());
+        gestorImpactoService.crearNuevoImpacto(Calendar.getInstance().getTime(), arbolActivosController.getActivoActual(), creada);
+        List<Dimension> dimensiones = dimensionDAO.buscarTodos(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+        for (int i = 0; i < dimensiones.size(); i++) {
+            List<TipoAmenaza> tipos = tipoAmenazaDAO.buscarDimension(dimensiones.get(i));
+            for (int j = 0; j < tipos.size(); j++) {
+                if (tipos.get(j).getNombre().equals(nomTipo)) {
+                    Activo actual = arbolActivosController.getActivoActual();
+                    List<Impacto> impact = impactoDAO.buscarAmenazasActivo(actual);
+                    for (int z = 0; z < impact.size(); z++) {
+                        if (impact.get(z).getAmenaza().getNombre().equals(nombre)) {
+                            gestorDegradacionService.crearNuevaDegradacion(gradoDegradacionBase, probabilidadOcurrencia, impact.get(z), dimensiones.get(i));
+                        }
+                    }
+                }
+            }
+        }
+        anadirMensajeCorrecto("La Amenaza " + nombre + " ha sido guardada correctamente");
         nombre = "";
         descripcion = "";
         codigo = "";
         nomTipo = "";
         probabilidadOcurrencia = null;
-        gradoDegradacionBase= null;
+        gradoDegradacionBase = null;
         context.redirect("amenazas.xhtml");
     }
-
 
 }

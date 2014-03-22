@@ -9,7 +9,6 @@ package es.uvigo.esei.tfg.logica.daos;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
-import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -29,5 +28,11 @@ public class ImpactoJPA extends GenericoJPA<Impacto> implements ImpactoDAO {
         return q.getResultList();
     }
     
-    
+    @Override
+    public List<Impacto> buscarActivoAmenazas(Amenaza amenaza){
+        Query q = em.createQuery("SELECT object(u) FROM Impacto as u "+
+                                 "  WHERE u.amenaza = :amenaza");
+        q.setParameter("amenaza", amenaza);
+        return q.getResultList();
+    }
 }

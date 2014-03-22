@@ -11,10 +11,16 @@ package es.uvigo.esei.tfg.controladores.editor;
  */
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
+import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
+import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
 import es.uvigo.esei.tfg.logica.daos.GrupoActivosDAO;
+import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import java.io.IOException;
 import java.io.Serializable;
@@ -46,10 +52,27 @@ public class ArbolActivosController implements Serializable {
     private String ubicacion;
     private Long cantidad;
     private String nombreGrupo;
-    
 
     private TipoActivo tiposActivos;
     private GrupoActivos grupoActivos;
+
+    @Inject
+    ActivoDAO activoDAO;
+
+    @Inject
+    TipoActivoDAO tipoActivoDAO;
+
+    @Inject
+    GrupoActivosDAO grupoActivosDAO;
+
+    @Inject
+    AmenazaDAO amenazaDAO;
+
+    @Inject
+    ImpactoDAO impactoDAO;
+
+    @Inject
+    DegradacionDAO degradacionDAO;
 
     @Inject
     ProyectoController proyectoController;
@@ -57,16 +80,6 @@ public class ArbolActivosController implements Serializable {
     @Inject
     TablaProyectosController tablaProyectoController;
 
-    @Inject
-    ActivoDAO activoDAO;
-
-    @Inject
-    TipoActivoDAO tipoActivoDAO;
-    
-    @Inject
-    GrupoActivosDAO grupoActivosDAO;
-   
-            
     public ArbolActivosController() {
 
     }
@@ -247,6 +260,16 @@ public class ArbolActivosController implements Serializable {
                     String[] separadas2 = pa.split(" ", 2);
                     pa = separadas2[1];
                     TipoActivo nuevo = tipoActivoDAO.buscarPorNombre(pa);
+                    List<Impacto> impactoEliminar = impactoDAO.buscarAmenazasActivo(seleccionado);
+                    for (int j = 0; j < impactoEliminar.size(); j++) {
+                        List<Degradacion> degradacionEliminar = degradacionDAO.buscarPorImpacto(impactoEliminar.get(j));
+                        for (int z = 0; z < degradacionEliminar.size(); z++) {
+                            degradacionDAO.eliminar(degradacionEliminar.get(z));
+                        }
+                        Amenaza amenazaEliminar = impactoEliminar.get(j).getAmenaza();
+                        impactoDAO.eliminar(impactoEliminar.get(j));
+                        amenazaDAO.eliminar(amenazaEliminar);
+                    }
                     activoDAO.eliminar(seleccionado);
                     if (padre.getChildren() == null) {
                         tipoActivoDAO.eliminar(nuevo);
@@ -254,7 +277,6 @@ public class ArbolActivosController implements Serializable {
                 }
             }
         }
-
         int tamano = selectedNodes.length;
         if (tamano == 1) {
             anadirMensajeCorrecto("El Activo ha sido eliminado correctamente");
@@ -435,7 +457,7 @@ public class ArbolActivosController implements Serializable {
             context.redirect("activos.xhtml");
         }
     }
-    
+
     public void amenazas() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);

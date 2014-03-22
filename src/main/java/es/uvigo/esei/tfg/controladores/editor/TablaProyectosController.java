@@ -9,14 +9,25 @@ package es.uvigo.esei.tfg.controladores.editor;
  *
  * @author Saul
  */
+import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
+import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.ProyectoModel;
+import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
+import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
+import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
+import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorProyectosService;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
@@ -38,12 +49,29 @@ public class TablaProyectosController implements Serializable {
     private ProyectoModel proyectoModel;
     private List<Proyecto> filteredProyectos;
 
+    private String nomMarco;
+
     @Inject
     ProyectoDAO proyectoDAO;
 
     @Inject
+    MarcoTrabajoDAO marcoTrabajoDAO;
+
+    @Inject
+    AmenazaDAO amenazaDAO;
+
+    @Inject
+    ImpactoDAO impactoDAO;
+
+    @Inject
+    DegradacionDAO degradacionDAO;
+
+    @Inject
+    ActivoDAO activoDAO;
+
+    @Inject
     GestorProyectosService gestorProyectosService;
-    
+
     @Inject
     @LoggedIn
     Usuario usuarioActual;
@@ -65,6 +93,14 @@ public class TablaProyectosController implements Serializable {
     protected void anadirMensajeCorrecto(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+    }
+
+    public String getNomMarco() {
+        return nomMarco;
+    }
+
+    public void setNomMarco(String nomMarco) {
+        this.nomMarco = nomMarco;
     }
 
     public Proyecto[] getSelectedProyectos() {
@@ -142,8 +178,10 @@ public class TablaProyectosController implements Serializable {
             anadirMensajeError("Tienes que introducir una descripción para el proyecto");
         } else if (gestorProyectosService.existeProyecto(seleccionado.getNombre()) == true && gestorProyectosService.existeId(seleccionado.getNombre()) != id) {
             anadirMensajeError("Ya existe un Proyecto con ese nombre");
-        } else { 
+        } else {
             seleccionado.setFechaModificacion(Calendar.getInstance().getTime());
+            MarcoTrabajo marco = marcoTrabajoDAO.buscarPorNombre(seleccionado.getMarcoTrabajo().getNombre());
+            seleccionado.setMarcoTrabajo(marco);
             proyectoDAO.actualizar(seleccionado);
             anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
             RequestContext.getCurrentInstance().update("form");
@@ -165,6 +203,20 @@ public class TablaProyectosController implements Serializable {
         int tamano = lista.length;
         for (int i = 0; i < tamano; i++) {
             Proyecto pro = lista[i];
+            List<Activo> activoEliminar = activoDAO.buscarActivosProyecto(pro);
+            for (int j = 0; j < activoEliminar.size(); j++) {
+                List<Impacto> impactoEliminar = impactoDAO.buscarAmenazasActivo(activoEliminar.get(j));
+                for (int s = 0; s < impactoEliminar.size(); s++) {
+                    List<Degradacion> degradacionEliminar = degradacionDAO.buscarPorImpacto(impactoEliminar.get(s));
+                    for (int z = 0; z < degradacionEliminar.size(); z++) {
+                        degradacionDAO.eliminar(degradacionEliminar.get(z));
+                    }
+                    Amenaza amenazaEliminar = impactoEliminar.get(s).getAmenaza();
+                    impactoDAO.eliminar(impactoEliminar.get(s));
+                    amenazaDAO.eliminar(amenazaEliminar);
+                }
+                activoDAO.eliminar(activoEliminar.get(j));
+            }
             proyectoDAO.eliminar(pro);
         }
         if (tamano == 1) {
@@ -183,5 +235,21 @@ public class TablaProyectosController implements Serializable {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         this.setSelectedProyectos(null);
         context.redirect("misproyectos.xhtml");
+    }
+
+    public List<String> getMarcos() {
+        List <String> nombres = new ArrayList<>();
+        Proyecto[] proyecto = this.getSelectedProyectos();
+        Proyecto elegido = proyecto[0];
+        MarcoTrabajo marco = elegido.getMarcoTrabajo();
+        List <MarcoTrabajo> marcos = marcoTrabajoDAO.buscarTodos();
+        for(int i=0; i<marcos.size();i++){
+            if(marcos.get(i).getNombre().equals(marco.getNombre())){
+                nombres.add(0,marcos.get(i).getNombre());
+            }else{
+                nombres.add(i,marcos.get(i).getNombre());
+            }
+        }
+        return nombres; 
     }
 }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
@@ -25,11 +24,20 @@ public class GestorAmenazasBean implements GestorAmenazasService {
 
     @Inject
     AmenazaDAO amenazaDAO;
-    
+
     @Override
-    public void crearNuevaAmenaza(String codigo, String nombre, String descripcion, Double probabilidadOcurrencia , Double gradoDegradacionBase, TipoAmenaza tipoAmenaza,Proyecto proyecto) {
+    public void crearNuevaAmenaza(String codigo, String nombre, String descripcion, Double probabilidadOcurrencia, Double gradoDegradacionBase, TipoAmenaza tipoAmenaza, Proyecto proyecto) {
         // Crear el usuario 
-        Amenaza nuevo = new Amenaza(codigo,nombre,descripcion,probabilidadOcurrencia,gradoDegradacionBase,tipoAmenaza,proyecto);
+        Amenaza nuevo = new Amenaza(codigo, nombre, descripcion, probabilidadOcurrencia, gradoDegradacionBase, tipoAmenaza, proyecto);
         amenazaDAO.crear(nuevo);
+    }
+
+    @Override
+    public Amenaza crearAmenaza(String codigo, String nombre, String descripcion, Double probabilidadOcurrencia, Double gradoDegradacionBase, TipoAmenaza tipoAmenaza, Proyecto proyecto) {
+        // Crear el usuario 
+        Amenaza nuevo = new Amenaza(codigo, nombre, descripcion, probabilidadOcurrencia, gradoDegradacionBase, tipoAmenaza, proyecto);
+        amenazaDAO.crear(nuevo);
+
+        return nuevo;
     }
 }

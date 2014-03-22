@@ -24,10 +24,11 @@ public class Degradacion {
     public Degradacion() {
     }
 
-    public Degradacion(Double grado, Double probabilidad, Impacto impacto) {
+    public Degradacion(Double grado, Double probabilidad, Impacto impacto,Dimension dimension) {
         this.grado = grado;
         this.probabilidad = probabilidad;
         this.impacto = impacto;
+        this.dimension = dimension;
     }
 
     public Long getId() {

@@ -5,6 +5,7 @@
  */
 package es.uvigo.esei.tfg.logica.daos;
 
+import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import java.util.List;
@@ -15,8 +16,9 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface TipoAmenazaDAO {
+public interface TipoAmenazaDAO extends GenericoDAO<TipoAmenaza>{
     List<TipoAmenaza> buscarTodos();
     List<TipoAmenaza> buscarTipoActivo(TipoActivo tiposActivo);
+    List<TipoAmenaza> buscarDimension(Dimension dimensiones);
     TipoAmenaza buscarPorNombre(String nombre);
 }

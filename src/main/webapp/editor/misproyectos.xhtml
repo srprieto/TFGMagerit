@@ -85,8 +85,8 @@
                                 <p:inputText id="descripcion" value="#{selectedEdit.descripcion}"/></p>
 
                             <p><h:outputLabel for="marco" value="#{msg.MAR}"  styleClass="negrita"/>                     
-                                <h:selectOneMenu id="marco" value="#{selectedEdit.marcoTrabajo}" converter="omnifaces.SelectItemsConverter" required="true">  
-                                    <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{proyectoController.marco}" />  
+                                <h:selectOneMenu id="marco" value="#{selectedEdit.marcoTrabajo.nombre}" converter="omnifaces.SelectItemsConverter" required="true">  
+                                    <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{tablaProyectosController.marcos}" />  
                                 </h:selectOneMenu></p>
                         </p:dataList>  
                     </div>

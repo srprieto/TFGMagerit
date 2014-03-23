@@ -352,7 +352,7 @@ public class ArbolActivosController implements Serializable {
                     int valor = 1;
                     List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
                     for (int j = 0; j < listanueva.size(); j++) {
-                        if (listanueva.get(j).getNombre().equals(nombre)) {
+                        if (listanueva.get(j).getNombre().equals(nombre) && listanueva.get(j).getId() != seleccionado.getId()) {
                             valor = 0;
                         }
                     }

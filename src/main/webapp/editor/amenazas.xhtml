@@ -42,6 +42,8 @@
                                          update=":form:displayEdit, :growl" actionListener="#{arbolAmenazasController.update()}"/>
                         <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
                                          update=":form:displayMulti, :growl" actionListener="#{arbolAmenazasController.eliminar()}"/>
+                         <p:commandButton id="valoracion" value="Valoración" icon="ui-icon-plusthick"  
+                                          update=":growl" actionListener="#{arbolAmenazasController.valoracion()}"/>
                     </f:facet>  
                 </p:treeTable>
                 <p:dialog id="multiEditDialog" header="#{msg.EDI2}" widgetVar="multiEditDialog"  
@@ -71,7 +73,7 @@
 
                         </p:dataList>  
                     </div>
-                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{arbolActivosController.updateActivo()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{arbolAmenazasController.updateAmenaza()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 

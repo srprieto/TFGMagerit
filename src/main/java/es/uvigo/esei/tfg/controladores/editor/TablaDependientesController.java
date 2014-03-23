@@ -120,10 +120,10 @@ public class TablaDependientesController implements Serializable {
         int tamano = seleccionados.length;
         if (tamano == 0) {
             this.setSelectedDependientes(null);
-            anadirMensajeError("No ha seleccionado ningun proyecto");
+            anadirMensajeError("No ha seleccionado ninguna Dependencia");
         } else if (tamano != 1) {
             this.setSelectedDependientes(null);
-            anadirMensajeError("Solo puede seleccionar un proyecto para editarlo");
+            anadirMensajeError("Solo puede seleccionar unlaa Dependencia para editar");
         } else {
             RequestContext.getCurrentInstance().execute("multiEditDialog.show();");
         }

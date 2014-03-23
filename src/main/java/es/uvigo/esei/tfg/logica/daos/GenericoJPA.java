@@ -10,7 +10,6 @@ import javax.persistence.PersistenceContext;
  * @param <T>
  */
 
-
 public class GenericoJPA<T> implements GenericoDAO<T> {
 
     @PersistenceContext(unitName = "tfgPU")

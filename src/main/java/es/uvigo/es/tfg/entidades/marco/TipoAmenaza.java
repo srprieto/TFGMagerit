@@ -156,4 +156,10 @@ public class TipoAmenaza implements Serializable {
         dimensiones.add(dimension);
     }
 
+    public void eliminarDimension(Dimension dimension) {
+        if (dimension != null) {
+            dimensiones.remove(dimension);
+        }
+    }
+
 }

@@ -261,8 +261,10 @@ public class ActivoController implements Serializable {
 
     public List<Valoracion> getModeloValor() {
         //buscar activos superiores
+        boolean esta=false;
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Valoracion> resultado = new ArrayList<>();
+        List<Valoracion> resultadoCorrecto = new ArrayList<>();
         List<Valoracion> valores = new ArrayList<>();
         List<Valoracion> depen = new ArrayList<>();
         List<Valoracion> provisional = new ArrayList<>();
@@ -308,7 +310,7 @@ public class ActivoController implements Serializable {
                     provisional.clear();
                 } else {
                     for (int r = 0; r < valores.size(); r++) {
-
+                        provisional.add(valores.get(r));
                     }
                     for (int j = 0; j < superior.size(); j++) {
                         if (superior.get(j).getGrado() > 20) {
@@ -342,7 +344,122 @@ public class ActivoController implements Serializable {
                 }
             }
         }
-        return resultado;
+        provisional.clear();
+        for (int i = 0; i < resultado.size(); i++) {
+          
+            Activo valorado = resultado.get(i).getActivo();
+            List<Dependencia> superiores = dependenciaDAO.buscarporDependiente(valorado);
+            if (superiores.isEmpty()) {
+                for (int j = 0; j < resultado.size(); j++) {
+                    if (resultado.get(j).getActivo().getNombre().equals(valorado.getNombre())) {
+                        if (resultadoCorrecto.contains(resultado.get(j))) {
+                            //no hacemos nada
+                        } else {
+                            resultadoCorrecto.add(resultado.get(j));
+                        }
+                    }
+                }
+            } else {
+                
+                valores = valoracionDAO.buscarPorActivo(valorado);
+                if (valores.isEmpty()) {
+                    for (int j = 0; j < superiores.size(); j++) {
+                       
+                        for (int p = 0; p < resultado.size(); p++) {
+                            if (superiores.get(j).getActivoPrincipal().getNombre().equals(resultado.get(p).getActivo().getNombre())) {
+                                if (superiores.get(j).getGrado() > 20) {
+                                    Valoracion valorNuevo = new Valoracion();
+                                    valorNuevo.setDimension(resultado.get(p).getDimension());
+                                    valorNuevo.setActivo(valorado);
+                                    valorNuevo.setValor(resultado.get(p).getValor());
+                                   
+                                    provisional.add(valorNuevo);
+                                   
+                                }
+                            }
+                        }
+                    }
+                    for (int s = 0; s < provisional.size(); s++) {
+                        Valoracion inicial = provisional.get(s);
+
+                        for (int f = s + 1; f < provisional.size(); f++) {
+                            if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
+                                inicial.setValor(provisional.get(f).getValor());
+                                provisional.remove(f);
+                                f--;
+                            } else if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() >= provisional.get(f).getValor()) {
+                                provisional.remove(f);
+                                f--;
+                            }
+                        }
+                        for (int g = 0; g < resultadoCorrecto.size(); g++ ){
+                            
+                            if(resultadoCorrecto.get(g).getActivo().getNombre().equals(inicial.getActivo().getNombre()) && resultadoCorrecto.get(g).getDimension().getNombre().equals(inicial.getDimension().getNombre())){
+                                esta = true;
+                            } 
+                        }
+                        if( esta == false){
+                            resultadoCorrecto.add(inicial);
+                        }
+                        
+                    }
+                    esta=false;
+                    provisional.clear();
+                } else {
+                    
+                    for (int k = 0; k < valores.size(); k++) {
+                        provisional.add(valores.get(k));
+                    }
+                    
+                    for (int j = 0; j < superiores.size(); j++) {
+                       
+                        for (int p = 0; p < resultado.size(); p++) {
+                            if (superiores.get(j).getActivoPrincipal().getNombre().equals(resultado.get(p).getActivo().getNombre())) {
+                                if (superiores.get(j).getGrado() > 20) {
+                                    Valoracion valorNuevo = new Valoracion();
+                                    valorNuevo.setDimension(resultado.get(p).getDimension());
+                                    valorNuevo.setActivo(valorado);
+                                    valorNuevo.setValor(resultado.get(p).getValor());
+                                   
+                                    provisional.add(valorNuevo);
+                                   
+                                }
+                            }
+                        }
+                    }
+                    for (int s = 0; s < provisional.size(); s++) {
+                        Valoracion inicial = provisional.get(s);
+
+                        for (int f = s + 1; f < provisional.size(); f++) {
+                            if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
+                                inicial.setValor(provisional.get(f).getValor());
+                                provisional.remove(f);
+                                f--;
+                            } else if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() >= provisional.get(f).getValor()) {
+                                provisional.remove(f);
+                                f--;
+                            }
+                        }
+                        for (int g = 0; g < resultadoCorrecto.size(); g++ ){
+                            
+                            if(resultadoCorrecto.get(g).getActivo().getNombre().equals(inicial.getActivo().getNombre()) && resultadoCorrecto.get(g).getDimension().getNombre().equals(inicial.getDimension().getNombre())){
+                                esta = true;
+                            } 
+                        }
+                        if( esta == false){
+                            System.out.println("inicio");
+                            System.out.println("activo" + inicial.getActivo().getNombre());
+                            resultadoCorrecto.add(inicial);
+                        }
+                        
+                    }
+                    esta=false;
+                    provisional.clear();
+                }
+
+            }
+        }
+        return resultadoCorrecto;
     }
 
 }

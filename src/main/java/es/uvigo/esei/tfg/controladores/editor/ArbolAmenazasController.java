@@ -197,7 +197,7 @@ public class ArbolAmenazasController implements Serializable {
 
     public void eliminarAmenaza() {
         String builder;
-        
+
         for (TreeNode node : selectedNodes) {
             builder = node.getData().toString();
             String[] separadas1 = builder.split(" ", 2);
@@ -275,6 +275,96 @@ public class ArbolAmenazasController implements Serializable {
             anadirMensajeError("No puedes seleccionar un Tipo");
         } else if (valor == 3) {
             anadirMensajeError("Solo puede seleccionar un activo para editarlo");
+        }
+    }
+
+    public void updateAmenaza() {
+        String builder;
+        TreeNode node = selectedNodes[0];
+        builder = node.getData().toString();
+        String[] separadas1 = builder.split(" ", 2);
+        builder = separadas1[1];
+        List<Impacto> lista = impactoDAO.buscarAmenazasActivo(arbolActivosController.getActivoActual());
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).getAmenaza().getNombre().equals(builder)) {
+                Amenaza seleccionado = lista.get(i).getAmenaza();
+                Long id = seleccionado.getId();
+                if (codigo.equals("")) {
+                    anadirMensajeError("Tienes que introducir un codigo para la Amenaza");
+                } else if (nombre.equals("")) {
+                    anadirMensajeError("Tienes que introducir un nombre para la Amenaza");
+                } else if (descripcion.equals("")) {
+                    anadirMensajeError("Tienes que introducir una descripción para la Amenaza");
+                } else if (seleccionado.getGradoDegradacionBase() == null) {
+                    anadirMensajeError("Tienes que introducir un grado de degradacion para la Amenaza");
+                } else if (seleccionado.getGradoDegradacionBase() == null) {
+                    anadirMensajeError("Tienes que introducir un grado de degradacion para la Amenaza");
+                } else {
+                    int valor = 1;
+                    List<Impacto> listanueva = impactoDAO.buscarAmenazasActivo(arbolActivosController.getActivoActual());
+                    for (int j = 0; j < listanueva.size(); j++) {
+                        if (lista.get(j).getAmenaza().getNombre().equals(nombre) && lista.get(j).getAmenaza().getId() != seleccionado.getId()) {
+                            valor = 0;
+                        }
+                    }
+
+                    if (valor == 0) {
+                        anadirMensajeError("Ya existe una Amenaza con ese nombre");
+                    } else {
+                        TipoAmenaza tip = tipoAmenazaDAO.buscarPorNombre(nomTipo);
+                        seleccionado.setCodigo(codigo);
+                        seleccionado.setNombre(nombre);
+                        seleccionado.setDescripcion(descripcion);
+                        seleccionado.setGradoDegradacionBase(gradoDegradacionBase);
+                        seleccionado.setProbabilidadOcurrencia(probabilidadOcurrencia);
+                        seleccionado.setTipoAmenaza(tip);
+                        amenazaDAO.actualizar(seleccionado);
+                        anadirMensajeCorrecto("La Amenaza ha sido modificada correctamente");
+                        RequestContext.getCurrentInstance().update("form");
+                    }
+                }
+            }
+        }
+    }
+
+    public void valoracion() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        int valor = 0;
+        if (selectedNodes == null) {
+            anadirMensajeError("Tienes que seleccionar una amenaza para valorarla");
+            context.redirect("amenazas.xhtml");
+            valor = 2;
+        } else {
+            int tamano = selectedNodes.length;
+            if (tamano != 1) {
+                valor = 3;
+            }
+            for (int i = 0; i < tamano; i++) {
+                if (selectedNodes[i].getParent().equals(root)) {
+                    valor = 1;
+                }
+            }
+        }
+        if (valor == 0) {
+            String builder;
+            TreeNode node = selectedNodes[0];
+            builder = node.getData().toString();
+            String[] separadas1 = builder.split(" ", 2);
+            builder = separadas1[1];
+            List<Impacto> lista = impactoDAO.buscarAmenazasActivo(arbolActivosController.getActivoActual());
+            for (int i = 0; i < lista.size(); i++) {
+                if (lista.get(i).getAmenaza().getNombre().equals(builder)) {
+                    Amenaza actual = lista.get(i).getAmenaza();
+                    context.redirect("valoracionamenaza.xhtml");
+                }
+            }
+        } else if (valor == 1) {
+            anadirMensajeError("No puedes seleccionar un Tipo");
+            context.redirect("amenazas.xhtml");
+        } else if (valor == 3) {
+            anadirMensajeError("Solo puede seleccionar una amenaza para valorarla");
+            context.redirect("amenazas.xhtml");
         }
     }
 }

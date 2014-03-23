@@ -39,14 +39,14 @@
 
                     <p:column styleClass="tabla2" selectionMode="multiple"/> 
 
-                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.NOM1} Dimension">  
+                    <p:column id="nombre" styleClass="tabla1" headerText="Dimension">  
                         <h:outputText value="#{valoracion.dimension.nombre}" />    
                     </p:column> 
 
                     <p:column id="abreviatura" styleClass="tabla1" headerText="Valor">  
                         <h:outputText value="#{valoracion.valor}" />    
                     </p:column> 
-                    
+
                     <p:column id="justificacion" styleClass="tabla1" headerText="Justificación">  
                         <h:outputText value="#{valoracion.justificacion}" />    
                     </p:column> 
@@ -54,32 +54,34 @@
                     <f:facet name="footer">  
                         <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
                                          update=":form:displayEdit, :growl" actionListener="#{tablaValoracionController.update()}"/>
+                        <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
+                                         update=":form:displayMulti, :growl" actionListener="#{tablaValoracionController.eliminar()}"/> 
                     </f:facet>
                 </p:dataTable> 
                 <p:dialog id="multiEditDialog" header="#{msg.EDI1}" widgetVar="multiEditDialog"  
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
                     <div class="datalist-noborder">
-                        <p:dataList id="displayEdit" value="#{tablaDependientesController.selectedDependientes}" type="none" var="selectedEdit">  
-                            <p><h:outputLabel for="grado" value="grado"  styleClass="negrita"/> 
-                                <p:inputText id="grado" value="#{selectedEdit.grado}"/></p>
+                        <p:dataList id="displayEdit" value="#{tablaValoracionController.selectedValoraciones}" type="none" var="selectedEdit">  
 
-                            <p><h:outputLabel for="descripcion" value="justificacion"  styleClass="negrita"/> 
-                                <p:inputText id="descripcion" value="#{selectedEdit.justificacion}"/></p>
-                                
+                            <p><h:outputLabel for="valor" value="valor"  styleClass="negrita"/> 
+                                <p:inputText id="grado" value="#{selectedEdit.valor}"/></p>
+
+                            <p><h:outputLabel for="justificacion" value="justificacion"  styleClass="negrita"/> 
+                                <p:inputText id="justificacion" value="#{selectedEdit.justificacion}"/></p>
 
                         </p:dataList>  
                     </div>
-                    <p:commandButton value="#{msg.ACE}" update=":form,  :growl" actionListener="#{tablaDependientesController.updateDependencia()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaValoracionController.updateValoracion()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 
-                <p:dialog id="multiDialog" header="Desea eliminar los activos dependientes seleccionados?" widgetVar="multiDialog"  
-                          height="200" width="300" showEffect="fade" hideEffect="explode">  
+                <p:dialog id="multiDialog" header="Desea eliminar las valoraciones seleccionadas?" widgetVar="multiDialog"  
+                          height="200" width="500" showEffect="fade" hideEffect="explode">  
 
-                    <p:dataList id="displayMulti" value="#{tablaDependientesController.selectedDependientes}" var="selected">  
-                        <h:outputText value="Activo dependiente: &#160;#{selected.activoDependiente.nombre}"/>
+                    <p:dataList id="displayMulti" value="#{tablaValoracionController.selectedValoraciones}" var="selected">  
+                        <h:outputText value="Dimension: &#160;#{selected.dimension.nombre} &#160;  -Valor: #{selected.valor} "/>
                     </p:dataList>  
-                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaDependientesController.eliminarDependencias()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaValoracionController.eliminarValoraciones()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>  
             </h:form>

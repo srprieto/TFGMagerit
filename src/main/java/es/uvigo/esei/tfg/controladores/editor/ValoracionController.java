@@ -98,8 +98,7 @@ public class ValoracionController implements Serializable {
     public void setJustificacion(String justificacion) {
         this.justificacion = justificacion;
     }
-    
-    
+
     public String getNomDimension() {
         return nomDimension;
     }
@@ -137,6 +136,9 @@ public class ValoracionController implements Serializable {
         } else if (valor == null || valor < 0 || valor > 10) {
             anadirMensajeError("No se ha indicado un valor, tiene que introducir un valor entre 0 y 10");
             destino = "valoracionnueva.xhtml";
+        } else if (justificacion.equals("")) {
+            anadirMensajeError("No se ha indicado una justificaión, tiene que introducir una justificación para la valoración");
+            destino = "valoracionnueva.xhtml";
         } else {
             destino = "confirmarvaloracion.xhtml";
         }
@@ -146,9 +148,9 @@ public class ValoracionController implements Serializable {
     public void doCrear() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        gestorValoracionService.crearNuevaValoracion(valor,justificacion, arbolActivosController.getActivoActual(), dimensionDAO.buscarPorNombre(nomDimension));
+        gestorValoracionService.crearNuevaValoracion(valor, justificacion, arbolActivosController.getActivoActual(), dimensionDAO.buscarPorNombre(nomDimension));
         anadirMensajeCorrecto("La valoración ha sido almacenada correctamente");
-        valor=null;
+        valor = null;
         justificacion = "";
         context.redirect("valoraciones.xhtml");
     }

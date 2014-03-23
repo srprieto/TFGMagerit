@@ -6,6 +6,7 @@
 package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.marco.Dimension;
+import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import java.util.List;
@@ -42,6 +43,15 @@ public class TipoAmenazaJPA extends GenericoJPA<TipoAmenaza> implements TipoAmen
         Query q = em.createQuery("SELECT object(p) FROM TipoAmenaza AS p"
                 + "  WHERE p.dimensiones = :dimensiones");
         q.setParameter("dimensiones", dimensiones);
+        return q.getResultList();
+    }
+    
+     @Override
+    public List<TipoAmenaza> buscarMarco(MarcoTrabajo marcoTrabajo) {
+
+        Query q = em.createQuery("SELECT object(p) FROM TipoAmenaza AS p"
+                + "  WHERE p.marcoTrabajo = :marcoTrabajo");
+        q.setParameter("marcoTrabajo", marcoTrabajo);
         return q.getResultList();
     }
 

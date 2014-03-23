@@ -1,12 +1,19 @@
 package es.uvigo.esei.tfg.controladores.administrador;
 
+import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
+import es.uvigo.esei.tfg.logica.daos.DimensionDAO;
+import es.uvigo.esei.tfg.logica.daos.GenericoDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
+import es.uvigo.esei.tfg.logica.daos.TipoAmenazaDAO;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -27,6 +34,12 @@ public class TablaMarcosController implements Serializable {
 
     @Inject
     MarcoTrabajoDAO marcoDAO;
+    
+    @Inject
+    TipoAmenazaDAO tipoAmenazaDAO;
+    
+    @Inject
+    DimensionDAO dimensionDAO;
 
     @Inject
     GestorMarcosService gestorMarcoService;
@@ -108,7 +121,16 @@ public class TablaMarcosController implements Serializable {
         int tamano = seleccionados.length;
         for (int i = 0; i < tamano; i++) {
             MarcoTrabajo seleccionado = seleccionados[i];
-            marcoDAO.eliminar(seleccionado);
+            List<TipoAmenaza> tipoAmenazaEliminar = tipoAmenazaDAO.buscarMarco(seleccionado);
+            for(int j=0;j<tipoAmenazaEliminar.size();j++){
+                TipoAmenaza actual = tipoAmenazaEliminar.get(j);
+                List<Dimension> dimension = dimensionDAO.buscarTodos(seleccionado);
+                for(int r=0;r<dimension.size();r++){
+                    
+                     actual.eliminarDimension(dimension.get(r));
+                }
+            }
+           
         }
         if (tamano == 1) {
             anadirMensajeCorrecto("El marco ha sido eliminado correctamente");

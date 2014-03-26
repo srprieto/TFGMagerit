@@ -19,7 +19,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaDependientesController.atras()}" />                
+                        <p:menuitem value="#{msg.ATR}" url="amenazas.xhtml" />
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -28,28 +28,26 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" var="valoracion" paginator="true" rows="10" value="#{activoController.modeloValor}" >  
+                <p:dataTable id="Proyectos" emptyMessage="No existen valoraciones para la amenaza #{arbolAmenazasController.amenazaActual.nombre} en las dimensiones" 
+                             var="degradacion" value="#{amenazaController.impacto}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="#{msg.MOD1}"/>   
+                            <h:outputText value="Impacto de las amenazas sobre el activo: #{arbolActivosController.activoActual.nombre}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
-                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.DIM1}">  
-                        <h:outputText value="#{valoracion.dimension.nombre}" />    
+                    <p:column id="grado" styleClass="tabla1" headerText="Grado">  
+                        <h:outputText value="#{degradacion.grado}" />    
+                    </p:column> 
+                                      
+                    <p:column id="amenaza" styleClass="tabla1" headerText="Amenaza">  
+                        <h:outputText value="#{degradacion.impacto.amenaza.nombre}" />    
                     </p:column> 
 
-                    <p:column id="abreviatura" styleClass="tabla1" headerText="#{msg.VAL2}">  
-                        <h:outputText value="#{valoracion.valor}" />    
-                    </p:column> 
-                    
-                    <p:column id="justificacion" styleClass="tabla1" headerText="#{msg.ACT4}">  
-                        <h:outputText value="#{valoracion.activo.nombre}" />    
+                    <p:column id="dimension" styleClass="tabla1" headerText="Dimension">  
+                        <h:outputText value="#{degradacion.dimension.nombre}" />    
                     </p:column> 
 
-                    <f:facet name="footer">  
-                        
-                    </f:facet>
                 </p:dataTable> 
                
             </h:form>

@@ -9,9 +9,12 @@ import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
+import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
+import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
 import es.uvigo.esei.tfg.logica.daos.DimensionDAO;
 import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoAmenazaDAO;
@@ -61,6 +64,12 @@ public class AmenazaController implements Serializable {
 
     @Inject
     ActivoDAO activoDAO;
+    
+    @Inject
+    DegradacionDAO degradacionDAO;
+    
+    @Inject 
+    ActivoController activoController;
 
     @Inject
     ArbolActivosController arbolActivosController;
@@ -228,6 +237,87 @@ public class AmenazaController implements Serializable {
         probabilidadOcurrencia = null;
         gradoDegradacionBase = null;
         context.redirect("amenazas.xhtml");
+    }
+    
+    public List<Degradacion> getImpacto() {
+
+        List<Degradacion> degradaciones = new ArrayList<>();
+        List<Degradacion> resultado = new ArrayList<>();
+        List<Valoracion> valorAcumulado = activoController.getModeloValor();
+
+        Activo actual = arbolActivosController.getActivoActual();
+        List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
+
+        for (int i = 0; i < impactos.size(); i++) {
+            Amenaza seleccionada = impactos.get(i).getAmenaza();
+            degradaciones = degradacionDAO.buscarPorImpacto(impactos.get(i));
+            for (int j = 0; j < degradaciones.size(); j++) {
+                Degradacion principal = degradaciones.get(j);
+                for (int r = 0; r < valorAcumulado.size(); r++) {
+                    if (principal.getDimension().getNombre().equals(valorAcumulado.get(r).getDimension().getNombre()) && actual.getNombre().equals(valorAcumulado.get(r).getActivo().getNombre())) {
+                        Degradacion nuevaDegradacion = new Degradacion();
+                        Double valor = valorAcumulado.get(r).getValor();
+                        Double degradacion = principal.getGrado();
+                        Double gradoReal;
+                        Double v = valor * (degradacion / 100);
+                        int val = this.round(v);
+                        gradoReal = val * 1.0;
+                        nuevaDegradacion.setGrado(gradoReal);
+                        nuevaDegradacion.setDimension(principal.getDimension());
+                        nuevaDegradacion.setImpacto(impactos.get(i));
+                        resultado.add(nuevaDegradacion);
+                    }
+                }
+            }
+        }
+        return resultado;
+
+    }
+
+    private int round(double d) {
+        double dAbs = Math.abs(d);
+        int i = (int) dAbs;
+        double result = dAbs - (double) i;
+        if (result < 0.5) {
+            return d < 0 ? -i : i;
+        } else {
+            return d < 0 ? -(i + 1) : i + 1;
+        }
+    }
+    
+    public List<Degradacion> getImpacto(Activo activo) {
+
+        List<Degradacion> degradaciones = new ArrayList<>();
+        List<Degradacion> resultado = new ArrayList<>();
+        List<Valoracion> valorAcumulado = activoController.getModeloValor();
+
+        Activo actual = activo;
+        List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
+
+        for (int i = 0; i < impactos.size(); i++) {
+            Amenaza seleccionada = impactos.get(i).getAmenaza();
+            degradaciones = degradacionDAO.buscarPorImpacto(impactos.get(i));
+            for (int j = 0; j < degradaciones.size(); j++) {
+                Degradacion principal = degradaciones.get(j);
+                for (int r = 0; r < valorAcumulado.size(); r++) {
+                    if (principal.getDimension().getNombre().equals(valorAcumulado.get(r).getDimension().getNombre()) && actual.getNombre().equals(valorAcumulado.get(r).getActivo().getNombre())) {
+                        Degradacion nuevaDegradacion = new Degradacion();
+                        Double valor = valorAcumulado.get(r).getValor();
+                        Double degradacion = principal.getGrado();
+                        Double gradoReal;
+                        Double v = valor * (degradacion / 100);
+                        int val = this.round(v);
+                        gradoReal = val * 1.0;
+                        nuevaDegradacion.setGrado(gradoReal);
+                        nuevaDegradacion.setDimension(principal.getDimension());
+                        nuevaDegradacion.setImpacto(impactos.get(i));
+                        resultado.add(nuevaDegradacion);
+                    }
+                }
+            }
+        }
+        return resultado;
+
     }
 
 }

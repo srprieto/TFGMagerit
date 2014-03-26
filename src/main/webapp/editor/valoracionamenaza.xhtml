@@ -1,16 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.MIS}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" url="amenazas.xhtml" />
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+                <p:dataTable id="Proyectos" emptyMessage="No existen valoraciones para la amenaza #{arbolAmenazasController.amenazaActual.nombre} en las dimensiones" 
+                             var="degradacion" value="#{tablaDegradacionController.degradacionModel}"   selection="#{tablaDegradacionController.selectedDegradaciones}">  
+                    <f:facet name="header" >  
+                        <p:outputPanel>  
+                            <h:outputText value="Valoraciones de la amenaza: #{arbolAmenazasController.amenazaActual.nombre}"/>   
+                        </p:outputPanel>  
+                    </f:facet> 
+
+                    <p:column styleClass="tabla2" selectionMode="multiple"/> 
+
+                    <p:column id="grado" styleClass="tabla1" headerText="Grado">  
+                        <h:outputText value="#{degradacion.grado}" />    
+                    </p:column> 
+
+                    <p:column id="probabilidad" styleClass="tabla1" headerText="Probabilidad Ocurrencia">  
+                        <h:outputText value="#{degradacion.probabilidad}" />    
+                    </p:column> 
+
+                    <p:column id="activo" styleClass="tabla1" headerText="Activo Afectado">  
+                        <h:outputText value="#{degradacion.impacto.activo.nombre}" />    
+                    </p:column> 
+
+                    <p:column id="dimension" styleClass="tabla1" headerText="Dimension">  
+                        <h:outputText value="#{degradacion.dimension.nombre}" />    
+                    </p:column> 
+
+                    <f:facet name="footer">  
+                        <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
+                                         update=":form:displayEdit, :growl" actionListener="#{tablaDegradacionController.update()}"/>
+                    </f:facet>
+                </p:dataTable> 
+                <p:dialog id="multiEditDialog" header="#{msg.EDI1}" widgetVar="multiEditDialog"  
+                          height="200" width="500" showEffect="fade" hideEffect="explode">  
+                    <div class="datalist-noborder">
+                        <p:dataList id="displayEdit" value="#{tablaDegradacionController.selectedDegradaciones}" type="none" var="selectedEdit">  
+                            
+                            <p><h:outputLabel for="grado" value="grado"  styleClass="negrita"/> 
+                                <p:inputText id="grado" value="#{selectedEdit.grado}"/></p>
+
+                            <p><h:outputLabel for="probabilidad" value="probabilidad"  styleClass="negrita"/> 
+                                <p:inputText id="probabilidad" value="#{selectedEdit.probabilidad}"/></p>
+
+                        </p:dataList>  
+                    </div>
+                    <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaDegradacionController.updateDegradacion()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>
+            </h:form>
+        </div>
+        <p:growl id="growl" life="3000" /> 
+    </ui:define>
+</ui:composition>

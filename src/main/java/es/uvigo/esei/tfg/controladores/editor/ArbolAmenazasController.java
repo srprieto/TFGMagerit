@@ -45,6 +45,8 @@ public class ArbolAmenazasController implements Serializable {
     private String descripcion;
     private Double probabilidadOcurrencia;
     private Double gradoDegradacionBase;
+    
+    private Amenaza amenazaActual;
 
     @Inject
     AmenazaDAO amenazaDAO;
@@ -112,6 +114,14 @@ public class ArbolAmenazasController implements Serializable {
         return root;
     }
 
+    public Amenaza getAmenazaActual() {
+        return amenazaActual;
+    }
+
+    public void setAmenazaActual(Amenaza amenazaActual) {
+        this.amenazaActual = amenazaActual;
+    }
+    
     public String getCodigo() {
         return codigo;
     }
@@ -355,7 +365,7 @@ public class ArbolAmenazasController implements Serializable {
             List<Impacto> lista = impactoDAO.buscarAmenazasActivo(arbolActivosController.getActivoActual());
             for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getAmenaza().getNombre().equals(builder)) {
-                    Amenaza actual = lista.get(i).getAmenaza();
+                    amenazaActual = lista.get(i).getAmenaza();
                     context.redirect("valoracionamenaza.xhtml");
                 }
             }

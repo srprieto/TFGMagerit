@@ -8,13 +8,18 @@ package es.uvigo.esei.tfg.controladores.editor;
 import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
 import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
+import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
 import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorActivoService;
 import es.uvigo.esei.tfg.logica.daos.GrupoActivosDAO;
+import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.ValoracionDAO;
 import java.io.IOException;
@@ -59,10 +64,7 @@ public class ActivoController implements Serializable {
     TipoActivoDAO tipoActivoDAO;
 
     @Inject
-    GestorActivoService gestorActivoService;
-
-    @Inject
-    ProyectoController proyectoController;
+    DegradacionDAO degradacionDAO;
 
     @Inject
     GrupoActivosDAO grupoActivoDAO;
@@ -72,6 +74,21 @@ public class ActivoController implements Serializable {
 
     @Inject
     ValoracionDAO valoracionDAO;
+
+    @Inject
+    ImpactoDAO impactoDAO;
+
+    @Inject
+    GestorActivoService gestorActivoService;
+
+    @Inject
+    ProyectoController proyectoController;
+
+    @Inject
+    ArbolActivosController arbolActivosController;
+
+    @Inject
+    AmenazaController amenazaController;
 
     public ActivoController() {
 
@@ -261,7 +278,7 @@ public class ActivoController implements Serializable {
 
     public List<Valoracion> getModeloValor() {
         //buscar activos superiores
-        boolean esta=false;
+        boolean esta = false;
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Valoracion> resultado = new ArrayList<>();
         List<Valoracion> resultadoCorrecto = new ArrayList<>();
@@ -346,7 +363,7 @@ public class ActivoController implements Serializable {
         }
         provisional.clear();
         for (int i = 0; i < resultado.size(); i++) {
-          
+
             Activo valorado = resultado.get(i).getActivo();
             List<Dependencia> superiores = dependenciaDAO.buscarporDependiente(valorado);
             if (superiores.isEmpty()) {
@@ -360,11 +377,11 @@ public class ActivoController implements Serializable {
                     }
                 }
             } else {
-                
+
                 valores = valoracionDAO.buscarPorActivo(valorado);
                 if (valores.isEmpty()) {
                     for (int j = 0; j < superiores.size(); j++) {
-                       
+
                         for (int p = 0; p < resultado.size(); p++) {
                             if (superiores.get(j).getActivoPrincipal().getNombre().equals(resultado.get(p).getActivo().getNombre())) {
                                 if (superiores.get(j).getGrado() > 20) {
@@ -372,9 +389,7 @@ public class ActivoController implements Serializable {
                                     valorNuevo.setDimension(resultado.get(p).getDimension());
                                     valorNuevo.setActivo(valorado);
                                     valorNuevo.setValor(resultado.get(p).getValor());
-                                   
                                     provisional.add(valorNuevo);
-                                   
                                 }
                             }
                         }
@@ -392,27 +407,24 @@ public class ActivoController implements Serializable {
                                 f--;
                             }
                         }
-                        for (int g = 0; g < resultadoCorrecto.size(); g++ ){
-                            
-                            if(resultadoCorrecto.get(g).getActivo().getNombre().equals(inicial.getActivo().getNombre()) && resultadoCorrecto.get(g).getDimension().getNombre().equals(inicial.getDimension().getNombre())){
+                        for (int g = 0; g < resultadoCorrecto.size(); g++) {
+
+                            if (resultadoCorrecto.get(g).getActivo().getNombre().equals(inicial.getActivo().getNombre()) && resultadoCorrecto.get(g).getDimension().getNombre().equals(inicial.getDimension().getNombre())) {
                                 esta = true;
-                            } 
+                            }
                         }
-                        if( esta == false){
+                        if (esta == false) {
                             resultadoCorrecto.add(inicial);
                         }
-                        
                     }
-                    esta=false;
+                    esta = false;
                     provisional.clear();
                 } else {
-                    
                     for (int k = 0; k < valores.size(); k++) {
                         provisional.add(valores.get(k));
                     }
-                    
                     for (int j = 0; j < superiores.size(); j++) {
-                       
+
                         for (int p = 0; p < resultado.size(); p++) {
                             if (superiores.get(j).getActivoPrincipal().getNombre().equals(resultado.get(p).getActivo().getNombre())) {
                                 if (superiores.get(j).getGrado() > 20) {
@@ -420,16 +432,13 @@ public class ActivoController implements Serializable {
                                     valorNuevo.setDimension(resultado.get(p).getDimension());
                                     valorNuevo.setActivo(valorado);
                                     valorNuevo.setValor(resultado.get(p).getValor());
-                                   
                                     provisional.add(valorNuevo);
-                                   
                                 }
                             }
                         }
                     }
                     for (int s = 0; s < provisional.size(); s++) {
                         Valoracion inicial = provisional.get(s);
-
                         for (int f = s + 1; f < provisional.size(); f++) {
                             if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
                                 inicial.setValor(provisional.get(f).getValor());
@@ -440,26 +449,56 @@ public class ActivoController implements Serializable {
                                 f--;
                             }
                         }
-                        for (int g = 0; g < resultadoCorrecto.size(); g++ ){
-                            
-                            if(resultadoCorrecto.get(g).getActivo().getNombre().equals(inicial.getActivo().getNombre()) && resultadoCorrecto.get(g).getDimension().getNombre().equals(inicial.getDimension().getNombre())){
+                        for (int g = 0; g < resultadoCorrecto.size(); g++) {
+
+                            if (resultadoCorrecto.get(g).getActivo().getNombre().equals(inicial.getActivo().getNombre()) && resultadoCorrecto.get(g).getDimension().getNombre().equals(inicial.getDimension().getNombre())) {
                                 esta = true;
-                            } 
+                            }
                         }
-                        if( esta == false){
-                            System.out.println("inicio");
-                            System.out.println("activo" + inicial.getActivo().getNombre());
+                        if (esta == false) {
                             resultadoCorrecto.add(inicial);
                         }
-                        
                     }
-                    esta=false;
+                    esta = false;
                     provisional.clear();
                 }
-
             }
         }
         return resultadoCorrecto;
+    }
+
+    public List<Degradacion> getImpactoAcumulado() {
+
+        List<Degradacion> impactoAcumulado = new ArrayList<>();
+        List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+
+        for (int p = 0; p < activos.size(); p++) {
+            List<Degradacion> resultado = amenazaController.getImpacto(activos.get(p));
+            for (int s = 0; s < resultado.size(); s++) {
+                Degradacion seleccionada = resultado.get(s);
+
+                for (int i = s + 1; i < resultado.size(); i++) {
+                    if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
+                        Degradacion valor = new Degradacion();
+                        if (seleccionada.getGrado() < resultado.get(i).getGrado()) {
+                            valor.setGrado(resultado.get(i).getGrado());
+                            valor.setDimension(resultado.get(i).getDimension());
+                            valor.setImpacto(resultado.get(i).getImpacto());
+                            resultado.remove(i);
+                            i--;
+                        } else {
+                            valor.setGrado(seleccionada.getGrado());
+                            valor.setDimension(seleccionada.getDimension());
+                            valor.setImpacto(seleccionada.getImpacto());
+                            resultado.remove(i);
+                            i--;
+                        }
+                        impactoAcumulado.add(valor);
+                    }
+                }
+            }
+        }
+        return impactoAcumulado;
     }
 
 }

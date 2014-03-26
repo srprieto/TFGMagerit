@@ -469,6 +469,7 @@ public class ActivoController implements Serializable {
 
     public List<Degradacion> getImpactoAcumulado() {
 
+        boolean sinDimension = true;
         List<Degradacion> impactoAcumulado = new ArrayList<>();
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
 
@@ -479,6 +480,7 @@ public class ActivoController implements Serializable {
 
                 for (int i = s + 1; i < resultado.size(); i++) {
                     if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
+                        sinDimension = false;
                         Degradacion valor = new Degradacion();
                         if (seleccionada.getGrado() < resultado.get(i).getGrado()) {
                             valor.setGrado(resultado.get(i).getGrado());
@@ -495,6 +497,14 @@ public class ActivoController implements Serializable {
                         }
                         impactoAcumulado.add(valor);
                     }
+
+                }
+                if (sinDimension == true) {
+                    Degradacion valor = new Degradacion();
+                    valor.setGrado(seleccionada.getGrado());
+                    valor.setDimension(seleccionada.getDimension());
+                    valor.setImpacto(seleccionada.getImpacto());
+                    impactoAcumulado.add(valor);
                 }
             }
         }

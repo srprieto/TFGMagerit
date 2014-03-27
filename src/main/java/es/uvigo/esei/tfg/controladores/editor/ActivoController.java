@@ -13,6 +13,7 @@ import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
 import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
+import es.uvigo.es.tfg.entidades.proyecto.Riesgo;
 import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
@@ -470,13 +471,15 @@ public class ActivoController implements Serializable {
     public List<Degradacion> getImpactoAcumulado() {
 
         boolean sinDimension = true;
+        Degradacion seleccionada;
         List<Degradacion> impactoAcumulado = new ArrayList<>();
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+        List<Degradacion> resultado = new ArrayList<>();
 
         for (int p = 0; p < activos.size(); p++) {
-            List<Degradacion> resultado = amenazaController.getImpacto(activos.get(p));
+            resultado = amenazaController.getImpacto(activos.get(p));
             for (int s = 0; s < resultado.size(); s++) {
-                Degradacion seleccionada = resultado.get(s);
+                seleccionada = resultado.get(s);
 
                 for (int i = s + 1; i < resultado.size(); i++) {
                     if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
@@ -509,6 +512,55 @@ public class ActivoController implements Serializable {
             }
         }
         return impactoAcumulado;
+    }
+
+    public List<Riesgo> getRiesgoAcumulado() {
+
+        boolean sinDimension = true;
+        List<Riesgo> riesgoAcumulado = new ArrayList<>();
+        List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+        List<Riesgo> resultado = new ArrayList<>();
+        System.out.println("inciio");
+        for (int p = 0; p < activos.size(); p++) {
+            resultado = amenazaController.getRiesgo(activos.get(p));
+            System.out.println("hola");
+            for (int s = 0; s < resultado.size(); s++) {
+                Riesgo seleccionada = resultado.get(s);
+                System.out.println("primero" + seleccionada.getDimension().getNombre());
+                for (int i = s + 1; i < resultado.size(); i++) {
+                     System.out.println("segundo" + resultado.get(i).getDimension().getNombre());
+                    if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
+                        sinDimension = false;
+                        Riesgo valor = new Riesgo();
+                        if (seleccionada.getValor() < resultado.get(i).getValor()) {
+                            valor.setValor(resultado.get(i).getValor());
+                            valor.setDimension(resultado.get(i).getDimension());
+                            valor.setImpacto(resultado.get(i).getImpacto());
+                            resultado.remove(i);
+                            i--;
+                        } else {
+                            valor.setValor(seleccionada.getValor());
+                            valor.setDimension(seleccionada.getDimension());
+                            valor.setImpacto(seleccionada.getImpacto());
+                            resultado.remove(i);
+                            i--;
+                        }
+                        riesgoAcumulado.add(valor);
+                        System.out.println(valor.getImpacto().getActivo().getNombre());
+                    }
+
+                }
+                if (sinDimension == true) {
+                    Riesgo valor = new Riesgo();
+                    valor.setValor(seleccionada.getValor());
+                    valor.setDimension(seleccionada.getDimension());
+                    valor.setImpacto(seleccionada.getImpacto());
+                    riesgoAcumulado.add(valor);
+                    System.out.println(valor.getImpacto().getActivo().getNombre());
+                }
+            }
+        }
+        return riesgoAcumulado;
     }
 
 }

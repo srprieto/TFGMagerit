@@ -11,6 +11,7 @@ import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
 import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
+import es.uvigo.es.tfg.entidades.proyecto.Riesgo;
 import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
@@ -64,11 +65,11 @@ public class AmenazaController implements Serializable {
 
     @Inject
     ActivoDAO activoDAO;
-    
+
     @Inject
     DegradacionDAO degradacionDAO;
-    
-    @Inject 
+
+    @Inject
     ActivoController activoController;
 
     @Inject
@@ -238,33 +239,40 @@ public class AmenazaController implements Serializable {
         gradoDegradacionBase = null;
         context.redirect("amenazas.xhtml");
     }
-    
+
     public List<Degradacion> getImpacto() {
 
         List<Degradacion> degradaciones = new ArrayList<>();
         List<Degradacion> resultado = new ArrayList<>();
         List<Valoracion> valorAcumulado = activoController.getModeloValor();
+        Double valor;
+        Double degradacion;
+        Double gradoReal;
+        Double v;
+        Degradacion principal;
+        Amenaza seleccionada;
+        int val;
 
         Activo actual = arbolActivosController.getActivoActual();
         List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
 
         for (int i = 0; i < impactos.size(); i++) {
-            Amenaza seleccionada = impactos.get(i).getAmenaza();
+            seleccionada = impactos.get(i).getAmenaza();
             degradaciones = degradacionDAO.buscarPorImpacto(impactos.get(i));
             for (int j = 0; j < degradaciones.size(); j++) {
-                Degradacion principal = degradaciones.get(j);
+                principal = degradaciones.get(j);
                 for (int r = 0; r < valorAcumulado.size(); r++) {
                     if (principal.getDimension().getNombre().equals(valorAcumulado.get(r).getDimension().getNombre()) && actual.getNombre().equals(valorAcumulado.get(r).getActivo().getNombre())) {
                         Degradacion nuevaDegradacion = new Degradacion();
-                        Double valor = valorAcumulado.get(r).getValor();
-                        Double degradacion = principal.getGrado();
-                        Double gradoReal;
-                        Double v = valor * (degradacion / 100);
-                        int val = this.round(v);
+                        valor = valorAcumulado.get(r).getValor();
+                        degradacion = principal.getGrado();
+                        v = valor * (degradacion / 100);
+                        val = this.round(v);
                         gradoReal = val * 1.0;
                         nuevaDegradacion.setGrado(gradoReal);
                         nuevaDegradacion.setDimension(principal.getDimension());
                         nuevaDegradacion.setImpacto(impactos.get(i));
+                        nuevaDegradacion.setProbabilidad(principal.getProbabilidad());
                         resultado.add(nuevaDegradacion);
                     }
                 }
@@ -284,33 +292,40 @@ public class AmenazaController implements Serializable {
             return d < 0 ? -(i + 1) : i + 1;
         }
     }
-    
+
     public List<Degradacion> getImpacto(Activo activo) {
 
         List<Degradacion> degradaciones = new ArrayList<>();
         List<Degradacion> resultado = new ArrayList<>();
         List<Valoracion> valorAcumulado = activoController.getModeloValor();
+        Double valor;
+        Double degradacion;
+        Double gradoReal;
+        Double v;
+        Degradacion principal;
+        Amenaza seleccionada;
+        int val;
 
         Activo actual = activo;
         List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
 
         for (int i = 0; i < impactos.size(); i++) {
-            Amenaza seleccionada = impactos.get(i).getAmenaza();
+            seleccionada = impactos.get(i).getAmenaza();
             degradaciones = degradacionDAO.buscarPorImpacto(impactos.get(i));
             for (int j = 0; j < degradaciones.size(); j++) {
-                Degradacion principal = degradaciones.get(j);
+                principal = degradaciones.get(j);
                 for (int r = 0; r < valorAcumulado.size(); r++) {
                     if (principal.getDimension().getNombre().equals(valorAcumulado.get(r).getDimension().getNombre()) && actual.getNombre().equals(valorAcumulado.get(r).getActivo().getNombre())) {
                         Degradacion nuevaDegradacion = new Degradacion();
-                        Double valor = valorAcumulado.get(r).getValor();
-                        Double degradacion = principal.getGrado();
-                        Double gradoReal;
-                        Double v = valor * (degradacion / 100);
-                        int val = this.round(v);
+                        valor = valorAcumulado.get(r).getValor();
+                        degradacion = principal.getGrado();
+                        v = valor * (degradacion / 100);
+                        val = this.round(v);
                         gradoReal = val * 1.0;
                         nuevaDegradacion.setGrado(gradoReal);
                         nuevaDegradacion.setDimension(principal.getDimension());
                         nuevaDegradacion.setImpacto(impactos.get(i));
+                        nuevaDegradacion.setProbabilidad(principal.getProbabilidad());
                         resultado.add(nuevaDegradacion);
                     }
                 }
@@ -319,5 +334,146 @@ public class AmenazaController implements Serializable {
         return resultado;
 
     }
+
+    public List<Riesgo> getRiesgo() {
+
+        List<Riesgo> resultado = new ArrayList<>();
+        List<Degradacion> impacto = this.getImpacto(arbolActivosController.getActivoActual());
+
+        Activo actual = arbolActivosController.getActivoActual();
+        List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
+
+        Amenaza seleccionada;
+        Double valor;
+        String daño;
+        int val = 0;
+
+        for (int i = 0; i < impactos.size(); i++) {
+            seleccionada = impactos.get(i).getAmenaza();
+            for (int j = 0; j < impacto.size(); j++) {
+                if (seleccionada.getNombre().equals(impacto.get(j).getImpacto().getAmenaza().getNombre())) {
+                    valor = impacto.get(j).getGrado();
+                    Riesgo riesgo = new Riesgo();
+                    if (valor == 0 && impacto.get(j).getProbabilidad() < 10) {
+                        val = 0;
+                    } else if (valor == 0 && impacto.get(j).getProbabilidad() >= 10) {
+                        val = 1;
+                    } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 0;
+                    } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
+                        val =2;
+                    } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 3 ;
+                    } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 2;
+                    } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
+                        val = 4;
+                    } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 6 ;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 5;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
+                        val = 7;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 9;
+                    } else if (valor >= 9 && valor <= 10 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 8;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 10;
+                    }
+                    
+                    if (val == 0) {
+                        daño = "Despreciable";
+                    } else if (val >= 1 && val <= 2) {
+                        daño = "Bajo";
+                    } else if (val >= 3 && val <= 5) {
+                        daño = "Apreciable";
+                    } else if (val >= 6 && val <= 8) {
+                        daño = "Importante";
+                    } else {
+                        daño = "Crítico";
+                    }
+                    riesgo.setGravedad(daño);
+                    riesgo.setValor(val);
+                    riesgo.setDimension(impacto.get(j).getDimension());
+                    riesgo.setImpacto(impacto.get(j).getImpacto());
+
+                    resultado.add(riesgo);
+                }
+            }
+        }
+        return resultado;
+    }
+    
+    public List<Riesgo> getRiesgo(Activo activo) {
+
+        List<Riesgo> resultado = new ArrayList<>();
+        List<Degradacion> impacto = this.getImpacto(activo);
+
+        Activo actual = activo;
+        List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
+
+        Amenaza seleccionada;
+        Double valor;
+        String daño;
+        int val = 0;
+
+        for (int i = 0; i < impactos.size(); i++) {
+            seleccionada = impactos.get(i).getAmenaza();
+            for (int j = 0; j < impacto.size(); j++) {
+                if (seleccionada.getNombre().equals(impacto.get(j).getImpacto().getAmenaza().getNombre())) {
+                    valor = impacto.get(j).getGrado();
+                    Riesgo riesgo = new Riesgo();
+                    if (valor == 0 && impacto.get(j).getProbabilidad() < 10) {
+                        val = 0;
+                    } else if (valor == 0 && impacto.get(j).getProbabilidad() >= 10) {
+                        val = 1;
+                    } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 0;
+                    } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
+                        val =2;
+                    } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 3 ;
+                    } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 2;
+                    } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
+                        val = 4;
+                    } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 6 ;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 5;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
+                        val = 7;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 9;
+                    } else if (valor >= 9 && valor <= 10 && impacto.get(j).getProbabilidad() == (1 / 100)) {
+                        val = 8;
+                    } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 100) {
+                        val = 10;
+                    }
+                    
+                    if (val == 0) {
+                        daño = "Despreciable";
+                    } else if (val >= 1 && val <= 2) {
+                        daño = "Bajo";
+                    } else if (val >= 3 && val <= 5) {
+                        daño = "Apreciable";
+                    } else if (val >= 6 && val <= 8) {
+                        daño = "Importante";
+                    } else {
+                        daño = "Crítico";
+                    }
+                    riesgo.setGravedad(daño);
+                    riesgo.setValor(val);
+                    riesgo.setDimension(impacto.get(j).getDimension());
+                    riesgo.setImpacto(impacto.get(j).getImpacto());
+
+                    resultado.add(riesgo);
+                }
+            }
+        }
+        return resultado;
+    }
+
 
 }

@@ -29,10 +29,8 @@
             <h:form id="form">
                 <p:panel header="#{msg.ALT}">
                     <h:panelGrid id="grid" columns="2" cellpadding="5"> 
-
                         <h:outputLabel for="login" value="#{msg.LOG1}"  styleClass="negrita"/>                      
                         <p:inputText id="login" value="#{usuarioController.login}"/>  
-
 
                         <h:outputLabel for="pwd1" value="#{msg.PAS1}" styleClass="negrita"/>                      
                         <p:password id="pwd1" value="#{usuarioController.password}"/>  
@@ -44,7 +42,6 @@
                         <h:selectOneMenu id="tipo" value="#{usuarioController.tipo}">  
                             <f:selectItems value="#{tipoUsuarioController.tipoValues}" />  
                         </h:selectOneMenu>    
-
                     </h:panelGrid>  
                     <p:commandButton value="#{msg.GUA}" update=" :growl" actionListener="#{usuarioController.doUsuario()}" styleClass="boton" /> 
                     <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/>  

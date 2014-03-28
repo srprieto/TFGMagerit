@@ -280,26 +280,35 @@ public class ActivoController implements Serializable {
     public List<Valoracion> getModeloValor() {
         //buscar activos superiores
         boolean esta = false;
+        
+        Activo activo;
+        Activo principal;
+        Activo valorado;
+        Valoracion inicial;
+        
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Valoracion> resultado = new ArrayList<>();
+        List<Dependencia> superior = new ArrayList<>();
+        List<Dependencia> superiores = new ArrayList<>();
         List<Valoracion> resultadoCorrecto = new ArrayList<>();
         List<Valoracion> valores = new ArrayList<>();
         List<Valoracion> depen = new ArrayList<>();
         List<Valoracion> provisional = new ArrayList<>();
+        
         for (int x = 0; x < activos.size(); x++) {
-            Activo activo = activoDAO.buscarPorNombre(activos.get(x).getNombre());
-            List<Dependencia> superior = dependenciaDAO.buscarporDependiente(activo);
+            activo = activoDAO.buscarPorNombre(activos.get(x).getNombre());
+            superior = dependenciaDAO.buscarporDependiente(activo);
             if (superior.isEmpty()) {
                 valores = valoracionDAO.buscarPorActivo(activo);
                 for (int i = 0; i < valores.size(); i++) {
                     resultado.add(valores.get(i));
-                }
+                }   
             } else {
                 valores = valoracionDAO.buscarPorActivo(activo);
                 if (valores.isEmpty()) {
                     for (int j = 0; j < superior.size(); j++) {
                         if (superior.get(j).getGrado() > 20) {
-                            Activo principal = superior.get(j).getActivoPrincipal();
+                            principal = superior.get(j).getActivoPrincipal();
                             depen = valoracionDAO.buscarPorActivo(principal);
                             for (int z = 0; z < depen.size(); z++) {
                                 Valoracion valorNuevo = new Valoracion();
@@ -308,10 +317,11 @@ public class ActivoController implements Serializable {
                                 valorNuevo.setValor(depen.get(z).getValor());
                                 provisional.add(valorNuevo);
                             }
+                            depen.clear();
                         }
                     }
                     for (int s = 0; s < provisional.size(); s++) {
-                        Valoracion inicial = provisional.get(s);
+                        inicial = provisional.get(s);
 
                         for (int f = s + 1; f < provisional.size(); f++) {
                             if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
@@ -332,7 +342,7 @@ public class ActivoController implements Serializable {
                     }
                     for (int j = 0; j < superior.size(); j++) {
                         if (superior.get(j).getGrado() > 20) {
-                            Activo principal = superior.get(j).getActivoPrincipal();
+                            principal = superior.get(j).getActivoPrincipal();
                             depen = valoracionDAO.buscarPorActivo(principal);
                             for (int z = 0; z < depen.size(); z++) {
                                 Valoracion valorNuevo = new Valoracion();
@@ -341,10 +351,11 @@ public class ActivoController implements Serializable {
                                 valorNuevo.setValor(depen.get(z).getValor());
                                 provisional.add(valorNuevo);
                             }
+                            depen.clear();
                         }
                     }
                     for (int s = 0; s < provisional.size(); s++) {
-                        Valoracion inicial = provisional.get(s);
+                        inicial = provisional.get(s);
 
                         for (int f = s + 1; f < provisional.size(); f++) {
                             if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
@@ -360,13 +371,14 @@ public class ActivoController implements Serializable {
                     }
                     provisional.clear();
                 }
+                valores.clear();
             }
+            superior.clear();
         }
         provisional.clear();
         for (int i = 0; i < resultado.size(); i++) {
-
-            Activo valorado = resultado.get(i).getActivo();
-            List<Dependencia> superiores = dependenciaDAO.buscarporDependiente(valorado);
+            valorado = resultado.get(i).getActivo();
+            superiores = dependenciaDAO.buscarporDependiente(valorado);
             if (superiores.isEmpty()) {
                 for (int j = 0; j < resultado.size(); j++) {
                     if (resultado.get(j).getActivo().getNombre().equals(valorado.getNombre())) {
@@ -378,11 +390,9 @@ public class ActivoController implements Serializable {
                     }
                 }
             } else {
-
                 valores = valoracionDAO.buscarPorActivo(valorado);
                 if (valores.isEmpty()) {
                     for (int j = 0; j < superiores.size(); j++) {
-
                         for (int p = 0; p < resultado.size(); p++) {
                             if (superiores.get(j).getActivoPrincipal().getNombre().equals(resultado.get(p).getActivo().getNombre())) {
                                 if (superiores.get(j).getGrado() > 20) {
@@ -396,8 +406,7 @@ public class ActivoController implements Serializable {
                         }
                     }
                     for (int s = 0; s < provisional.size(); s++) {
-                        Valoracion inicial = provisional.get(s);
-
+                        inicial = provisional.get(s);
                         for (int f = s + 1; f < provisional.size(); f++) {
                             if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
                                 inicial.setValor(provisional.get(f).getValor());
@@ -439,7 +448,7 @@ public class ActivoController implements Serializable {
                         }
                     }
                     for (int s = 0; s < provisional.size(); s++) {
-                        Valoracion inicial = provisional.get(s);
+                        inicial = provisional.get(s);
                         for (int f = s + 1; f < provisional.size(); f++) {
                             if (provisional.get(f).getDimension().getNombre() == inicial.getDimension().getNombre() && inicial.getValor() < provisional.get(f).getValor()) {
                                 inicial.setValor(provisional.get(f).getValor());
@@ -463,7 +472,9 @@ public class ActivoController implements Serializable {
                     esta = false;
                     provisional.clear();
                 }
+                valores.clear();
             }
+            superiores.clear();
         }
         return resultadoCorrecto;
     }
@@ -480,7 +491,6 @@ public class ActivoController implements Serializable {
             resultado = amenazaController.getImpacto(activos.get(p));
             for (int s = 0; s < resultado.size(); s++) {
                 seleccionada = resultado.get(s);
-
                 for (int i = s + 1; i < resultado.size(); i++) {
                     if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
                         sinDimension = false;
@@ -517,18 +527,16 @@ public class ActivoController implements Serializable {
     public List<Riesgo> getRiesgoAcumulado() {
 
         boolean sinDimension = true;
+        Riesgo seleccionada;
         List<Riesgo> riesgoAcumulado = new ArrayList<>();
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Riesgo> resultado = new ArrayList<>();
-        System.out.println("inciio");
+      
         for (int p = 0; p < activos.size(); p++) {
-            resultado = amenazaController.getRiesgo(activos.get(p));
-            System.out.println("hola");
+            resultado = amenazaController.getRiesgo(activos.get(p));         
             for (int s = 0; s < resultado.size(); s++) {
-                Riesgo seleccionada = resultado.get(s);
-                System.out.println("primero" + seleccionada.getDimension().getNombre());
-                for (int i = s + 1; i < resultado.size(); i++) {
-                     System.out.println("segundo" + resultado.get(i).getDimension().getNombre());
+                seleccionada = resultado.get(s);              
+                for (int i = s + 1; i < resultado.size(); i++) {                   
                     if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
                         sinDimension = false;
                         Riesgo valor = new Riesgo();
@@ -536,17 +544,19 @@ public class ActivoController implements Serializable {
                             valor.setValor(resultado.get(i).getValor());
                             valor.setDimension(resultado.get(i).getDimension());
                             valor.setImpacto(resultado.get(i).getImpacto());
+                            valor.setGravedad(resultado.get(i).getGravedad());
                             resultado.remove(i);
                             i--;
                         } else {
                             valor.setValor(seleccionada.getValor());
                             valor.setDimension(seleccionada.getDimension());
                             valor.setImpacto(seleccionada.getImpacto());
+                             valor.setGravedad(seleccionada.getGravedad());
                             resultado.remove(i);
                             i--;
                         }
                         riesgoAcumulado.add(valor);
-                        System.out.println(valor.getImpacto().getActivo().getNombre());
+                     
                     }
 
                 }
@@ -555,8 +565,9 @@ public class ActivoController implements Serializable {
                     valor.setValor(seleccionada.getValor());
                     valor.setDimension(seleccionada.getDimension());
                     valor.setImpacto(seleccionada.getImpacto());
+                    valor.setGravedad(seleccionada.getGravedad());
                     riesgoAcumulado.add(valor);
-                    System.out.println(valor.getImpacto().getActivo().getNombre());
+                   
                 }
             }
         }

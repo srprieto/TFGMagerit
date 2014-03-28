@@ -162,6 +162,17 @@ public class AmenazaController implements Serializable {
         this.gradoDegradacionBase = gradoDegradacionBase;
     }
 
+    public List<Double> getProbabilidad() {
+        List<Double> probabilidades = new ArrayList<>();
+        probabilidades.add(0.01);
+        probabilidades.add(0.1);
+        probabilidades.add(1 * 1.0);
+        probabilidades.add(10 * 1.0);
+        probabilidades.add(100 * 1.0);
+
+        return probabilidades;
+    }
+
     public String doGuargar() {
         String destino;
         if (codigo.equals("")) {
@@ -172,6 +183,9 @@ public class AmenazaController implements Serializable {
             destino = "crearamenaza.xhtml";
         } else if (descripcion.equals("")) {
             anadirMensajeError("No se ha indicado una descripción para la amenaza");
+            destino = "crearamenaza.xhtml";
+        } else if (gradoDegradacionBase == null) {
+            anadirMensajeError("No se ha indicado una degradación para la amenaza");
             destino = "crearamenaza.xhtml";
         } else {
 
@@ -244,17 +258,19 @@ public class AmenazaController implements Serializable {
 
         List<Degradacion> degradaciones = new ArrayList<>();
         List<Degradacion> resultado = new ArrayList<>();
-        List<Valoracion> valorAcumulado = activoController.getModeloValor();
+
         Double valor;
         Double degradacion;
         Double gradoReal;
         Double v;
+        int val;
+
         Degradacion principal;
         Amenaza seleccionada;
-        int val;
 
         Activo actual = arbolActivosController.getActivoActual();
         List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
+        List<Valoracion> valorAcumulado = activoController.getModeloValor();
 
         for (int i = 0; i < impactos.size(); i++) {
             seleccionada = impactos.get(i).getAmenaza();
@@ -361,15 +377,15 @@ public class AmenazaController implements Serializable {
                     } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() == (1 / 100)) {
                         val = 0;
                     } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
-                        val =2;
+                        val = 2;
                     } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
-                        val = 3 ;
+                        val = 3;
                     } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() == (1 / 100)) {
                         val = 2;
                     } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
                         val = 4;
                     } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
-                        val = 6 ;
+                        val = 6;
                     } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() == (1 / 100)) {
                         val = 5;
                     } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
@@ -381,7 +397,7 @@ public class AmenazaController implements Serializable {
                     } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 100) {
                         val = 10;
                     }
-                    
+
                     if (val == 0) {
                         daño = "Despreciable";
                     } else if (val >= 1 && val <= 2) {
@@ -404,7 +420,7 @@ public class AmenazaController implements Serializable {
         }
         return resultado;
     }
-    
+
     public List<Riesgo> getRiesgo(Activo activo) {
 
         List<Riesgo> resultado = new ArrayList<>();
@@ -431,15 +447,15 @@ public class AmenazaController implements Serializable {
                     } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() == (1 / 100)) {
                         val = 0;
                     } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
-                        val =2;
+                        val = 2;
                     } else if (valor >= 1 && valor <= 2 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
-                        val = 3 ;
+                        val = 3;
                     } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() == (1 / 100)) {
                         val = 2;
                     } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
                         val = 4;
                     } else if (valor >= 3 && valor <= 5 && impacto.get(j).getProbabilidad() >= 10 && impacto.get(j).getProbabilidad() <= 100) {
-                        val = 6 ;
+                        val = 6;
                     } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() == (1 / 100)) {
                         val = 5;
                     } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 1) {
@@ -451,7 +467,7 @@ public class AmenazaController implements Serializable {
                     } else if (valor >= 6 && valor <= 8 && impacto.get(j).getProbabilidad() >= (1 / 10) && impacto.get(j).getProbabilidad() <= 100) {
                         val = 10;
                     }
-                    
+
                     if (val == 0) {
                         daño = "Despreciable";
                     } else if (val >= 1 && val <= 2) {
@@ -474,6 +490,5 @@ public class AmenazaController implements Serializable {
         }
         return resultado;
     }
-
 
 }

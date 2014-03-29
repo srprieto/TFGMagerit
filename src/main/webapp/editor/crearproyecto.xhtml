@@ -7,7 +7,7 @@ xmlns:f="http://java.sun.com/jsf/core"
 xmlns:p="http://primefaces.org/ui"
 template="/templates/plantilla.xhtml">
 <h:outputStylesheet library="css" name="estilo.css"  />
-<ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
+<ui:define name="head"><h:outputText value="#{msg.CRE3}"/></ui:define>
 <ui:define name="sidebar">
     <h:form id="logout">
         <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -43,7 +43,7 @@ template="/templates/plantilla.xhtml">
             </h:selectOneMenu>     
             
         </h:panelGrid>  
-        <p:commandButton value="#{msg.GUA}" update=" :growl" action="#{proyectoController.doProyecto()}" styleClass="boton" /> 
+        <p:commandButton value="#{msg.GUA}" update=" :growl" actionListener="#{proyectoController.doProyecto()}" styleClass="boton" /> 
         <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/>  
     </p:panel>
 </h:form>  

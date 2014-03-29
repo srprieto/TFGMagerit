@@ -44,15 +44,29 @@
                         <h:outputLabel for="degradacion" value="Degradacion:" />  
                         <p:inputText id="degradacion" value="#{amenazaController.gradoDegradacionBase}"  label="Ubicacion"/>  
 
-                        <h:outputLabel for="ocurrencia" value="Probabilidad Ocurrencia:" />  
-                        <h:selectOneMenu id="ocurrencia" value="#{amenazaController.probabilidadOcurrencia}" converter="omnifaces.SelectItemsConverter" >  
-                            <f:selectItems value="#{amenazaController.probabilidad}" />  
-                        </h:selectOneMenu>  
-
                         <h:outputLabel for="tipo" value="Tipo Amenaza:" />  
                         <h:selectOneMenu id="tipo" value="#{amenazaController.nomTipo}" converter="omnifaces.SelectItemsConverter" >  
                             <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{amenazaController.tipos}" />  
                         </h:selectOneMenu>  
+
+                    </h:panelGrid> 
+
+                    <h:panelGrid columns="4">  
+                        
+
+                        <h:outputLabel for="ocurrencia" value="Probabilidad Ocurrencia:" />  
+                        <h:selectOneMenu id="ocurrencia" value="#{amenazaController.probabilidadOcurrencia}" converter="omnifaces.SelectItemsConverter" >  
+                            <f:selectItems value="#{amenazaController.probabilidad}" />  
+                        </h:selectOneMenu>  
+                        
+                          <p:graphicImage id="img" value="../images/icono.jpg" style="cursor:pointer" title="Probabilidades posibles"/> 
+                        <p:overlayPanel id="imgPanel" for="img" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown"  
+                                        dismissable="false" showCloseIcon="true">  
+                            <p:imageSwitch id="imgSwitch" effect="fade" style="width:500px;height:200px;">  
+                                <p:graphicImage value="../images/probabilidad.png" width="500"/>  
+                            </p:imageSwitch>  
+                        </p:overlayPanel> 
+
 
                     </h:panelGrid>  
 

@@ -5,7 +5,6 @@
  */
 package es.uvigo.esei.tfg.controladores.administrador;
 
-import es.uvigo.esei.tfg.logica.servicios.CargadorCatalogoService;
 import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import java.io.IOException;
 import java.io.Serializable;
@@ -29,8 +28,6 @@ public class MarcosController implements Serializable {
 
     @Inject
     GestorMarcosService gestorMarcoService;
-
-   
 
     public MarcosController() {
 
@@ -67,31 +64,37 @@ public class MarcosController implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public String doMarco() {
-        String destino;
+    public void doMarco() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         if (nombre.equals("")) {
             anadirMensajeError("No se ha indicado un nombre para el marco de trabajo");
-            destino = "crearmarco.xhtml";
+            context.redirect("crearmarco.xhtml");
         } else if (descripcion.equals("")) {
             anadirMensajeError("No se ha indicado una descripción");
-            destino = "crearmarco.xhtml";
+            context.redirect("crearmarco.xhtml");
         } else if (gestorMarcoService.existeMarco(nombre) == true) {
             anadirMensajeError("Ya existe un marco con ese nombre");
-            destino = "crearmarco.xhtml";
+            context.redirect("crearmarco.xhtml");
         } else {
-            destino = "nuevomarco.xhtml";
+            context.redirect("nuevomarco.xhtml");
         }
-        return destino;
     }
 
     public void doCrear() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         gestorMarcoService.crearNuevoMarco(nombre, descripcion);
         anadirMensajeCorrecto("El marco de trabajo " + nombre + " ha sido creado correctamente");
         nombre = "";
         descripcion = "";
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         context.redirect("marcos.xhtml");
+    }
 
+    public void atras() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        nombre = "";
+        descripcion = "";
+        context.redirect("crearmarco.xhtml");
     }
 }

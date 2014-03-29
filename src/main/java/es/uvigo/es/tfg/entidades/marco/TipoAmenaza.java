@@ -3,8 +3,10 @@ package es.uvigo.es.tfg.entidades.marco;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 @Entity
 public class TipoAmenaza implements Serializable {
@@ -29,17 +32,19 @@ public class TipoAmenaza implements Serializable {
     @ManyToOne
     MarcoTrabajo marcoTrabajo;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     TipoAmenaza tipoAmenazaPadre;
 
-    @OneToMany(mappedBy = "tipoAmenazaPadre")
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "tipoAmenazaPadre")
     Set<TipoAmenaza> tiposAmenazaHijo;
 
     @ManyToMany
     @JoinTable(name = "TIPOAMENZA_DIMENSION")
+    @CascadeOnDelete
     Set<Dimension> dimensiones;
 
     @ManyToMany(mappedBy = "tiposAmenaza")
+    @CascadeOnDelete
     Set<TipoActivo> tiposActivo;
 
     public TipoAmenaza() {
@@ -154,12 +159,6 @@ public class TipoAmenaza implements Serializable {
             dimensiones = new HashSet<Dimension>();
         }
         dimensiones.add(dimension);
-    }
-
-    public void eliminarDimension(Dimension dimension) {
-        if (dimension != null) {
-            dimensiones.remove(dimension);
-        }
     }
 
 }

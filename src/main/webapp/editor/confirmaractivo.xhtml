@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.CON4}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="crearactivo.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{activoController.atras()}" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -37,7 +37,7 @@
                     <p><h:outputText value="#{msg.TIP3}&#160;#{activoController.activoEnEdicion.tipoActivo.nombre}"/></p>
                     <p><h:outputText value="#{msg.GRU2}&#160;#{activoController.nombreGrupo}"/></p>
                     <p:commandButton value="#{msg.GUA}" actionListener="#{activoController.guardarActivo()}"/>
-                    <p:commandButton value="#{msg.CAN}" action="crearactivo.xhtml"/>
+                    <p:commandButton value="#{msg.CAN}" actionListener="#{activoController.atras()}"/>
                 </p:panel>
             </h:form>  
         </div>

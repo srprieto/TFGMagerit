@@ -50,6 +50,8 @@ public class AmenazaController implements Serializable {
     private String descripcion;
     private Double probabilidadOcurrencia;
     private Double gradoDegradacionBase;
+    
+    private TipoAmenaza tipoAmenaza;
 
     @Inject
     TipoAmenazaDAO tipoAmenazaDAO;
@@ -105,6 +107,16 @@ public class AmenazaController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+
+    public TipoAmenaza getTipoAmenaza() {
+        return tipoAmenaza;
+    }
+
+    public void setTipoAmenaza(TipoAmenaza tipoAmenaza) {
+        this.tipoAmenaza = tipoAmenaza;
+    }
+    
+    
 
     public String getNomTipo() {
         return nomTipo;
@@ -164,11 +176,11 @@ public class AmenazaController implements Serializable {
 
     public List<Double> getProbabilidad() {
         List<Double> probabilidades = new ArrayList<>();
-        probabilidades.add(0.01);
-        probabilidades.add(0.1);
-        probabilidades.add(1 * 1.0);
-        probabilidades.add(10 * 1.0);
         probabilidades.add(100 * 1.0);
+        probabilidades.add(10 * 1.0);
+        probabilidades.add(1 * 1.0);
+        probabilidades.add(0.1);
+        probabilidades.add(0.01);
 
         return probabilidades;
     }

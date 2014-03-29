@@ -36,7 +36,7 @@ public class TipoAmenazaJPA extends GenericoJPA<TipoAmenaza> implements TipoAmen
         q.setParameter("tiposActivo", tiposActivo);
         return q.getResultList();
     }
-    
+
     @Override
     public List<TipoAmenaza> buscarDimension(Dimension dimensiones) {
 
@@ -45,8 +45,8 @@ public class TipoAmenazaJPA extends GenericoJPA<TipoAmenaza> implements TipoAmen
         q.setParameter("dimensiones", dimensiones);
         return q.getResultList();
     }
-    
-     @Override
+
+    @Override
     public List<TipoAmenaza> buscarMarco(MarcoTrabajo marcoTrabajo) {
 
         Query q = em.createQuery("SELECT object(p) FROM TipoAmenaza AS p"

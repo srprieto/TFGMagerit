@@ -21,7 +21,6 @@ public class Dimension implements Serializable {
     @Column(length = 1000)
     String descripcion;
 
-    
     @ManyToOne
     MarcoTrabajo marcoTrabajo;
     

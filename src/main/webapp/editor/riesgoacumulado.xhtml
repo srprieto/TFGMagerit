@@ -8,7 +8,7 @@
                 template="/templates/plantilla.xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.MIS}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.RIE2}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -28,27 +28,27 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="No existen valoraciones para la amenaza #{arbolAmenazasController.amenazaActual.nombre} en las dimensiones" 
+                <p:dataTable id="Proyectos" emptyMessage="#{msg.VAC4}" 
                              var="riesgo" value="#{activoController.riesgoAcumulado}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
-                            <h:outputText value="Riesgo Acumulado"/>   
+                            <h:outputText value="#{msg.RIE}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
-                    <p:column id="grado" styleClass="tabla1" headerText="Valor">  
+                    <p:column id="grado" styleClass="tabla1" headerText="#{msg.VAL2}">  
                         <h:outputText value="#{riesgo.valor}" />    
                     </p:column> 
                     
-                    <p:column id="daño" styleClass="tabla1" headerText="Daño">  
+                    <p:column id="daño" styleClass="tabla1" headerText="#{msg.DAÑ}">  
                         <h:outputText value="#{riesgo.gravedad}" />    
                     </p:column> 
                                       
-                    <p:column id="amenaza" styleClass="tabla1" headerText="Activo">  
+                    <p:column id="amenaza" styleClass="tabla1" headerText="#{msg.ACT4}">  
                         <h:outputText value="#{riesgo.impacto.activo.nombre}" />    
                     </p:column> 
 
-                    <p:column id="dimension" styleClass="tabla1" headerText="Dimension">  
+                    <p:column id="dimension" styleClass="tabla1" headerText="#{msg.DIM1}">  
                         <h:outputText value="#{riesgo.dimension.nombre}" />    
                     </p:column> 
 

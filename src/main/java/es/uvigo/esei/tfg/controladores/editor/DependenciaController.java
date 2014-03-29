@@ -37,7 +37,7 @@ public class DependenciaController implements Serializable {
 
     @Inject
     GestorDependenciaService gestorDependenciaDAO;
-    
+
     @Inject
     ProyectoController proyectoController;
 
@@ -76,18 +76,15 @@ public class DependenciaController implements Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
-    
+
     public List<String> getActivos() {
         activos = gestorDependenciaDAO.devolverPosiblesDependencias();
         return activos;
     }
 
-
     public void setActivos(List<String> activos) {
         this.activos = activos;
     }
-
 
     public Activo getPrincipal() {
         return principal;
@@ -121,40 +118,48 @@ public class DependenciaController implements Serializable {
         this.justificante = justificante;
     }
 
-    public String doGuardar() {
-        String destino;
+    public void doGuardar() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+
         if (grado == null) {
             anadirMensajeError("No se ha indicado un grado para la dependencia");
-            destino = "dependencianueva.xhtml";
+            context.redirect("dependencianueva.xhtml");
         } else if (justificante.equals("")) {
             anadirMensajeError("No se ha indicado una justificación");
-            destino = "dependencianueva.xhtml";
+            context.redirect("dependencianueva.xhtml");
         } else if (this.getActivos() == null) {
             anadirMensajeError("No se pueden asignar una dpendencia");
-            destino = "dependencias.xhtml";
+            context.redirect("dependencianueva.xhtml");
         } else if (grado < 0 || grado > 100) {
             anadirMensajeError("Tiene que introducir un grado entre 0 y 100");
-            destino = "dependencianueva.xhtml";
+            context.redirect("dependencianueva.xhtml");
         } else {
-            destino = "confirmardependencia.xhtml";
+            context.redirect("confirmardependencia.xhtml");
         }
-        return destino;
     }
 
     public void guardarDependencia() throws IOException {
         List<Activo> act = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
-        for(int i=0;i<act.size();i++){
-            if(act.get(i).getNombre().equals(nombre)){
+        for (int i = 0; i < act.size(); i++) {
+            if (act.get(i).getNombre().equals(nombre)) {
                 dependiente = act.get(i);
             }
         }
-        gestorDependenciaDAO.crearNuevaDependencia(justificante,grado,arbolActivoController.getActivoActual(),dependiente);
+        gestorDependenciaDAO.crearNuevaDependencia(justificante, grado, arbolActivoController.getActivoActual(), dependiente);
         anadirMensajeCorrecto("La dependencia  ha sido guardado correctamente");
         justificante = "";
         grado = null;
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         context.redirect("dependencias.xhtml");
+    }
+    
+     public void atras() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        grado = null;
+        justificante = "";
+        context.redirect("dependencianueva.xhtml");
     }
 
 }

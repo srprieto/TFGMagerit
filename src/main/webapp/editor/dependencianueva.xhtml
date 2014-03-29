@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.CRE5}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -27,14 +27,11 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-
-                <p:panel id="panel" header="#{msg.NUE1}" style="margin-bottom:10px;">  
+                <p:panel id="panel" header="#{msg.NUE1}" style="tabla4">  
                     <p:messages id="messages" />  
-
                     <h:panelGrid columns="2">  
                         <h:outputLabel for="grado" value="#{msg.GRA1}" />  
                         <p:inputText id="grado" value="#{dependenciaController.grado}"  label="grado"/> 
-                        
 
                         <h:outputLabel for="justificante" value="#{msg.JUS1}" />  
                         <p:inputText id="justificante" value="#{dependenciaController.justificante}"  label="justificante"/>    
@@ -43,11 +40,10 @@
                         <h:selectOneMenu id="dependiente" value="#{dependenciaController.nombre}" converter="omnifaces.SelectItemsConverter" > 
                             <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{dependenciaController.activos}" />  
                         </h:selectOneMenu>  
-
                     </h:panelGrid>  
+                    <p:commandButton update=" :growl" action="#{dependenciaController.doGuardar()}" value="#{msg.GUA}" /> 
+                    <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
                 </p:panel>  
-                <p:commandButton update=" :growl" action="#{dependenciaController.doGuardar()}" value="#{msg.GUA}" /> 
-                <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
             </h:form>  
         </div>
         <p:growl id="growl" life="3000" />

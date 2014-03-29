@@ -3,6 +3,7 @@ package es.uvigo.es.tfg.entidades.marco;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 @Entity
 public class TipoActivo implements Serializable {
@@ -24,21 +26,19 @@ public class TipoActivo implements Serializable {
     @Column(length = 1000)
     String descripcion;
 
-    
     @ManyToOne
     MarcoTrabajo marcoTrabajo;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     TipoActivo tipoActivoPadre;
 
-    @OneToMany(mappedBy = "tipoActivoPadre")
+    @OneToMany(cascade = {CascadeType.ALL},mappedBy = "tipoActivoPadre")
     Set<TipoActivo> tiposActivoHijo;
 
     @ManyToMany
-    @JoinTable(name = "TIPOACTIVO_TIPOAMENZA")  // Es necesario
+    @JoinTable(name = "TIPOACTIVO_TIPOAMENZA")
+    @CascadeOnDelete
     Set<TipoAmenaza> tiposAmenaza;
-
-
 
     public TipoActivo() {
     }
@@ -114,16 +114,14 @@ public class TipoActivo implements Serializable {
         this.tiposAmenaza = tiposAmenaza;
     }
 
-
     public void anadirTipoActivoHijo(TipoActivo tipoActivo) {
         if (tiposActivoHijo == null) {
-            tiposActivoHijo= new HashSet<TipoActivo>();
+            tiposActivoHijo = new HashSet<TipoActivo>();
         }
         tipoActivo.setTipoActivoPadre(this);
         tiposActivoHijo.add(tipoActivo);
     }
-    
-    
+
     public void anadirTipoAmenaza(TipoAmenaza tipoAmenza) {
         if (tiposAmenaza == null) {
             tiposAmenaza = new HashSet<TipoAmenaza>();
@@ -131,7 +129,5 @@ public class TipoActivo implements Serializable {
         // OMITIRLO: daria un bucle infinito -> tipoAmenza.anadirTipoActivo(this); // TODO: es necesario esto ¿?
         tiposAmenaza.add(tipoAmenza);
     }
-    
-    
-    
+
 }

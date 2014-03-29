@@ -208,23 +208,25 @@ public class ActivoController implements Serializable {
         this.grupoActivos = grupoActivos;
     }
 
-    public String doGuargar() {
-        String destino;
+    public void doGuargar() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+
         if (codigo.equals("")) {
             anadirMensajeError("No se ha indicado un codigo para el activo");
-            destino = "crearactivo.xhtml";
+            context.redirect("crearactivo.xhtml");
         } else if (nombre.equals("")) {
             anadirMensajeError("No se ha indicado un nombre para el activo");
-            destino = "crearactivo.xhtml";
+            context.redirect("crearactivo.xhtml");
         } else if (descripcion.equals("")) {
             anadirMensajeError("No se ha indicado una descripción para el activo");
-            destino = "crearactivo.xhtml";
+            context.redirect("crearactivo.xhtml");
         } else if (responsable.equals("")) {
             anadirMensajeError("No se ha indicado un responsable para el activo");
-            destino = "crearactivo.xhtml";
+            context.redirect("crearactivo.xhtml");
         } else if (nombreGrupo.equals("")) {
             anadirMensajeError("No se ha indicado un grupo para el activo, si no existe uno puede crear uno nuevo");
-            destino = "crearactivo.xhtml";
+            context.redirect("crearactivo.xhtml");
         } else {
             int valor = 1;
             List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
@@ -243,13 +245,25 @@ public class ActivoController implements Serializable {
             }
             setCodigo(sb.toString());
             if (valor == 1) {
-                destino = "confirmaractivo.xhtml";
+                context.redirect("confirmaractivo.xhtml");
             } else {
                 anadirMensajeError("Ya existe un Activo con ese nombre");
-                destino = "crearactivo.xhtml";
+                context.redirect("crearactivo.xhtml");
             }
         }
-        return destino;
+
+    }
+    
+    public void atras() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        nombre = "";
+        descripcion = "";
+        codigo = "";
+        responsable = "";
+        ubicacion = "";
+        cantidad = null;
+        nombreGrupo = "";
+        context.redirect("crearactivo.xhtml");
     }
 
     public void guardarActivo() throws IOException {
@@ -280,12 +294,12 @@ public class ActivoController implements Serializable {
     public List<Valoracion> getModeloValor() {
         //buscar activos superiores
         boolean esta = false;
-        
+
         Activo activo;
         Activo principal;
         Activo valorado;
         Valoracion inicial;
-        
+
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Valoracion> resultado = new ArrayList<>();
         List<Dependencia> superior = new ArrayList<>();
@@ -294,7 +308,7 @@ public class ActivoController implements Serializable {
         List<Valoracion> valores = new ArrayList<>();
         List<Valoracion> depen = new ArrayList<>();
         List<Valoracion> provisional = new ArrayList<>();
-        
+
         for (int x = 0; x < activos.size(); x++) {
             activo = activoDAO.buscarPorNombre(activos.get(x).getNombre());
             superior = dependenciaDAO.buscarporDependiente(activo);
@@ -302,7 +316,7 @@ public class ActivoController implements Serializable {
                 valores = valoracionDAO.buscarPorActivo(activo);
                 for (int i = 0; i < valores.size(); i++) {
                     resultado.add(valores.get(i));
-                }   
+                }
             } else {
                 valores = valoracionDAO.buscarPorActivo(activo);
                 if (valores.isEmpty()) {
@@ -531,12 +545,12 @@ public class ActivoController implements Serializable {
         List<Riesgo> riesgoAcumulado = new ArrayList<>();
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Riesgo> resultado = new ArrayList<>();
-      
+
         for (int p = 0; p < activos.size(); p++) {
-            resultado = amenazaController.getRiesgo(activos.get(p));         
+            resultado = amenazaController.getRiesgo(activos.get(p));
             for (int s = 0; s < resultado.size(); s++) {
-                seleccionada = resultado.get(s);              
-                for (int i = s + 1; i < resultado.size(); i++) {                   
+                seleccionada = resultado.get(s);
+                for (int i = s + 1; i < resultado.size(); i++) {
                     if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
                         sinDimension = false;
                         Riesgo valor = new Riesgo();
@@ -551,12 +565,12 @@ public class ActivoController implements Serializable {
                             valor.setValor(seleccionada.getValor());
                             valor.setDimension(seleccionada.getDimension());
                             valor.setImpacto(seleccionada.getImpacto());
-                             valor.setGravedad(seleccionada.getGravedad());
+                            valor.setGravedad(seleccionada.getGravedad());
                             resultado.remove(i);
                             i--;
                         }
                         riesgoAcumulado.add(valor);
-                     
+
                     }
 
                 }
@@ -567,7 +581,7 @@ public class ActivoController implements Serializable {
                     valor.setImpacto(seleccionada.getImpacto());
                     valor.setGravedad(seleccionada.getGravedad());
                     riesgoAcumulado.add(valor);
-                   
+
                 }
             }
         }

@@ -46,7 +46,9 @@ public class ProyectoController implements Serializable {
     @Inject
     MarcoTrabajoDAO marcoTrabajoDAO;
 
-    @Inject @LoggedIn Usuario usuarioActual;
+    @Inject
+    @LoggedIn
+    Usuario usuarioActual;
 
     @Inject
     TablaProyectosController tablaProyectosController;
@@ -133,30 +135,30 @@ public class ProyectoController implements Serializable {
         this.marcoelegido = marcoelegido;
     }
 
-    public String doProyecto() {
-        String destino;
+    public void doProyecto() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         if (nombre.equals("")) {
             anadirMensajeError("No se ha indicado un nombre para el proyecto");
-            destino= "crearproyecto.xhtml";
+            context.redirect("crearproyecto.xhtml");
         } else if (descripcion.equals("")) {
             anadirMensajeError("No se ha indicado una descripción");
-            destino= "crearproyecto.xhtml";
-        } else if(gestorProyectosService.existeProyecto(nombre)) {
-             anadirMensajeError("Ya existe un proyecto con ese nombre");
-             destino= "crearproyecto.xhtml";
-        }else{
-             destino= "confirmarproyecto.xhtml";
+            context.redirect("crearproyecto.xhtml");
+        } else if (gestorProyectosService.existeProyecto(nombre)) {
+            anadirMensajeError("Ya existe un proyecto con ese nombre");
+            context.redirect("crearproyecto.xhtml");
+        } else {
+            context.redirect("confirmarproyecto.xhtml");
         }
-        return destino;
     }
 
     public void doCrearProyecto() throws IOException {
-        gestorProyectosService.crearNuevoProyecto(nombre, descripcion, proyectoEnEdicion.getMarcoTrabajo(), proyectoEnEdicion.getCreador());
-        anadirMensajeCorrecto("El proyecto " + nombre + " ha sido guardado correctamente");
-        nombre="";
-        descripcion="";
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        gestorProyectosService.crearNuevoProyecto(nombre, descripcion, proyectoEnEdicion.getMarcoTrabajo(), proyectoEnEdicion.getCreador());
+        anadirMensajeCorrecto("El proyecto " + nombre + " ha sido guardado correctamente");
+        nombre = "";
+        descripcion = "";
         context.redirect("misproyectos.xhtml");
     }
 
@@ -176,5 +178,12 @@ public class ProyectoController implements Serializable {
             creador = usuarioActual;
             context.redirect("activos.xhtml");
         }
+    }
+
+    public void atras() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        nombre = "";
+        descripcion = "";
+        context.redirect("crearproyecto.xhtml");
     }
 }

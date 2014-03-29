@@ -19,4 +19,5 @@ import javax.ejb.Local;
 public interface DimensionDAO extends GenericoDAO<Dimension>{
     List<Dimension> buscarTodos(MarcoTrabajo marcoTrabajo);
     Dimension buscarPorNombre(String nombre);
+    List<Dimension> buscarMarco(MarcoTrabajo marcoTrabajo);
 }

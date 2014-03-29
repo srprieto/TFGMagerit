@@ -20,8 +20,8 @@
                     <p:submenu label="#{msg.MEN}">  
                         <p:menuitem value="#{msg.ATR}" actionListener="#{arbolAmenazasController.atras()}"/>  
                         <p:menuitem value="#{msg.ANA5}" url="crearamenaza.xhtml"/>
-                        <p:menuitem value="Impacto" url="impacto.xhtml"/>
-                        <p:menuitem value="Riesgo" url="riesgo.xhtml"/>
+                        <p:menuitem value="#{msg.IMP1}" url="impacto.xhtml"/>
+                        <p:menuitem value="#{msg.RIE1}" url="riesgo.xhtml"/>
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -44,7 +44,7 @@
                                          update=":form:displayEdit, :growl" actionListener="#{arbolAmenazasController.update()}"/>
                         <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
                                          update=":form:displayMulti, :growl" actionListener="#{arbolAmenazasController.eliminar()}"/>
-                         <p:commandButton id="valoracion" value="Valoración" icon="ui-icon-plusthick"  
+                         <p:commandButton id="valoracion" value="#{msg.VAL4}" icon="ui-icon-plusthick"  
                                           update=":growl" actionListener="#{arbolAmenazasController.valoracion()}"/>
                     </f:facet>  
                 </p:treeTable>
@@ -62,13 +62,13 @@
                             <p><h:outputLabel for="descripcion" value="#{msg.DES2}&#160;" />  
                             <p:inputText id="descripcion" value="#{arbolAmenazasController.descripcion}"  label="Descripcion"/></p>  
 
-                            <p><h:outputLabel for="ocurrencia" value="Ocurrencia:&#160;" />  
+                            <p><h:outputLabel for="ocurrencia" value="#{msg.OCU1}&#160;" />  
                             <p:inputText id="ocurrencia" value="#{arbolAmenazasController.probabilidadOcurrencia}"  label="Ocurrencia"/></p>  
 
-                            <p><h:outputLabel for="degradacion" value="Degradacion:&#160;" />  
+                            <p><h:outputLabel for="degradacion" value="#{msg.DEG1}&#160;" />  
                                 <p:inputText id="degradacion" value="#{arbolAmenazasController.gradoDegradacionBase}"  label="Ubicacion"/></p>  
 
-                            <p><h:outputLabel for="tipo" value="Tipo Amenaza:&#160;" />  
+                            <p><h:outputLabel for="tipo" value="#{msg.TIP5}&#160;" />  
                             <h:selectOneMenu id="tipo" value="#{arbolAmenazasController.nomTipo}" converter="omnifaces.SelectItemsConverter" >  
                                 <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{amenazaController.tipos}" />  
                             </h:selectOneMenu></p>  

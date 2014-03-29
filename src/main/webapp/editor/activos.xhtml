@@ -22,8 +22,8 @@
                         <p:menuitem value="#{msg.ANA2}" url="crearactivo.xhtml"/> 
                         <p:menuitem value="#{msg.GES}" url="usuarios.xhtml"/>
                         <p:menuitem value="#{msg.MOD1}" url="modelovalor.xhtml"/>
-                        <p:menuitem value="Impacto Acumulado" url="impactoacumulado.xhtml"/>
-                        <p:menuitem value="Riesgo Acumulado" url="riesgoacumulado.xhtml"/>
+                        <p:menuitem value="#{msg.IMP}" url="impactoacumulado.xhtml"/>
+                        <p:menuitem value="#{msg.RIE}" url="riesgoacumulado.xhtml"/>
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -48,9 +48,9 @@
                                          update=":form:displayMulti, :growl" actionListener="#{arbolActivosController.eliminar()}"/>
                          <p:commandButton id="dependencias" value="#{msg.DEP}" icon="ui-icon-search"  
                                           update=":growl" actionListener="#{arbolActivosController.doDestino()}"/> 
-                         <p:commandButton id="valoracion" value="Valoración" icon="ui-icon-plusthick"  
+                         <p:commandButton id="valoracion" value="#{msg.VAL4}" icon="ui-icon-plusthick"  
                                           update=":growl" actionListener="#{arbolActivosController.valoracion()}"/>
-                         <p:commandButton id="amenazas" value="Amenazas" icon="ui-icon-alert"  
+                         <p:commandButton id="amenazas" value="#{msg.AME2}" icon="ui-icon-alert"  
                                           update=":growl" actionListener="#{arbolActivosController.amenazas()}"/>
                     </f:facet>  
                 </p:treeTable>

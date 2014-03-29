@@ -8,7 +8,7 @@
                 template="/templates/plantilla.xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.MIS}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.DEP1}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -38,7 +38,7 @@
 
                     <p:column styleClass="tabla2" selectionMode="multiple"/> 
 
-                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.NOM1}">  
+                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.ACT1}">  
                         <h:outputText value="#{dependiente.activoDependiente.nombre}" />    
                     </p:column> 
                     

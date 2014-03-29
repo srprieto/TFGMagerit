@@ -44,4 +44,13 @@ public class DimensionJPA extends GenericoJPA<Dimension> implements DimensionDAO
         }
     }
     
+    @Override
+    public List<Dimension> buscarMarco(MarcoTrabajo marcoTrabajo) {
+
+        Query q = em.createQuery("SELECT object(p) FROM Dimension AS p"
+                + "  WHERE p.marcoTrabajo = :marcoTrabajo");
+        q.setParameter("marcoTrabajo", marcoTrabajo);
+        return q.getResultList();
+    }
+    
 }

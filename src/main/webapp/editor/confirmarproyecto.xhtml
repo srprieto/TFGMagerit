@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.CON3}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="crearproyecto.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{proyectoController.atras()}" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -28,11 +28,11 @@
         <div class="tabla">
             <h:form id="form" >
                 <p:panel header="#{msg.CON}">
-                    <p><h:outputText value="#{msg.NOM7}&#160;#{proyectoController.nombre}"/></p>
+                    <p><h:outputText value="#{msg.NOM8}&#160;#{proyectoController.nombre}"/></p>
                     <p><h:outputText value="#{msg.DES5}&#160;#{proyectoController.descripcion}"/></p>
                     <p><h:outputText value="#{msg.MAR3}&#160;#{proyectoController.proyectoEnEdicion.marcoTrabajo.nombre}"/></p>
                     <p:commandButton value="#{msg.GUA}" actionListener="#{proyectoController.doCrearProyecto()}"/>
-                    <p:commandButton value="#{msg.CAN}" action="crearusuario.xhtml"/>
+                    <p:commandButton value="#{msg.CAN}" actionListener="#{proyectoController.atras()}"/>
                 </p:panel>
             </h:form>  
         </div>

@@ -2,15 +2,18 @@ package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
 import es.uvigo.esei.tfg.logica.daos.DimensionDAO;
 import es.uvigo.esei.tfg.logica.daos.GenericoDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
+import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoAmenazaDAO;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +40,9 @@ public class TablaMarcosController implements Serializable {
     
     @Inject
     TipoAmenazaDAO tipoAmenazaDAO;
+    
+    @Inject
+    TipoActivoDAO tipoActivoDAO;
     
     @Inject
     DimensionDAO dimensionDAO;
@@ -116,21 +122,22 @@ public class TablaMarcosController implements Serializable {
     }
 
     public void eliminarMarcos() {
-
+        List<TipoAmenaza> tipoAmenazaEliminar = new ArrayList<>();
+        List <TipoActivo> tipoActivoEliminar = new ArrayList<>();
+        List<Dimension> dimensiones = new ArrayList<>();
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         for (int i = 0; i < tamano; i++) {
             MarcoTrabajo seleccionado = seleccionados[i];
-            List<TipoAmenaza> tipoAmenazaEliminar = tipoAmenazaDAO.buscarMarco(seleccionado);
-            for(int j=0;j<tipoAmenazaEliminar.size();j++){
-                TipoAmenaza actual = tipoAmenazaEliminar.get(j);
-                List<Dimension> dimension = dimensionDAO.buscarTodos(seleccionado);
-                for(int r=0;r<dimension.size();r++){
-                    
-                     actual.eliminarDimension(dimension.get(r));
-                }
+            tipoActivoEliminar = tipoActivoDAO.buscarMarco(seleccionado);
+            for(int j=0;j<tipoActivoEliminar.size();j++){
+                tipoActivoDAO.eliminar(tipoActivoEliminar.get(j));               
             }
-           
+            tipoAmenazaEliminar = tipoAmenazaDAO.buscarMarco(seleccionado);
+            for(int j=0;j<tipoAmenazaEliminar.size();j++){
+                tipoAmenazaDAO.eliminar(tipoAmenazaEliminar.get(j));               
+            }
+            
         }
         if (tamano == 1) {
             anadirMensajeCorrecto("El marco ha sido eliminado correctamente");

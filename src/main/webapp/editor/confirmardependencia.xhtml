@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.CON5}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="dependencianueva.xhtml" />   
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{dependenciaController.atras()}" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -32,7 +32,7 @@
                     <p><h:outputText value="#{msg.JUS}&#160;#{dependenciaController.justificante}"/></p>
                     <p><h:outputText value="#{msg.NOM6}&#160;#{dependenciaController.nombre}"/></p>
                     <p:commandButton value="#{msg.GUA}" actionListener="#{dependenciaController.guardarDependencia()}"/>
-                    <p:commandButton value="#{msg.CAN}" action="dependencianueva.xhtml"/>
+                    <p:commandButton value="#{msg.CAN}" actionListener="#{dependenciaController.atras()}"/>
                 </p:panel>
             </h:form>  
         </div>

@@ -84,11 +84,13 @@ public class LoginController implements Serializable {
         return sb.toString();
     }
     
-    // Acciones para paginas JSF
+    // Metodo que permite loguearse a los usuarios en el sistema;
     public String doLogin() {
         String destino;
         TipoUsuario tipo;
-        String pass = this.encriptar(credenciales.getPassword());
+        //encriptamos el password introducido por el usuario con MD5, ya que lo almacenamos de la misma manera en la base de datos
+        String pass = this.encriptar(credenciales.getPassword()); 
+        //Nos devuelve los usuarios correspondientes al usuario y password introducidos en la vista login
         List<Usuario> results = gestorUsuariosService.usuario(pass);
         if(!results.isEmpty()){
             usuarioActual = results.get(0);
@@ -98,7 +100,6 @@ public class LoginController implements Serializable {
             destino = "fallo.login";
             autenticado= false;
         } else {  
-            
             tipo = usuarioActual.getTipo();
             if(tipo == TipoUsuario.ADMINISTRADOR)
             {
@@ -136,6 +137,7 @@ public class LoginController implements Serializable {
         this.usuarioActual = usuario;
     }
     
+    //Nos permite recuperar el usuario logeado desde cualquier controlador
     @Produces @LoggedIn Usuario getUsuarioActual() {return usuarioActual;}
     
     @Qualifier

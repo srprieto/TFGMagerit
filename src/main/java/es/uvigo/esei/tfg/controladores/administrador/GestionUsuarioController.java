@@ -28,21 +28,22 @@ import javax.inject.Inject;
 @SessionScoped
 public class GestionUsuarioController implements Serializable {
 
-     // Atributos
+    // Atributos
     private TipoUsuario tipo1;
     private String login = "";
     private String password = "";
     private String password2 = "";
     private boolean nuevoUsuario = true;
 
-    @Inject
-    GestorUsuariosService gestorUsuariosService;
-
+     
     @Inject
     UsuarioDAO usuarioDAO;
 
     @Inject
     TablaUsuariosController tablaUsuariosController;
+
+    @Inject
+    GestorUsuariosService gestorUsuariosService;
 
     @Inject
     @LoginController.LoggedIn
@@ -51,8 +52,59 @@ public class GestionUsuarioController implements Serializable {
     public GestionUsuarioController() {
 
     }
+    
+      // Metodos get y set
+    public Usuario getUsuarioActual() {
+        return usuarioActual;
+    }
 
+    public void setUsuarioActual(Usuario usuario) {
+        this.usuarioActual = usuario;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
+    }
+
+    public boolean isNuevoUsuario() {
+        return nuevoUsuario;
+    }
+
+    public void setNuevoUsuario(boolean nuevoUsuario) {
+        this.nuevoUsuario = nuevoUsuario;
+    }
+
+    public TipoUsuario getTipo() {
+        return tipo1;
+    }
+
+    public void setTipo(TipoUsuario tipo1) {
+        this.tipo1 = tipo1;
+    }
+    
+    
     /**
+     * Mensajes de error y correctos
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
      *
      * @param mensaje
@@ -66,7 +118,10 @@ public class GestionUsuarioController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
-
+    
+    /*Funcion doUsuario() nos redirecciona a la vista de confirmacion de usuario en caso de que todos los
+    valores sean correctos, en caso contrario muestra el mensaje de error correspondiente y nose redirecciona
+    nuevamente a la vista de creación de usuarios*/
     public void doUsuario() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -91,7 +146,8 @@ public class GestionUsuarioController implements Serializable {
         }
     }
     
-     public String encriptar(String password) {
+    /*Funcion encriptar() encripta mediante el algoritmo MD5 la clave que le pasamos como parametro*/
+    public String encriptar(String password) {
         String algorithm = "MD5";
         byte[] plainText = password.getBytes();
         MessageDigest md = null;
@@ -141,77 +197,6 @@ public class GestionUsuarioController implements Serializable {
             destino = "usuario.actualizado";
         }
         return destino;
-    }
-
-    public String doCancelarModificacionUsuario() {
-        String destino;
-        if (nuevoUsuario) {
-            // Anular los datos del nuevo cliente no guardado
-            usuarioActual = null;
-
-        } else {
-            // Recuperar los datos originales del cliente
-            usuarioActual = gestorUsuariosService.recuperarDatosUsuario(usuarioActual.getLogin()); // El login nunca se edita
-
-        }
-        destino = "usuario.cancelado";
-        return destino;
-    }
-
-    public String doVerPerfil() {
-        //login = loginController.getUsuarioActual().getLogin();
-        //password = loginController.getUsuarioActual().getPassword();
-        password2 = password;
-        return "usuario.perfil";
-    }
-
-    // Metodos get y set
-    public Usuario getUsuarioActual() {
-        return usuarioActual;
-    }
-
-    public void setUsuarioActual(Usuario usuario) {
-        this.usuarioActual = usuario;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword2() {
-        return password2;
-    }
-
-    public void setPassword2(String password2) {
-        this.password2 = password2;
-    }
-
-    public boolean isNuevoUsuario() {
-        return nuevoUsuario;
-    }
-
-    public void setNuevoUsuario(boolean nuevoUsuario) {
-        this.nuevoUsuario = nuevoUsuario;
-    }
-
-    public TipoUsuario getTipo() {
-        return tipo1;
-    }
-
-    public void setTipo(TipoUsuario tipo1) {
-        this.tipo1 = tipo1;
     }
     
     public void atras() throws IOException {

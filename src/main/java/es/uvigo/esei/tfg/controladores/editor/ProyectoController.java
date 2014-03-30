@@ -52,6 +52,9 @@ public class ProyectoController implements Serializable {
 
     @Inject
     TablaProyectosController tablaProyectosController;
+    
+    @Inject
+    TablaProyectoColaborativoController tablaProyectoColaborativoController;
 
     public ProyectoController() {
 
@@ -166,6 +169,24 @@ public class ProyectoController implements Serializable {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         Proyecto[] lista = tablaProyectosController.getSelectedProyectos();
+        int tamano = lista.length;
+        if (tamano == 0) {
+            anadirMensajeError("debe seleccionar un proyecto");
+            context.redirect("misproyectos.xhtml");
+        } else if (tamano != 1) {
+            anadirMensajeError("Solo puede seleccionar un proyecto para trabajar sobre el");
+            context.redirect("misproyectos.xhtml");
+        } else {
+            proyectoActual = lista[0];
+            creador = usuarioActual;
+            context.redirect("activos.xhtml");
+        }
+    }
+    
+     public void doDestino1() throws IOException {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        Proyecto[] lista = tablaProyectoColaborativoController.getSelectedProyectos();
         int tamano = lista.length;
         if (tamano == 0) {
             anadirMensajeError("debe seleccionar un proyecto");

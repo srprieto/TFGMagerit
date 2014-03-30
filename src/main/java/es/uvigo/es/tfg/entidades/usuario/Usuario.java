@@ -3,52 +3,53 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package es.uvigo.es.tfg.entidades.usuario;
 
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;  
+import javax.persistence.Temporal;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 /**
  *
  * @author Saul
  */
 @Entity
-public class Usuario implements Serializable  {
-    
+public class Usuario implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @ManyToMany
     List<Proyecto> proyectos;
-    
+
     private String login;
     private String password;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date   fechaAlta;
+    private Date fechaAlta;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date   ultimoAcceso;
+    private Date ultimoAcceso;
 
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipo;
-   
-    
+
     public Usuario() {
     }
-    
+
     public Usuario(String login, String password, TipoUsuario tipo, Date fechaAlta, Date ultimoAcceso) {
         this.login = login;
         this.password = password;
@@ -57,7 +58,7 @@ public class Usuario implements Serializable  {
         this.ultimoAcceso = ultimoAcceso;
 
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -65,6 +66,7 @@ public class Usuario implements Serializable  {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getLogin() {
         return login;
     }
@@ -89,10 +91,10 @@ public class Usuario implements Serializable  {
         this.tipo = tipo;
     }
 
-    public Date getFechaAlta()  {
+    public Date getFechaAlta() {
         return fechaAlta;
     }
-   
+
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
@@ -137,7 +139,7 @@ public class Usuario implements Serializable  {
     public String toString() {
         return "Usuario{" + "id=" + id + ", proyectos=" + proyectos + ", login=" + login + ", password=" + password + ", fechaAlta=" + fechaAlta + ", ultimoAcceso=" + ultimoAcceso + ", tipo=" + tipo + '}';
     }
-    
+
     public List<Proyecto> getProyectos() {
         return proyectos;
     }
@@ -145,5 +147,5 @@ public class Usuario implements Serializable  {
     public void setProyectos(List<Proyecto> proyectos) {
         this.proyectos = proyectos;
     }
- 
+
 }

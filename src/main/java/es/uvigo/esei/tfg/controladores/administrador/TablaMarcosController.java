@@ -12,6 +12,7 @@ import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
+import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
@@ -159,6 +160,7 @@ public class TablaMarcosController implements Serializable {
     }
 
     public void eliminarMarcos() {
+        
         List<TipoAmenaza> tipoAmenazaEliminar = new ArrayList<>();
         List<TipoActivo> tipoActivoEliminar = new ArrayList<>();
         List<Dimension> dimensionesEliminar = new ArrayList<>();
@@ -169,9 +171,12 @@ public class TablaMarcosController implements Serializable {
         List<Degradacion> degradacionEliminar = new ArrayList<>();
         List<Dependencia> dependenciasEliminar = new ArrayList<>();
         List<Valoracion> valoracionesEliminar = new ArrayList<>();
+        List<Usuario> editores = new ArrayList<>();
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        
         Amenaza amenazaEliminar;
         int tamano = seleccionados.length;
+        
         for (int i = 0; i < tamano; i++) {
             MarcoTrabajo seleccionado = seleccionados[i];
             proyectosEliminar = proyectoDAO.buscarMarco(seleccionado);
@@ -184,40 +189,50 @@ public class TablaMarcosController implements Serializable {
                         for (int z = 0; z < degradacionEliminar.size(); z++) {
                             degradacionDAO.eliminar(degradacionEliminar.get(z));
                         }
+                        degradacionEliminar.clear();
                         amenazaEliminar = impactoEliminar.get(s).getAmenaza();
                         impactoDAO.eliminar(impactoEliminar.get(s));
                         amenazaDAO.eliminar(amenazaEliminar);
                     }
-
+                    impactoEliminar.clear();
                     dependenciasEliminar = dependenciaDAO.buscarPorPrincipal(activoEliminar.get(j));
                     for (int s = 0; s < dependenciasEliminar.size(); s++) {
                         dependenciaDAO.eliminar(dependenciasEliminar.get(s));
                     }
+                    dependenciasEliminar.clear();
                     valoracionesEliminar = valoracionDAO.buscarPorActivo(activoEliminar.get(j));
                     for (int s = 0; s < valoracionesEliminar.size(); s++) {
                         valoracionDAO.eliminar(valoracionesEliminar.get(s));
                     }
+                    valoracionesEliminar.clear();
                     activoDAO.eliminar(activoEliminar.get(j));
                 }
+                activoEliminar.clear();
+                proyectosEliminar.get(r).setEditores(editores);
+                proyectoDAO.actualizar(proyectosEliminar.get(r));
                 proyectoDAO.eliminar(proyectosEliminar.get(r));
             }
+            proyectosEliminar.clear();
             tipoActivoEliminar = tipoActivoDAO.buscarMarco(seleccionado);
             for (int j = 0; j < tipoActivoEliminar.size(); j++) {
                 tipoActivoDAO.eliminar(tipoActivoEliminar.get(j));
             }
+            tipoActivoEliminar.clear();
             tipoAmenazaEliminar = tipoAmenazaDAO.buscarMarco(seleccionado);
             for (int j = 0; j < tipoAmenazaEliminar.size(); j++) {
                 tipoAmenazaDAO.eliminar(tipoAmenazaEliminar.get(j));
             }
+            tipoAmenazaEliminar.clear();
             dimensionesEliminar = dimensionDAO.buscarMarco(seleccionado);
             for (int j = 0; j < dimensionesEliminar.size(); j++) {
                 dimensionDAO.eliminar(dimensionesEliminar.get(j));
             }
-
+            dimensionesEliminar.clear();
             criteriosEliminar = criterioValoracionDAO.buscarMarco(seleccionado);
             for (int j = 0; j < criteriosEliminar.size(); j++) {
                 criterioValoracionDAO.eliminar(criteriosEliminar.get(j));
             }
+            criteriosEliminar.clear();
             marcoDAO.eliminar(seleccionado);
         }
         if (tamano == 1) {

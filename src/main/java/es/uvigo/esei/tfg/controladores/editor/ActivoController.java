@@ -253,7 +253,7 @@ public class ActivoController implements Serializable {
         }
 
     }
-    
+
     public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         nombre = "";
@@ -497,6 +497,8 @@ public class ActivoController implements Serializable {
 
         boolean sinDimension = true;
         Degradacion seleccionada;
+        Degradacion valor;
+
         List<Degradacion> impactoAcumulado = new ArrayList<>();
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Degradacion> resultado = new ArrayList<>();
@@ -508,7 +510,7 @@ public class ActivoController implements Serializable {
                 for (int i = s + 1; i < resultado.size(); i++) {
                     if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
                         sinDimension = false;
-                        Degradacion valor = new Degradacion();
+                        valor = new Degradacion();
                         if (seleccionada.getGrado() < resultado.get(i).getGrado()) {
                             valor.setGrado(resultado.get(i).getGrado());
                             valor.setDimension(resultado.get(i).getDimension());
@@ -527,7 +529,7 @@ public class ActivoController implements Serializable {
 
                 }
                 if (sinDimension == true) {
-                    Degradacion valor = new Degradacion();
+                    valor = new Degradacion();
                     valor.setGrado(seleccionada.getGrado());
                     valor.setDimension(seleccionada.getDimension());
                     valor.setImpacto(seleccionada.getImpacto());
@@ -542,6 +544,8 @@ public class ActivoController implements Serializable {
 
         boolean sinDimension = true;
         Riesgo seleccionada;
+        Riesgo valor;
+
         List<Riesgo> riesgoAcumulado = new ArrayList<>();
         List<Activo> activos = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         List<Riesgo> resultado = new ArrayList<>();
@@ -553,7 +557,7 @@ public class ActivoController implements Serializable {
                 for (int i = s + 1; i < resultado.size(); i++) {
                     if (seleccionada.getDimension().getNombre().equals(resultado.get(i).getDimension().getNombre())) {
                         sinDimension = false;
-                        Riesgo valor = new Riesgo();
+                        valor = new Riesgo();
                         if (seleccionada.getValor() < resultado.get(i).getValor()) {
                             valor.setValor(resultado.get(i).getValor());
                             valor.setDimension(resultado.get(i).getDimension());
@@ -575,7 +579,7 @@ public class ActivoController implements Serializable {
 
                 }
                 if (sinDimension == true) {
-                    Riesgo valor = new Riesgo();
+                    valor = new Riesgo();
                     valor.setValor(seleccionada.getValor());
                     valor.setDimension(seleccionada.getDimension());
                     valor.setImpacto(seleccionada.getImpacto());

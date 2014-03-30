@@ -239,6 +239,10 @@ public class AmenazaController implements Serializable {
     public void guardarAmenaza() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        List<Dimension> dimensiones = new ArrayList<>();
+        List<TipoAmenaza> tipos  = new ArrayList<>(); 
+        List<Impacto> impact = new ArrayList<>(); 
+        Activo actual;
         List<TipoAmenaza> tipo = tipoAmenazaDAO.buscarMarco(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
         for(int i=0;i<tipo.size();i++){
             if(tipo.get(i).getNombre().equals(nomTipo)){
@@ -247,13 +251,13 @@ public class AmenazaController implements Serializable {
         }
         Amenaza creada = gestorAmenazasService.crearAmenaza(codigo, nombre, descripcion, probabilidadOcurrencia, gradoDegradacionBase, tipoAmenaza, proyectoController.getProyectoActual());
         gestorImpactoService.crearNuevoImpacto(Calendar.getInstance().getTime(), arbolActivosController.getActivoActual(), creada);
-        List<Dimension> dimensiones = dimensionDAO.buscarTodos(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+        dimensiones = dimensionDAO.buscarTodos(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
         for (int i = 0; i < dimensiones.size(); i++) {
-            List<TipoAmenaza> tipos = tipoAmenazaDAO.buscarDimension(dimensiones.get(i));
+            tipos = tipoAmenazaDAO.buscarDimension(dimensiones.get(i));
             for (int j = 0; j < tipos.size(); j++) {
                 if (tipos.get(j).getNombre().equals(nomTipo)) {
-                    Activo actual = arbolActivosController.getActivoActual();
-                    List<Impacto> impact = impactoDAO.buscarAmenazasActivo(actual);
+                    actual = arbolActivosController.getActivoActual();
+                    impact = impactoDAO.buscarAmenazasActivo(actual);
                     for (int z = 0; z < impact.size(); z++) {
                         if (impact.get(z).getAmenaza().getNombre().equals(nombre)) {
                             gestorDegradacionService.crearNuevaDegradacion(gradoDegradacionBase, probabilidadOcurrencia, impact.get(z), dimensiones.get(i));

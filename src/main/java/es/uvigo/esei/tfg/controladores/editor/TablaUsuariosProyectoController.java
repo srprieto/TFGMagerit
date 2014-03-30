@@ -16,11 +16,13 @@ import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.UsuarioModel;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -44,7 +46,7 @@ public class TablaUsuariosProyectoController implements Serializable {
     ProyectoDAO proyectoDAO;
 
     @Inject
-    ProyectoController proyecto;
+    ProyectoController proyectoController;
 
     @Inject
     @LoggedIn
@@ -114,7 +116,7 @@ public class TablaUsuariosProyectoController implements Serializable {
         usuarios = usuarioDAO.buscarPorTipo(TipoUsuario.EDITOR);
         Usuario creador = usuarioActual;
         usuarios.remove(creador);
-        List<Usuario> editores = proyecto.getProyectoActual().getEditores();
+        List<Usuario> editores = proyectoController.getProyectoActual().getEditores();
         int tamano = editores.size();
         for (int i = 0; i < tamano; i++) {
             usuarios.remove(editores.get(i));
@@ -133,20 +135,25 @@ public class TablaUsuariosProyectoController implements Serializable {
         }
     }
 
-    public void aceptarUsuarios() {
+    public void aceptarUsuarios() throws IOException {
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+
         List<Proyecto> proyectos = new ArrayList<>();
         usuarios = new ArrayList<>();
         Usuario[] lista = this.getSelectedUsuarios();
         int tamano = lista.length;
-        Proyecto pro = proyecto.getProyectoActual();
+        Proyecto pro = proyectoController.getProyectoActual();
         proyectos.add(pro);
         for (int i = 0; i < tamano; i++) {
             Usuario usu = lista[i];
             usuarios.add(usu);
-            usu.setProyectos(proyectos);
-            usuarioDAO.actualizar(usu);
         }
         pro.setEditores(usuarios);
         proyectoDAO.actualizar(pro);
+
+        anadirMensajeCorrecto("Usuarios asignados correctamente");
+        context.redirect("usuarios.xhtml");
     }
 }

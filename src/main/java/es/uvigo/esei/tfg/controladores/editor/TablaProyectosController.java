@@ -72,7 +72,7 @@ public class TablaProyectosController implements Serializable {
 
     @Inject
     ActivoDAO activoDAO;
-    
+
     @Inject
     DependenciaDAO dependenciaDAO;
 
@@ -212,9 +212,10 @@ public class TablaProyectosController implements Serializable {
         Proyecto[] lista = this.getSelectedProyectos();
         List<Activo> activoEliminar = new ArrayList<>();
         List<Impacto> impactoEliminar = new ArrayList<>();
-         List<Dependencia> dependenciasEliminar = new ArrayList<>();
+        List<Dependencia> dependenciasEliminar = new ArrayList<>();
         List<Valoracion> valoracionesEliminar = new ArrayList<>();
         List<Degradacion> degradacionEliminar = new ArrayList<>();
+        List<Usuario> editores = new ArrayList<>();
         int tamano = lista.length;
         for (int i = 0; i < tamano; i++) {
             Proyecto pro = lista[i];
@@ -231,15 +232,18 @@ public class TablaProyectosController implements Serializable {
                     amenazaDAO.eliminar(amenazaEliminar);
                 }
                 dependenciasEliminar = dependenciaDAO.buscarPorPrincipal(activoEliminar.get(j));
-                    for (int s = 0; s < dependenciasEliminar.size(); s++) {
-                        dependenciaDAO.eliminar(dependenciasEliminar.get(s));
-                    }
-                    valoracionesEliminar = valoracionDAO.buscarPorActivo(activoEliminar.get(j));
-                    for (int s = 0; s < valoracionesEliminar.size(); s++) {
-                        valoracionDAO.eliminar(valoracionesEliminar.get(s));
-                    }
+                for (int s = 0; s < dependenciasEliminar.size(); s++) {
+                    dependenciaDAO.eliminar(dependenciasEliminar.get(s));
+                }
+                valoracionesEliminar = valoracionDAO.buscarPorActivo(activoEliminar.get(j));
+                for (int s = 0; s < valoracionesEliminar.size(); s++) {
+                    valoracionDAO.eliminar(valoracionesEliminar.get(s));
+                }
                 activoDAO.eliminar(activoEliminar.get(j));
             }
+
+            pro.setEditores(editores);
+            proyectoDAO.actualizar(pro);
             proyectoDAO.eliminar(pro);
         }
         if (tamano == 1) {
@@ -267,19 +271,19 @@ public class TablaProyectosController implements Serializable {
     }
 
     public List<String> getMarcos() {
-        List <String> nombres = new ArrayList<>();
+        List<String> nombres = new ArrayList<>();
         Proyecto[] proyecto = this.getSelectedProyectos();
         Proyecto elegido = proyecto[0];
         MarcoTrabajo marco = elegido.getMarcoTrabajo();
-        List <MarcoTrabajo> marcos = marcoTrabajoDAO.buscarTodos();
-        for(int i=0; i<marcos.size();i++){
-            if(marcos.get(i).getNombre().equals(marco.getNombre())){
-                nombres.add(0,marcos.get(i).getNombre());
-            }else{
-                nombres.add(i,marcos.get(i).getNombre());
+        List<MarcoTrabajo> marcos = marcoTrabajoDAO.buscarTodos();
+        for (int i = 0; i < marcos.size(); i++) {
+            if (marcos.get(i).getNombre().equals(marco.getNombre())) {
+                nombres.add(0, marcos.get(i).getNombre());
+            } else {
+                nombres.add(i, marcos.get(i).getNombre());
             }
         }
         marcos.clear();
-        return nombres; 
+        return nombres;
     }
 }

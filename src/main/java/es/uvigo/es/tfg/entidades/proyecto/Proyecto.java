@@ -3,6 +3,7 @@ package es.uvigo.es.tfg.entidades.proyecto;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,18 +11,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 @Entity
-public class Proyecto implements Serializable { 
+public class Proyecto implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String nombre;
     String descripcion;
-    
+
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     Date fechaCreacion;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -29,15 +33,13 @@ public class Proyecto implements Serializable {
 
     @ManyToOne
     MarcoTrabajo marcoTrabajo;
-    
+
     @ManyToOne
     Usuario creador;
-    
+
     @ManyToMany
     List<Usuario> editores;
 
-    
-    
     @ManyToOne
     Proyecto proyectoBase;
 
@@ -50,7 +52,7 @@ public class Proyecto implements Serializable {
         this(nombre, descripcion, marcoTrabajo, creador, null);
     }
 
-    public Proyecto(String nombre, String descripcion,  MarcoTrabajo marcoTrabajo, Usuario creador, Proyecto proyectoBase) {
+    public Proyecto(String nombre, String descripcion, MarcoTrabajo marcoTrabajo, Usuario creador, Proyecto proyectoBase) {
         this(); // Fija fechas
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -122,7 +124,7 @@ public class Proyecto implements Serializable {
     public void setProyectoBase(Proyecto proyectoBase) {
         this.proyectoBase = proyectoBase;
     }
-    
+
     public List<Usuario> getEditores() {
         return editores;
     }
@@ -130,7 +132,5 @@ public class Proyecto implements Serializable {
     public void setEditores(List<Usuario> editores) {
         this.editores = editores;
     }
-    
-    
-    
+
 }

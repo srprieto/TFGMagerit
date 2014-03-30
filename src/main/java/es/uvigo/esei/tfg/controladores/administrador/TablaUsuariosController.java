@@ -153,8 +153,9 @@ public class TablaUsuariosController implements Serializable {
     public void eliminarUsuarios() {
         Usuario[] lista = this.getSelectedUsuarios();
         int tamano = lista.length;
+        Usuario user;
         for (int i = 0; i < tamano; i++) {
-            Usuario user = lista[i];
+            user = lista[i];
             usuarioDAO.eliminar(user);
         }
         if (tamano == 1) {

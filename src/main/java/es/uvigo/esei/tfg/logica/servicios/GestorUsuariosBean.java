@@ -3,6 +3,7 @@ package es.uvigo.esei.tfg.logica.servicios;
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
+import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -18,7 +19,7 @@ public class GestorUsuariosBean implements GestorUsuariosService {
 
     @Inject
     UsuarioDAO usuarioDAO;
-
+    
     @Override
     public boolean autenticarUsuario(String login, String passwordPlano) {
         Usuario usuario;
@@ -97,8 +98,8 @@ public class GestorUsuariosBean implements GestorUsuariosService {
     }
 
     @Override
-    public List<Usuario> usuario() {
-        return usuarioDAO.usuario();
+    public List<Usuario> usuario(String pass) {
+        return usuarioDAO.usuario(pass);
     }
 
     @Override

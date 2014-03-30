@@ -1,22 +1,35 @@
 package es.uvigo.esei.tfg.controladores.administrador;
 
+import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
 import es.uvigo.es.tfg.entidades.marco.Dimension;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Activo;
+import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
+import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
+import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
+import es.uvigo.es.tfg.entidades.proyecto.Impacto;
+import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
+import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.controladores.modelos.MarcoModel;
+import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
+import es.uvigo.esei.tfg.logica.daos.CriterioValoracionDAO;
+import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
+import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
 import es.uvigo.esei.tfg.logica.daos.DimensionDAO;
-import es.uvigo.esei.tfg.logica.daos.GenericoDAO;
+import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
+import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoAmenazaDAO;
+import es.uvigo.esei.tfg.logica.daos.ValoracionDAO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -37,15 +50,39 @@ public class TablaMarcosController implements Serializable {
 
     @Inject
     MarcoTrabajoDAO marcoDAO;
-    
+
     @Inject
     TipoAmenazaDAO tipoAmenazaDAO;
-    
+
     @Inject
     TipoActivoDAO tipoActivoDAO;
-    
+
     @Inject
     DimensionDAO dimensionDAO;
+
+    @Inject
+    ProyectoDAO proyectoDAO;
+
+    @Inject
+    ImpactoDAO impactoDAO;
+
+    @Inject
+    DegradacionDAO degradacionDAO;
+
+    @Inject
+    ActivoDAO activoDAO;
+
+    @Inject
+    AmenazaDAO amenazaDAO;
+
+    @Inject
+    DependenciaDAO dependenciaDAO;
+
+    @Inject
+    ValoracionDAO valoracionDAO;
+
+    @Inject
+    CriterioValoracionDAO criterioValoracionDAO;
 
     @Inject
     GestorMarcosService gestorMarcoService;
@@ -123,21 +160,65 @@ public class TablaMarcosController implements Serializable {
 
     public void eliminarMarcos() {
         List<TipoAmenaza> tipoAmenazaEliminar = new ArrayList<>();
-        List <TipoActivo> tipoActivoEliminar = new ArrayList<>();
-        List<Dimension> dimensiones = new ArrayList<>();
+        List<TipoActivo> tipoActivoEliminar = new ArrayList<>();
+        List<Dimension> dimensionesEliminar = new ArrayList<>();
+        List<CriterioValoracion> criteriosEliminar = new ArrayList<>();
+        List<Proyecto> proyectosEliminar = new ArrayList<>();
+        List<Activo> activoEliminar = new ArrayList<>();
+        List<Impacto> impactoEliminar = new ArrayList<>();
+        List<Degradacion> degradacionEliminar = new ArrayList<>();
+        List<Dependencia> dependenciasEliminar = new ArrayList<>();
+        List<Valoracion> valoracionesEliminar = new ArrayList<>();
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        Amenaza amenazaEliminar;
         int tamano = seleccionados.length;
         for (int i = 0; i < tamano; i++) {
             MarcoTrabajo seleccionado = seleccionados[i];
+            proyectosEliminar = proyectoDAO.buscarMarco(seleccionado);
+            for (int r = 0; r < proyectosEliminar.size(); r++) {
+                activoEliminar = activoDAO.buscarActivosProyecto(proyectosEliminar.get(r));
+                for (int j = 0; j < activoEliminar.size(); j++) {
+                    impactoEliminar = impactoDAO.buscarAmenazasActivo(activoEliminar.get(j));
+                    for (int s = 0; s < impactoEliminar.size(); s++) {
+                        degradacionEliminar = degradacionDAO.buscarPorImpacto(impactoEliminar.get(s));
+                        for (int z = 0; z < degradacionEliminar.size(); z++) {
+                            degradacionDAO.eliminar(degradacionEliminar.get(z));
+                        }
+                        amenazaEliminar = impactoEliminar.get(s).getAmenaza();
+                        impactoDAO.eliminar(impactoEliminar.get(s));
+                        amenazaDAO.eliminar(amenazaEliminar);
+                    }
+
+                    dependenciasEliminar = dependenciaDAO.buscarPorPrincipal(activoEliminar.get(j));
+                    for (int s = 0; s < dependenciasEliminar.size(); s++) {
+                        dependenciaDAO.eliminar(dependenciasEliminar.get(s));
+                    }
+                    valoracionesEliminar = valoracionDAO.buscarPorActivo(activoEliminar.get(j));
+                    for (int s = 0; s < valoracionesEliminar.size(); s++) {
+                        valoracionDAO.eliminar(valoracionesEliminar.get(s));
+                    }
+                    activoDAO.eliminar(activoEliminar.get(j));
+                }
+                proyectoDAO.eliminar(proyectosEliminar.get(r));
+            }
             tipoActivoEliminar = tipoActivoDAO.buscarMarco(seleccionado);
-            for(int j=0;j<tipoActivoEliminar.size();j++){
-                tipoActivoDAO.eliminar(tipoActivoEliminar.get(j));               
+            for (int j = 0; j < tipoActivoEliminar.size(); j++) {
+                tipoActivoDAO.eliminar(tipoActivoEliminar.get(j));
             }
             tipoAmenazaEliminar = tipoAmenazaDAO.buscarMarco(seleccionado);
-            for(int j=0;j<tipoAmenazaEliminar.size();j++){
-                tipoAmenazaDAO.eliminar(tipoAmenazaEliminar.get(j));               
+            for (int j = 0; j < tipoAmenazaEliminar.size(); j++) {
+                tipoAmenazaDAO.eliminar(tipoAmenazaEliminar.get(j));
             }
-            
+            dimensionesEliminar = dimensionDAO.buscarMarco(seleccionado);
+            for (int j = 0; j < dimensionesEliminar.size(); j++) {
+                dimensionDAO.eliminar(dimensionesEliminar.get(j));
+            }
+
+            criteriosEliminar = criterioValoracionDAO.buscarMarco(seleccionado);
+            for (int j = 0; j < criteriosEliminar.size(); j++) {
+                criterioValoracionDAO.eliminar(criteriosEliminar.get(j));
+            }
+            marcoDAO.eliminar(seleccionado);
         }
         if (tamano == 1) {
             anadirMensajeCorrecto("El marco ha sido eliminado correctamente");
@@ -180,6 +261,7 @@ public class TablaMarcosController implements Serializable {
             RequestContext.getCurrentInstance().update("form");
         }
     }
+
     public void fichero() throws IOException {
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
@@ -194,7 +276,7 @@ public class TablaMarcosController implements Serializable {
             context.redirect("marcoxml.xhtml");
         }
     }
- 
+
     public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         this.setSelectedMarcos(null);

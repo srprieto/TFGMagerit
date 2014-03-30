@@ -7,7 +7,6 @@ package es.uvigo.esei.tfg.logica.daos;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
-import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;

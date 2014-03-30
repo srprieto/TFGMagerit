@@ -26,7 +26,7 @@ public interface GestorUsuariosService {
      public boolean existeUsuario(String login);
      public TipoUsuario tipoUsuario(String login);
      public void eliminarUsuario(Usuario usuario); 
-     public List<Usuario> usuario();
+     public List<Usuario> usuario(String pass);
      public Long existeId (String nombre);
      boolean comprobarPassword(String passwordPlano, String passwordEncriptado);
 }

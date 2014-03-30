@@ -6,6 +6,7 @@
 package es.uvigo.esei.tfg.controladores.editor;
 
 import es.uvigo.es.tfg.entidades.marco.Dimension;
+import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.DimensionDAO;
 import es.uvigo.esei.tfg.logica.daos.ValoracionDAO;
@@ -148,7 +149,14 @@ public class ValoracionController implements Serializable {
     public void doCrear() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        gestorValoracionService.crearNuevaValoracion(valor, justificacion, arbolActivosController.getActivoActual(), dimensionDAO.buscarPorNombre(nomDimension));
+        List<Dimension> dimensiones = dimensionDAO.buscarMarco(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+        for(int i =0; i<dimensiones.size();i++){
+            if(dimensiones.get(i).getNombre().equals(nomDimension)){
+                dimension = dimensiones.get(i);
+            } 
+        }
+        Activo actual = arbolActivosController.getActivoActual();
+        gestorValoracionService.crearNuevaValoracion(valor, justificacion, actual, dimension);
         anadirMensajeCorrecto("La valoración ha sido almacenada correctamente");
         valor = null;
         justificacion = "";

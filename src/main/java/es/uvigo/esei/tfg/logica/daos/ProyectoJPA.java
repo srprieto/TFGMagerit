@@ -6,6 +6,8 @@
 
 package es.uvigo.esei.tfg.logica.daos;
 
+import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
+import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import java.util.List;
@@ -51,5 +53,14 @@ public class ProyectoJPA extends GenericoJPA<Proyecto> implements ProyectoDAO {
         else {
             return resultados.get(0);  // Devuelve el encontrado
         }
+    }
+     
+    @Override
+    public List<Proyecto> buscarMarco(MarcoTrabajo marcoTrabajo) {
+
+        Query q = em.createQuery("SELECT object(p) FROM Proyecto AS p"
+                + "  WHERE p.marcoTrabajo = :marcoTrabajo");
+        q.setParameter("marcoTrabajo", marcoTrabajo);
+        return q.getResultList();
     }
 }

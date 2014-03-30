@@ -239,7 +239,13 @@ public class AmenazaController implements Serializable {
     public void guardarAmenaza() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        Amenaza creada = gestorAmenazasService.crearAmenaza(codigo, nombre, descripcion, probabilidadOcurrencia, gradoDegradacionBase, tipoAmenazaDAO.buscarPorNombre(nomTipo), proyectoController.getProyectoActual());
+        List<TipoAmenaza> tipo = tipoAmenazaDAO.buscarMarco(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+        for(int i=0;i<tipo.size();i++){
+            if(tipo.get(i).getNombre().equals(nomTipo)){
+                tipoAmenaza = tipo.get(i);
+            }
+        }
+        Amenaza creada = gestorAmenazasService.crearAmenaza(codigo, nombre, descripcion, probabilidadOcurrencia, gradoDegradacionBase, tipoAmenaza, proyectoController.getProyectoActual());
         gestorImpactoService.crearNuevoImpacto(Calendar.getInstance().getTime(), arbolActivosController.getActivoActual(), creada);
         List<Dimension> dimensiones = dimensionDAO.buscarTodos(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
         for (int i = 0; i < dimensiones.size(); i++) {

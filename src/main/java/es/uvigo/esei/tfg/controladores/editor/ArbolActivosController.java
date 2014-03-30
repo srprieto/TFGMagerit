@@ -13,15 +13,19 @@ import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
 import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
+import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
+import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
 import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
+import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
 import es.uvigo.esei.tfg.logica.daos.GrupoActivosDAO;
 import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import es.uvigo.esei.tfg.logica.daos.TipoActivoDAO;
+import es.uvigo.esei.tfg.logica.daos.ValoracionDAO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -73,6 +77,12 @@ public class ArbolActivosController implements Serializable {
 
     @Inject
     DegradacionDAO degradacionDAO;
+
+    @Inject
+    DependenciaDAO dependenciaDAO;
+
+    @Inject
+    ValoracionDAO valoracionDAO;
 
     @Inject
     ProyectoController proyectoController;
@@ -246,15 +256,18 @@ public class ArbolActivosController implements Serializable {
 
     public void eliminarActivo() {
         String builder;
-
+        Activo seleccionado;
+        List<Dependencia> dependenciasEliminar = new ArrayList<>();
+        List<Valoracion> valoracionesEliminar = new ArrayList<>();
+        List<Activo> lista = new ArrayList<>();
         for (TreeNode node : selectedNodes) {
             builder = node.getData().toString();
             String[] separadas1 = builder.split(" ", 2);
             builder = separadas1[1];
-            List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+            lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
             for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getNombre().equals(builder)) {
-                    Activo seleccionado = lista.get(i);
+                    seleccionado = lista.get(i);
                     TreeNode padre = node.getParent();
                     String pa = padre.getData().toString();
                     String[] separadas2 = pa.split(" ", 2);
@@ -270,6 +283,15 @@ public class ArbolActivosController implements Serializable {
                         impactoDAO.eliminar(impactoEliminar.get(j));
                         amenazaDAO.eliminar(amenazaEliminar);
                     }
+                    dependenciasEliminar = dependenciaDAO.buscarPorPrincipal(seleccionado);
+                    for (int j = 0; j < dependenciasEliminar.size(); j++) {
+                        dependenciaDAO.eliminar(dependenciasEliminar.get(j));
+                    }
+                    valoracionesEliminar = valoracionDAO.buscarPorActivo(seleccionado);
+                    for (int j = 0; j < valoracionesEliminar.size(); j++) {
+                        valoracionDAO.eliminar(valoracionesEliminar.get(j));
+                    }
+
                     activoDAO.eliminar(seleccionado);
                     if (padre.getChildren() == null) {
                         tipoActivoDAO.eliminar(nuevo);

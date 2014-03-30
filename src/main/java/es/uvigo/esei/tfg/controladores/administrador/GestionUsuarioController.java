@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.security.MessageDigest;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -89,11 +90,35 @@ public class GestionUsuarioController implements Serializable {
             context.redirect("confirmarusuario.xhtml");
         }
     }
+    
+     public String encriptar(String password) {
+        String algorithm = "MD5";
+        byte[] plainText = password.getBytes();
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance(algorithm);
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+        md.reset();
+        md.update(plainText);
+        byte[] encodedPassword = md.digest();
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < encodedPassword.length; i++) {
+            if ((encodedPassword[i] & 0xff) < 0x10) {
+                sb.append("0");
+            }
+            sb.append(Long.toString(encodedPassword[i] & 0xff, 16));
+        }
+        return sb.toString();
+    }
 
     public void doCrearUsuario() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        gestorUsuariosService.crearNuevoUsuario(login, password, tipo1);
+        String nuevoPass = this.encriptar(password);
+        gestorUsuariosService.crearNuevoUsuario(login, nuevoPass, tipo1);
         anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
         login = "";
         password = "";

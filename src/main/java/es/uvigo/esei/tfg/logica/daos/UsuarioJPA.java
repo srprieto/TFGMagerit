@@ -70,11 +70,13 @@ public class UsuarioJPA extends GenericoJPA<Usuario> implements UsuarioDAO {
     }
     
     @Override
-    public List<Usuario> usuario(){
+    public List<Usuario> usuario(String pass){
         Query q =em.createQuery("SELECT object(u) FROM Usuario as u "+
                                 " WHERE u.login=:login AND u.password=:password");
            q.setParameter("login", credenciales.getLogin());
-           q.setParameter("password", credenciales.getPassword());
+           q.setParameter("password", pass);
            return q.getResultList();
     }
+    
+    
 }

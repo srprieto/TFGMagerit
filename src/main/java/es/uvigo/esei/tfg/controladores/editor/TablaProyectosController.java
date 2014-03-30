@@ -13,18 +13,22 @@ import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
 import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
+import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
+import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.ProyectoModel;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
 import es.uvigo.esei.tfg.logica.daos.AmenazaDAO;
 import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
+import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
 import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorProyectosService;
 import es.uvigo.esei.tfg.logica.daos.ProyectoDAO;
+import es.uvigo.esei.tfg.logica.daos.ValoracionDAO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,6 +72,12 @@ public class TablaProyectosController implements Serializable {
 
     @Inject
     ActivoDAO activoDAO;
+    
+    @Inject
+    DependenciaDAO dependenciaDAO;
+
+    @Inject
+    ValoracionDAO valoracionDAO;
 
     @Inject
     GestorProyectosService gestorProyectosService;
@@ -200,14 +210,19 @@ public class TablaProyectosController implements Serializable {
 
     public void eliminarProyectos() {
         Proyecto[] lista = this.getSelectedProyectos();
+        List<Activo> activoEliminar = new ArrayList<>();
+        List<Impacto> impactoEliminar = new ArrayList<>();
+         List<Dependencia> dependenciasEliminar = new ArrayList<>();
+        List<Valoracion> valoracionesEliminar = new ArrayList<>();
+        List<Degradacion> degradacionEliminar = new ArrayList<>();
         int tamano = lista.length;
         for (int i = 0; i < tamano; i++) {
             Proyecto pro = lista[i];
-            List<Activo> activoEliminar = activoDAO.buscarActivosProyecto(pro);
+            activoEliminar = activoDAO.buscarActivosProyecto(pro);
             for (int j = 0; j < activoEliminar.size(); j++) {
-                List<Impacto> impactoEliminar = impactoDAO.buscarAmenazasActivo(activoEliminar.get(j));
+                impactoEliminar = impactoDAO.buscarAmenazasActivo(activoEliminar.get(j));
                 for (int s = 0; s < impactoEliminar.size(); s++) {
-                    List<Degradacion> degradacionEliminar = degradacionDAO.buscarPorImpacto(impactoEliminar.get(s));
+                    degradacionEliminar = degradacionDAO.buscarPorImpacto(impactoEliminar.get(s));
                     for (int z = 0; z < degradacionEliminar.size(); z++) {
                         degradacionDAO.eliminar(degradacionEliminar.get(z));
                     }
@@ -215,13 +230,27 @@ public class TablaProyectosController implements Serializable {
                     impactoDAO.eliminar(impactoEliminar.get(s));
                     amenazaDAO.eliminar(amenazaEliminar);
                 }
+                dependenciasEliminar = dependenciaDAO.buscarPorPrincipal(activoEliminar.get(j));
+                    for (int s = 0; s < dependenciasEliminar.size(); s++) {
+                        dependenciaDAO.eliminar(dependenciasEliminar.get(s));
+                    }
+                    valoracionesEliminar = valoracionDAO.buscarPorActivo(activoEliminar.get(j));
+                    for (int s = 0; s < valoracionesEliminar.size(); s++) {
+                        valoracionDAO.eliminar(valoracionesEliminar.get(s));
+                    }
                 activoDAO.eliminar(activoEliminar.get(j));
             }
             proyectoDAO.eliminar(pro);
         }
         if (tamano == 1) {
+            activoEliminar.clear();
+            impactoEliminar.clear();
+            degradacionEliminar.clear();
             anadirMensajeCorrecto("El proyecto ha sido eliminado correctamente");
         } else {
+            activoEliminar.clear();
+            impactoEliminar.clear();
+            degradacionEliminar.clear();
             anadirMensajeCorrecto("Los proyectos fueron eliminados correctamente");
         }
     }
@@ -250,6 +279,7 @@ public class TablaProyectosController implements Serializable {
                 nombres.add(i,marcos.get(i).getNombre());
             }
         }
+        marcos.clear();
         return nombres; 
     }
 }

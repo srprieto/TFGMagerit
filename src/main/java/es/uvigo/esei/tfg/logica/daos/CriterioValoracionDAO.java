@@ -6,9 +6,8 @@
 
 package es.uvigo.esei.tfg.logica.daos;
 
+import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
-import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
-import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -17,9 +16,6 @@ import javax.ejb.Local;
  * @author Saul
  */
 @Local
-public interface ProyectoDAO extends GenericoDAO<Proyecto>{
-    List<Proyecto> buscarTodos();
-    List<Proyecto> buscarPorCreador(Usuario creador);
-    Proyecto buscarPorNombre(String nombre);
-    List<Proyecto> buscarMarco(MarcoTrabajo marcoTrabajo);
+public interface CriterioValoracionDAO extends GenericoDAO<CriterioValoracion>{
+    List<CriterioValoracion> buscarMarco(MarcoTrabajo marcoTrabajo);
 }

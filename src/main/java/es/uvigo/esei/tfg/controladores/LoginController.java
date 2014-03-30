@@ -29,6 +29,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.security.MessageDigest;
 import javax.inject.Qualifier;
 
 
@@ -60,11 +61,35 @@ public class LoginController implements Serializable {
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
     }
     
+     public String encriptar(String password) {
+        String algorithm = "MD5";
+        byte[] plainText = password.getBytes();
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance(algorithm);
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+        md.reset();
+        md.update(plainText);
+        byte[] encodedPassword = md.digest();
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < encodedPassword.length; i++) {
+            if ((encodedPassword[i] & 0xff) < 0x10) {
+                sb.append("0");
+            }
+            sb.append(Long.toString(encodedPassword[i] & 0xff, 16));
+        }
+        return sb.toString();
+    }
+    
     // Acciones para paginas JSF
     public String doLogin() {
         String destino;
         TipoUsuario tipo;
-        List<Usuario> results = gestorUsuariosService.usuario();
+        String pass = this.encriptar(credenciales.getPassword());
+        List<Usuario> results = gestorUsuariosService.usuario(pass);
         if(!results.isEmpty()){
             usuarioActual = results.get(0);
         }
@@ -73,6 +98,7 @@ public class LoginController implements Serializable {
             destino = "fallo.login";
             autenticado= false;
         } else {  
+            
             tipo = usuarioActual.getTipo();
             if(tipo == TipoUsuario.ADMINISTRADOR)
             {

@@ -210,13 +210,16 @@ public class TablaProyectosController implements Serializable {
 
     public void eliminarProyectos() {
         Proyecto[] lista = this.getSelectedProyectos();
+        
         List<Activo> activoEliminar = new ArrayList<>();
         List<Impacto> impactoEliminar = new ArrayList<>();
         List<Dependencia> dependenciasEliminar = new ArrayList<>();
         List<Valoracion> valoracionesEliminar = new ArrayList<>();
         List<Degradacion> degradacionEliminar = new ArrayList<>();
         List<Usuario> editores = new ArrayList<>();
+        
         int tamano = lista.length;
+        
         for (int i = 0; i < tamano; i++) {
             Proyecto pro = lista[i];
             activoEliminar = activoDAO.buscarActivosProyecto(pro);

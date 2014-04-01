@@ -29,31 +29,31 @@
         <div class="tabla">
             <h:form id="form">  
                 <p:dataTable id="Proyectos" emptyMessage="#{msg.VAC3}" 
-                             var="degradacion" value="#{activoController.impactoAcumulado}">  
+                             var="degradacion" value="#{activoController.impactoAcumulado}" sortBy="impacto.activo.nombre">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.IMP}"/>   
                         </p:outputPanel>  
                     </f:facet> 
-                    
+
                     <p:column id="activo" styleClass="tabla1" headerText="#{msg.ACT4}">  
                         <h:outputText value="#{degradacion.impacto.activo.nombre}" />    
-                    </p:column> 
-
-                    <p:column id="grado" styleClass="tabla1" headerText="#{msg.GRA1}">  
-                        <h:outputText value="#{degradacion.grado}" />    
-                    </p:column> 
-                                      
-                    <p:column id="amenaza" styleClass="tabla1" headerText="#{msg.AME1}">  
-                        <h:outputText value="#{degradacion.impacto.amenaza.nombre}" />    
                     </p:column> 
 
                     <p:column id="dimension" styleClass="tabla1" headerText="#{msg.DIM1}">  
                         <h:outputText value="#{degradacion.dimension.nombre}" />    
                     </p:column> 
 
+                    <p:column id="grado" styleClass="tabla1" headerText="#{msg.GRA1}">  
+                        <h:outputText value="#{degradacion.grado}" />    
+                    </p:column> 
+                    
+                    <p:summaryRow>
+                        <p:column colspan="15" style="height: 15px"/>
+                    </p:summaryRow>
+
                 </p:dataTable> 
-               
+
             </h:form>
         </div>
         <p:growl id="growl" life="3000" /> 

@@ -29,21 +29,13 @@
         <div class="tabla">
             <h:form id="form">  
                 <p:dataTable id="Proyectos" emptyMessage="No existen valoraciones para la amenaza #{arbolAmenazasController.amenazaActual.nombre} en las dimensiones" 
-                             var="riesgo" value="#{amenazaController.riesgo}">  
+                             var="riesgo" value="#{amenazaController.riesgo}" sortBy="impacto.amenaza.nombre">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="Riesgo de las amenazas sobre el activo: #{arbolActivosController.activoActual.nombre}"/>   
                         </p:outputPanel>  
                     </f:facet> 
 
-                    <p:column id="valor" styleClass="tabla1" headerText="Valor">  
-                        <h:outputText value="#{riesgo.valor}" />    
-                    </p:column> 
-                    
-                    <p:column id="daño" styleClass="tabla1" headerText="Daño">  
-                        <h:outputText value="#{riesgo.gravedad}" />    
-                    </p:column> 
-                                      
                     <p:column id="amenaza" styleClass="tabla1" headerText="Amenaza">  
                         <h:outputText value="#{riesgo.impacto.amenaza.nombre}" />    
                     </p:column> 
@@ -52,8 +44,20 @@
                         <h:outputText value="#{riesgo.dimension.nombre}" />    
                     </p:column> 
 
+                    <p:column id="daño" styleClass="tabla1" headerText="Daño">  
+                        <h:outputText value="#{riesgo.gravedad}" />    
+                    </p:column> 
+
+                    <p:column id="valor" styleClass="tabla1" headerText="Valor">  
+                        <h:outputText value="#{riesgo.valor}" />    
+                    </p:column> 
+                    
+                    <p:summaryRow>
+                        <p:column colspan="15" style="height: 15px"/>
+                    </p:summaryRow>
+
                 </p:dataTable> 
-               
+
             </h:form>
         </div>
         <p:growl id="growl" life="3000" /> 

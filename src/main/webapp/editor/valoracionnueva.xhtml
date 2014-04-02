@@ -27,29 +27,52 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-
                 <p:panel id="panel" header="#{msg.VAL1}" style="margin-bottom:10px;">  
-
+                    
                     <h:panelGrid columns="3">  
-
                         <h:outputLabel for="valor" value="#{msg.VAL}" />  
                         <p:inputText id="valor" value="#{valoracionController.valor}"  label="Valor"/>  
 
-                        <p:graphicImage id="img" value="../images/icono.jpg" style="cursor:pointer" title="Valores posibles"/> 
-                        <p:overlayPanel id="imgPanel" for="img" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown"  
-                                        dismissable="false" showCloseIcon="true">  
+                        <p:commandButton id="img" value="Valores posibles" type="button" />  
+
+                        <p:overlayPanel id="imgPanel" for="img"  hideEffect="fade" showCloseIcon="true">  
                             <p:imageSwitch id="imgSwitch" effect="fade" style="width:500px;height:200px;">  
                                 <p:graphicImage value="../images/info.jpeg" width="500"/>  
                             </p:imageSwitch>  
                         </p:overlayPanel> 
+                    </h:panelGrid>  
 
+                    <h:panelGrid columns="4">  
+                        <h:outputLabel for="justificacion" value="#{msg.JUS2}" />  
+                        <p:inputText id="justificacion" value="#{valoracionController.justificacion}"  label="Justificacion"/>
+
+                        <p:commandButton id="criterio" value="Criterio Valoración" type="button" />  
+
+                        <p:overlayPanel id="valoracion" for="criterio"  hideEffect="fade" showCloseIcon="true"> 
+                            <p:accordionPanel value="#{tablaCriteriosController.valoraciones}" var="criterio">  
+                                <p:tab title="#{criterio.nombre}">  
+                                    <p:dataTable var="item" value="#{tablaCriteriosController.getItems(criterio)}">  
+                                        <p:column headerText="Nombre">  
+                                            <h:outputText value="#{item.nombre}" />  
+                                        </p:column>  
+
+                                        <p:column headerText="Abreviatura">  
+                                            <h:outputText value="#{item.abreviatura}" />  
+                                        </p:column>  
+
+                                        <p:column headerText="Valor">  
+                                            <h:outputText value="#{item.valor}" />  
+                                        </p:column>  
+                                        
+                                    </p:dataTable>   
+
+                                </p:tab>  
+                            </p:accordionPanel>  
+                        </p:overlayPanel> 
                     </h:panelGrid>  
 
                     <h:panelGrid columns="2"> 
-                        
-                        <h:outputLabel for="justificacion" value="#{msg.JUS2}" />  
-                        <p:inputText id="justificacion" value="#{valoracionController.justificacion}"  label="Justificacion"/>
-                        
+
                         <h:outputLabel for="dimension" value="#{msg.DIM}" />  
                         <h:selectOneMenu id="dimension" value="#{valoracionController.nomDimension}" converter="omnifaces.SelectItemsConverter" >  
                             <f:selectItems value="#{valoracionController.dimensiones}" />  

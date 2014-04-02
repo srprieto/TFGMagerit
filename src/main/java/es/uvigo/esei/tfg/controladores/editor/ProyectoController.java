@@ -34,6 +34,7 @@ public class ProyectoController implements Serializable {
     private Proyecto proyectoEnEdicion;
     private Proyecto proyectoActual;
 
+    private boolean mostrar = false;
     private String nombre = "";
     private String descripcion = "";
     private List<MarcoTrabajo> marco;
@@ -138,6 +139,14 @@ public class ProyectoController implements Serializable {
         this.marcoelegido = marcoelegido;
     }
 
+    public boolean isMostrar() {
+        return mostrar;
+    }
+
+    public void setMostrar(boolean mostrar) {
+        this.mostrar = mostrar;
+    }
+
     public void doProyecto() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -179,6 +188,7 @@ public class ProyectoController implements Serializable {
         } else {
             proyectoActual = lista[0];
             creador = usuarioActual;
+            mostrar = true;
             context.redirect("activos.xhtml");
         }
     }
@@ -197,6 +207,7 @@ public class ProyectoController implements Serializable {
         } else {
             proyectoActual = lista[0];
             creador = usuarioActual;
+             mostrar = false;
             context.redirect("activos.xhtml");
         }
     }

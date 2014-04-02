@@ -37,8 +37,8 @@
                         <p:inputText id="descripcion" value="#{marcosController.descripcion}"/>  
 
                     </h:panelGrid>  
-                    <p:commandButton value="#{msg.ACE}" update=" :growl" action="#{marcosController.doMarco()}" styleClass="boton" /> 
-                    <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/>  
+                    <p:commandButton id="botonaceptar" value="#{msg.ACE}" update=" :growl" action="#{marcosController.doMarco()}" styleClass="boton" /> 
+                    <p:commandButton id="botonborrar" value="#{msg.LIM}" styleClass="boton" actionListener="#{marcosController.atras()}"/>  
                 </p:panel>
             </h:form>  
         </div>

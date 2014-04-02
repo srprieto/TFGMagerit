@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -43,6 +45,11 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class TablaMarcosController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private ResourceBundle messages;
+
+    //Atributos
     private List<MarcoTrabajo> marcos;
     private MarcoTrabajo selectedMarco;
     private MarcoTrabajo[] selectedMarcos;
@@ -150,17 +157,20 @@ public class TablaMarcosController implements Serializable {
     }
 
     public void eliminar() {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
-            anadirMensajeError("No ha seleccionado ningun marco");
+            anadirMensajeError(messages.getString("ERRTABMAR"));
         } else {
             RequestContext.getCurrentInstance().execute("multiMarcoDialog.show();");
         }
     }
 
     public void eliminarMarcos() {
-        
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
         List<TipoAmenaza> tipoAmenazaEliminar = new ArrayList<>();
         List<TipoActivo> tipoActivoEliminar = new ArrayList<>();
         List<Dimension> dimensionesEliminar = new ArrayList<>();
@@ -173,10 +183,10 @@ public class TablaMarcosController implements Serializable {
         List<Valoracion> valoracionesEliminar = new ArrayList<>();
         List<Usuario> editores = new ArrayList<>();
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
-        
+
         Amenaza amenazaEliminar;
         int tamano = seleccionados.length;
-        
+
         for (int i = 0; i < tamano; i++) {
             MarcoTrabajo seleccionado = seleccionados[i];
             proyectosEliminar = proyectoDAO.buscarMarco(seleccionado);
@@ -236,28 +246,32 @@ public class TablaMarcosController implements Serializable {
             marcoDAO.eliminar(seleccionado);
         }
         if (tamano == 1) {
-            anadirMensajeCorrecto("El marco ha sido eliminado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABMAR"));
         } else {
-            anadirMensajeCorrecto("Los marcos fueron eliminados correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABMAR1"));
 
         }
     }
 
     public void update() {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
             this.setSelectedMarcos(null);
-            anadirMensajeError("No ha seleccionado ningun marco");
+            anadirMensajeError(messages.getString("ERRTABMAR"));
         } else if (tamano != 1) {
             this.setSelectedMarcos(null);
-            anadirMensajeError("Solo puede seleccionar un marco para editarlo");
+            anadirMensajeError(messages.getString("ERRTABMAR1"));
         } else {
             RequestContext.getCurrentInstance().execute("multiMarcoEditDialog.show();");
         }
     }
 
     public void updateMarco() {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         MarcoTrabajo seleccionado = seleccionados[0];
@@ -265,27 +279,29 @@ public class TablaMarcosController implements Serializable {
         this.setSelectedMarcos(null);
 
         if (seleccionado.getNombre().equals("")) {
-            anadirMensajeError("Tienes que introducir un nombre para el marco");
+            anadirMensajeError(messages.getString("ERRTABMAR2"));
         } else if (seleccionado.getDescripcion().equals("")) {
-            anadirMensajeError("Tienes que introducir una descripcion para el marco");
+            anadirMensajeError(messages.getString("ERRTABMAR3"));
         } else if (gestorMarcoService.existeMarco(seleccionado.getNombre()) == true && gestorMarcoService.existeId(seleccionado.getNombre()) != id) {
-            anadirMensajeError("Ya existe un marco con ese nombre");
+            anadirMensajeError(messages.getString("ERRTABMAR4"));
         } else {
             marcoDAO.actualizar(seleccionado);
-            anadirMensajeCorrecto("El marco ha sido modificado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABMAR2"));
             RequestContext.getCurrentInstance().update("form");
         }
     }
 
     public void fichero() throws IOException {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
             this.setSelectedMarcos(null);
-            anadirMensajeError("No ha seleccionado ningun marco");
+            anadirMensajeError(messages.getString("ERRTABMAR5"));
         } else if (tamano != 1) {
             this.setSelectedMarcos(null);
-            anadirMensajeError("Solo puede seleccionar un marco para cargar un fichero xml");
+            anadirMensajeError(messages.getString("ERRTABMAR6"));
         } else {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.redirect("marcoxml.xhtml");

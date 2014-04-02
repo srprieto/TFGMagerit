@@ -56,6 +56,9 @@
                             <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
                         </h:selectOneMenu>  
 
+                    </h:panelGrid>  
+                    <h:panelGrid columns="3">  
+
                         <h:outputLabel for="grupo" value="#{msg.GRU3}" />  
                         <h:selectOneMenu id="grupo" value="#{activoController.nombreGrupo}" converter="omnifaces.SelectItemsConverter" >  
                             <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
@@ -63,9 +66,9 @@
 
                         <p:commandButton value="#{msg.NG}" action="nuevogrupo.xhtml"/><br/>
 
-                        <h:outputText value="#{msg.OBL}" />  
-                    </h:panelGrid>  
 
+                    </h:panelGrid>  
+                    <p><h:outputText value="#{msg.OBL}" /></p>
                     <p:commandButton update=" :growl" actionListener="#{activoController.doGuargar()}" value="#{msg.GUA}" /> 
                     <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
                 </p:panel>  

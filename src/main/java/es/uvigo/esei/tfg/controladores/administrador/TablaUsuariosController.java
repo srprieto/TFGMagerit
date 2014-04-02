@@ -16,6 +16,8 @@ import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -27,13 +29,17 @@ import org.primefaces.context.RequestContext;
 @Named(value = "tablaUsuariosController")
 @SessionScoped
 public class TablaUsuariosController implements Serializable {
-
+    
+    //Internacionalizacion
+    private Locale locale; //nos sirve para indicar el idioma (es, en, fr...)
+    private ResourceBundle messages;//recupera los mensajes del archivo properties
+    
+    //Atributos
     private Usuario usuario;
-    private List<Usuario> usuarios;
-    private Usuario selectedUsuario;
-    private Usuario[] selectedUsuarios;
-    private UsuarioModel usuarioModel;
-    private List<Usuario> filteredUsuarios;
+    private List<Usuario> usuarios; 
+    private Usuario[] selectedUsuarios; //Lista de usuarios seleccionados por el usuario en la tabla
+    private UsuarioModel usuarioModel;//modelo de usuario ,necesario para cargar los datos en la tabla
+    private List<Usuario> filteredUsuarios;//Lista que contiene los usuarios necesarios para el filtrado de los mismos en la tabla
 
     @Inject
     UsuarioDAO usuarioDAO;
@@ -76,14 +82,6 @@ public class TablaUsuariosController implements Serializable {
         this.selectedUsuarios = selectedUsuarios;
     }
 
-    public Usuario getSelectedUsuario() {
-        return selectedUsuario;
-    }
-
-    public void setSelectedUsuario(Usuario selectedUsuario) {
-        this.selectedUsuario = selectedUsuario;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -100,68 +98,98 @@ public class TablaUsuariosController implements Serializable {
     public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
-
+    
+    /*Datos que se mostraran en la tabla, primero recuperamos todos los datos y 
+    posteriormente los cargamos con el modelo*/
     public UsuarioModel getUsuarioModel() {
         usuarios = usuarioDAO.buscarTodos();
         usuarioModel = new UsuarioModel(usuarios);
         return usuarioModel;
     }
 
+    /*Funcion que valida si se selecciono un usuario, en caso de no seleccionar ninguno o mas 
+    de uno se mostrara un mensaje de error, en caso contrario nos muestra el formulario de edición*/
     public void update() {
+        
+        //Internacionalizacion
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Atributos
         Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
             this.setSelectedUsuarios(null);
-            anadirMensajeError("No ha seleccionado ningun usuario");
+            anadirMensajeError(messages.getString("ERRTABUSU"));
         } else if (tamano != 1) {
-
             this.setSelectedUsuarios(null);
-            anadirMensajeError("Solo puede seleccionar un usuario para editarlo");
+            anadirMensajeError(messages.getString("ERRTABUSU1"));
         } else {
             RequestContext.getCurrentInstance().execute("multiEditDialog.show();");
         }
     }
 
     public void updateUsuario() {
+        
+        //Internacionalizacion
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
         Usuario[] seleccionados = this.getSelectedUsuarios();
+        
+        //Atributos
         int tamano = seleccionados.length;
         Usuario seleccionado = seleccionados[0];
         Long id = seleccionado.getId();
         this.setSelectedUsuarios(null);
 
         if (seleccionado.getLogin().equals("")) {
-            anadirMensajeError("Tienes que introducir un login para el usuario");
+            anadirMensajeError(messages.getString("ERRTABUSU2"));
         } else if (gestorUsuariosService.existeUsuario(seleccionado.getLogin()) == true && gestorUsuariosService.existeId(seleccionado.getLogin()) != id) {
-            anadirMensajeError("Ya existe un usuario con ese login");
+            anadirMensajeError(messages.getString("ERRTABUSU3"));
         } else {
             usuarioDAO.actualizar(seleccionado);
-            anadirMensajeCorrecto("El usuario ha sido modificado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABUSU"));
             RequestContext.getCurrentInstance().update("form");
         }
     }
 
     public void eliminar() {
+        
+        //Internacionalizacion
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Atributos
         Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
-            anadirMensajeError("No ha seleccionado ningun usuario");
+            anadirMensajeError(messages.getString("ERRTABUSU4"));
         } else {
             RequestContext.getCurrentInstance().execute("multiUsuarioDialog.show();");
         }
     }
 
     public void eliminarUsuarios() {
+        
+        //internacionalizacion
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Atributos
         Usuario[] lista = this.getSelectedUsuarios();
         int tamano = lista.length;
         Usuario user;
+        
         for (int i = 0; i < tamano; i++) {
             user = lista[i];
             usuarioDAO.eliminar(user);
         }
         if (tamano == 1) {
-            anadirMensajeCorrecto("El usuario ha sido eliminado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABUSU1"));
         } else {
-            anadirMensajeCorrecto("Los usuarios fueron eliminados correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABUSU2"));
         }
     }
 

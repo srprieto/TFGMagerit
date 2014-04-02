@@ -33,6 +33,7 @@ public class TablaValoracionController implements Serializable {
     private ValoracionModel valoracionModel;
     private List<Valoracion> filteredValoracion;
 
+
     @Inject
     DimensionDAO dimensionDAO;
 
@@ -63,6 +64,7 @@ public class TablaValoracionController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+
 
     public Valoracion getValoracion() {
         return valoracion;

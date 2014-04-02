@@ -15,6 +15,8 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.security.MessageDigest;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -28,14 +30,17 @@ import javax.inject.Inject;
 @SessionScoped
 public class GestionUsuarioController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private ResourceBundle messages;
+
     // Atributos
     private TipoUsuario tipo1;
     private String login = "";
     private String password = "";
     private String password2 = "";
     private boolean nuevoUsuario = true;
-
-     
+    
     @Inject
     UsuarioDAO usuarioDAO;
 
@@ -52,8 +57,8 @@ public class GestionUsuarioController implements Serializable {
     public GestionUsuarioController() {
 
     }
-    
-      // Metodos get y set
+
+    // Metodos get y set
     public Usuario getUsuarioActual() {
         return usuarioActual;
     }
@@ -101,11 +106,10 @@ public class GestionUsuarioController implements Serializable {
     public void setTipo(TipoUsuario tipo1) {
         this.tipo1 = tipo1;
     }
-    
-    
+
     /**
-     * Mensajes de error y correctos
-     * Añade un mensaje de error a la jeraquia de componetes de la página JSF
+     * Mensajes de error y correctos Añade un mensaje de error a la jeraquia de
+     * componetes de la página JSF
      *
      * @param mensaje
      */
@@ -118,34 +122,36 @@ public class GestionUsuarioController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
-    
+
     /*Funcion doUsuario() nos redirecciona a la vista de confirmacion de usuario en caso de que todos los
-    valores sean correctos, en caso contrario muestra el mensaje de error correspondiente y nose redirecciona
-    nuevamente a la vista de creación de usuarios*/
+     valores sean correctos, en caso contrario muestra el mensaje de error correspondiente y nose redirecciona
+     nuevamente a la vista de creación de usuarios*/
     public void doUsuario() throws IOException {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 
         if (login.equals("")) {
-            anadirMensajeError("No se ha indicado un nombre de usuario");
+            anadirMensajeError(messages.getString("ERRUSU"));
             context.redirect("crearusuario.xhtml");
         } else if (password.equals("")) {
-            anadirMensajeError("No se ha indicado una contraseña");
+            anadirMensajeError(messages.getString("ERRUSU1"));
             context.redirect("crearusuario.xhtml");
         } else if (password2.equals("")) {
-            anadirMensajeError("No se ha repetido la contraseña");
+            anadirMensajeError(messages.getString("ERRUSU2"));
             context.redirect("crearusuario.xhtml");
         } else if (!password.equals(password2)) {
-            anadirMensajeError("Las contraseñas introducidas no coinciden");
+            anadirMensajeError(messages.getString("ERRUSU3"));
             context.redirect("crearusuario.xhtml");
         } else if (gestorUsuariosService.existeUsuario(login)) {
-            anadirMensajeError("El nombre de usuario " + login + " ya existe");
+            anadirMensajeError(messages.getString("ERRUSU4") +" " + login +" "+ messages.getString("ERRUSU5"));
             context.redirect("crearusuario.xhtml");
         } else {
             context.redirect("confirmarusuario.xhtml");
         }
     }
-    
+
     /*Funcion encriptar() encripta mediante el algoritmo MD5 la clave que le pasamos como parametro*/
     public String encriptar(String password) {
         String algorithm = "MD5";
@@ -170,35 +176,24 @@ public class GestionUsuarioController implements Serializable {
         return sb.toString();
     }
 
+     /*Funcion doUsuario() crea un nuevo usuario en la base de datos con los datos introducidos*/
     public void doCrearUsuario() throws IOException {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         String nuevoPass = this.encriptar(password);
         gestorUsuariosService.crearNuevoUsuario(login, nuevoPass, tipo1);
-        anadirMensajeCorrecto("El usuario " + login + " ha sido guardado correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRUSU")+ " " + login + " "+messages.getString("CORRUSU1"));
         login = "";
         password = "";
         tipo1 = null;
         tablaUsuariosController.setSelectedUsuarios(null);
         context.redirect("usuarios.xhtml");
     }
-
-    public String doActualizarUsuario() {
-        String destino = null;
-        if (password.equals("")) {
-            anadirMensajeError("No se ha indicado una contraseña");
-        } else if (password2.equals("")) {
-            anadirMensajeError("No se ha repetido la contraseña");
-        } else if (!password.equals(password2)) {
-            anadirMensajeError("Las contraseñas introducidas no coinciden");
-        } else {
-            gestorUsuariosService.actualizarPassword(usuarioActual.getId(), password);
-            gestorUsuariosService.actualizarDatosCliente(usuarioActual);
-            destino = "usuario.actualizado";
-        }
-        return destino;
-    }
     
+    /*Funcion atras() hace referencia al boton Atras de la vista de creación de un usuario, ya que necesitamos 
+    limpiar los atributos para que no se muestren los datos una vez abandonada la vista*/
     public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         login = "";

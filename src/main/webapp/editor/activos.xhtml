@@ -5,7 +5,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                template="/templates/plantilla.xhtml">
+                template="/templates/plantilla.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:outputStylesheet library="css" name="estilo.css"  />
     <ui:define name="head"><h:outputText value="#{msg.LIS2}"/></ui:define>
     <ui:define name="sidebar">
@@ -20,10 +21,17 @@
                     <p:submenu label="#{msg.MEN}">  
                         <p:menuitem value="#{msg.ATR}" actionListener="#{arbolActivosController.atras()}"/>  
                         <p:menuitem value="#{msg.ANA2}" url="crearactivo.xhtml"/> 
-                        <p:menuitem value="#{msg.GES}" url="usuarios.xhtml"/>
+                        <c:choose>
+                            <c:when test="#{proyectoController.mostrar == true}">
+                                <p:menuitem value="#{msg.GES}" url="usuarios.xhtml"/>
+                            </c:when>
+                            <c:otherwise/>
+                        </c:choose>
                         <p:menuitem value="#{msg.MOD1}" url="modelovalor.xhtml"/>
                         <p:menuitem value="#{msg.IMP}" url="impactoacumulado.xhtml"/>
                         <p:menuitem value="#{msg.RIE}" url="riesgoacumulado.xhtml"/>
+                        <p:menuitem value="Impacto Repercutido" url="impactorepercutido.xhtml"/>
+                        <p:menuitem value="Riesgo Repercutido" url="riesgorepercutido.xhtml"/>
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -46,12 +54,12 @@
                                          update=":form:displayEdit, :growl" actionListener="#{arbolActivosController.update()}"/>
                         <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
                                          update=":form:displayMulti, :growl" actionListener="#{arbolActivosController.eliminar()}"/>
-                         <p:commandButton id="dependencias" value="#{msg.DEP}" icon="ui-icon-search"  
-                                          update=":growl" actionListener="#{arbolActivosController.doDestino()}"/> 
-                         <p:commandButton id="valoracion" value="#{msg.VAL4}" icon="ui-icon-plusthick"  
-                                          update=":growl" actionListener="#{arbolActivosController.valoracion()}"/>
-                         <p:commandButton id="amenazas" value="#{msg.AME2}" icon="ui-icon-alert"  
-                                          update=":growl" actionListener="#{arbolActivosController.amenazas()}"/>
+                        <p:commandButton id="dependencias" value="#{msg.DEP}" icon="ui-icon-search"  
+                                         update=":growl" actionListener="#{arbolActivosController.doDestino()}"/> 
+                        <p:commandButton id="valoracion" value="#{msg.VAL4}" icon="ui-icon-plusthick"  
+                                         update=":growl" actionListener="#{arbolActivosController.valoracion()}"/>
+                        <p:commandButton id="amenazas" value="#{msg.AME2}" icon="ui-icon-alert"  
+                                         update=":growl" actionListener="#{arbolActivosController.amenazas()}"/>
                     </f:facet>  
                 </p:treeTable>
                 <p:dialog id="multiEditDialog" header="#{msg.EDI2}" widgetVar="multiEditDialog"  

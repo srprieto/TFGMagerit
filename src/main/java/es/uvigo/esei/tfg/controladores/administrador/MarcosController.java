@@ -8,6 +8,8 @@ package es.uvigo.esei.tfg.controladores.administrador;
 import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -22,9 +24,15 @@ import javax.inject.Named;
 @Named(value = "marcosController")
 @SessionScoped
 public class MarcosController implements Serializable {
-
+    
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
+    //Atributos
     private String nombre = "";
     private String descripcion = "";
+    
 
     @Inject
     GestorMarcosService gestorMarcoService;
@@ -65,16 +73,18 @@ public class MarcosController implements Serializable {
     }
 
     public void doMarco() throws IOException {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         if (nombre.equals("")) {
-            anadirMensajeError("No se ha indicado un nombre para el marco de trabajo");
+            anadirMensajeError(messages.getString("ERRMAR"));
             context.redirect("crearmarco.xhtml");
         } else if (descripcion.equals("")) {
-            anadirMensajeError("No se ha indicado una descripción");
+            anadirMensajeError(messages.getString("ERRMAR1"));
             context.redirect("crearmarco.xhtml");
         } else if (gestorMarcoService.existeMarco(nombre) == true) {
-            anadirMensajeError("Ya existe un marco con ese nombre");
+            anadirMensajeError(messages.getString("ERRMAR2"));
             context.redirect("crearmarco.xhtml");
         } else {
             context.redirect("nuevomarco.xhtml");
@@ -82,10 +92,12 @@ public class MarcosController implements Serializable {
     }
 
     public void doCrear() throws IOException {
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         gestorMarcoService.crearNuevoMarco(nombre, descripcion);
-        anadirMensajeCorrecto("El marco de trabajo " + nombre + " ha sido creado correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRMAR")+ " "+ nombre+" " + messages.getString("CORRMAR1"));
         nombre = "";
         descripcion = "";
         context.redirect("marcos.xhtml");
@@ -97,4 +109,5 @@ public class MarcosController implements Serializable {
         descripcion = "";
         context.redirect("crearmarco.xhtml");
     }
+
 }

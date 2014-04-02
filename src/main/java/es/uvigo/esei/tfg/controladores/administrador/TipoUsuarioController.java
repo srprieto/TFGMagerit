@@ -22,7 +22,8 @@ public class TipoUsuarioController implements Serializable {
  
     public TipoUsuarioController() {
     }
-
+    
+    /*Función necesaria para mostrar los tipos de usuario en un select*/
     public SelectItem[] getTipoValues() {
         SelectItem[] items = new SelectItem[TipoUsuario.values().length];
         int i = 0;

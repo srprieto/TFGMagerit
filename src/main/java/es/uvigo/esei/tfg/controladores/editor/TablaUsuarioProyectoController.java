@@ -19,6 +19,8 @@ import es.uvigo.esei.tfg.logica.daos.UsuarioDAO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -31,6 +33,10 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class TablaUsuarioProyectoController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Usuario usuario;
     private List<Usuario> usuarios;
     private Usuario selectedUsuario;
@@ -75,6 +81,10 @@ public class TablaUsuarioProyectoController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+     /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public List<Usuario> getFilteredUsuarios() {
         return filteredUsuarios;
@@ -122,20 +132,34 @@ public class TablaUsuarioProyectoController implements Serializable {
         usuarioModel = new UsuarioModel(usuarios);
         return usuarioModel;
     }
+    
+    /************************************************************************************************/
 
     public void eliminar() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
-            anadirMensajeError("No ha seleccionado ningun usuario");
+            anadirMensajeError(messages.getString("ERRTABUSUPRO"));
         } else {
             RequestContext.getCurrentInstance().execute("multiDialog.show();");
         }
     }
 
     public void eliminarUsuario() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
+        
         for (int i = 0; i < tamano; i++) {
             Usuario seleccionado = seleccionados[i];
             proyecto.getProyectoActual().getEditores().remove(seleccionado);
@@ -143,7 +167,7 @@ public class TablaUsuarioProyectoController implements Serializable {
             proyectoDAO.actualizar(proyecto.getProyectoActual());
             usuarioDAO.actualizar(seleccionado);
         }
-        anadirMensajeCorrecto("El usuario ha sido eliminado correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRTABUSUPRO"));
         RequestContext.getCurrentInstance().update("form");
     }
     

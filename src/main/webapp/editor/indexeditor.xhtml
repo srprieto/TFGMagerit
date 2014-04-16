@@ -14,16 +14,14 @@ template="/templates/plantilla.xhtml">
     </h:form>
 </ui:define>
 <ui:define name="sidebar1">  
-    <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
         <h:form id="frmMenu" prependId="false" >
             <p:menu>  
-                <p:submenu label="#{msg.MEN}">   
-                    <p:menuitem value="#{msg.PRO1}" url="misproyectos.xhtml" /> 
-                    <p:menuitem value="#{msg.PRO2}" url="otrosproyectos.xhtml" />   
+                <p:submenu label="#{msg.MEN}" styleClass="cabeceramenu">   
+                    <p:menuitem value="#{msg.PRO1}"  url="misproyectos.xhtml" styleClass="menucolor" /> 
+                    <p:menuitem value="#{msg.PRO2}"  url="otrosproyectos.xhtml" styleClass="menucolor"/>   
                 </p:submenu>  
             </p:menu>
         </h:form>  
-    </div>
 </ui:define>
 <ui:define name="content">
      <h1 class="title ui-widget-header ui-corner-all"><h:outputText value="#{msg.BIE1}&#160;#{usuarioController.usuarioActual.login} "/></h1>

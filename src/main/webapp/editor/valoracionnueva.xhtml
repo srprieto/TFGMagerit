@@ -30,7 +30,7 @@
                 <p:panel id="panel" header="#{msg.VAL1}" style="margin-bottom:10px;">  
                     
                     <h:panelGrid columns="3">  
-                        <h:outputLabel for="valor" value="#{msg.VAL}" />  
+                        <h:outputLabel for="valor" value="#{msg.VAL}" styleClass="negrita"/>  
                         <p:inputText id="valor" value="#{valoracionController.valor}"  label="Valor"/>  
 
                         <p:commandButton id="img" value="Valores posibles" type="button" />  
@@ -43,13 +43,13 @@
                     </h:panelGrid>  
 
                     <h:panelGrid columns="4">  
-                        <h:outputLabel for="justificacion" value="#{msg.JUS2}" />  
+                        <h:outputLabel for="justificacion" value="#{msg.JUS5}" styleClass="negrita"/>  
                         <p:inputText id="justificacion" value="#{valoracionController.justificacion}"  label="Justificacion"/>
 
                         <p:commandButton id="criterio" value="Criterio Valoración" type="button" />  
 
                         <p:overlayPanel id="valoracion" for="criterio"  hideEffect="fade" showCloseIcon="true"> 
-                            <p:accordionPanel value="#{tablaCriteriosController.valoraciones}" var="criterio">  
+                            <p:accordionPanel value="#{tablaCriteriosController.valoraciones}" var="criterio" >  
                                 <p:tab title="#{criterio.nombre}">  
                                     <p:dataTable var="item" value="#{tablaCriteriosController.getItems(criterio)}">  
                                         <p:column headerText="Nombre">  
@@ -73,7 +73,7 @@
 
                     <h:panelGrid columns="2"> 
 
-                        <h:outputLabel for="dimension" value="#{msg.DIM}" />  
+                        <h:outputLabel for="dimension" value="#{msg.DIM}" styleClass="negrita" />  
                         <h:selectOneMenu id="dimension" value="#{valoracionController.nomDimension}" converter="omnifaces.SelectItemsConverter" >  
                             <f:selectItems value="#{valoracionController.dimensiones}" />  
                         </h:selectOneMenu>  

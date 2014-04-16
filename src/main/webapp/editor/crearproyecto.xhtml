@@ -1,53 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:p="http://primefaces.org/ui"
-template="/templates/plantilla.xhtml">
-<h:outputStylesheet library="css" name="estilo.css"  />
-<ui:define name="head"><h:outputText value="#{msg.CRE3}"/></ui:define>
-<ui:define name="sidebar">
-    <h:form id="logout">
-        <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
-    </h:form>
-</ui:define>
-<ui:define name="sidebar1">  
-    <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
-        <h:form id="frmMenu" prependId="false" >
-            <p:menu>  
-                <p:submenu label="#{msg.MEN}">  
-                    <p:menuitem value="#{msg.ATR}" url="misproyectos.xhtml" />   
-                </p:submenu>  
-            </p:menu>
-        </h:form>  
-    </div>
-</ui:define>
-<ui:define name="content">
-<div class="tabla">
-<h:form id="form">
-    <p:panel header="#{msg.CRE2}">
-        <h:panelGrid id="grid" columns="2" cellpadding="5"> 
-            
-            <h:outputLabel for="nombre" value="#{msg.NOM2}"  styleClass="negrita"/>                      
-            <p:inputText id="nombre" value="#{proyectoController.nombre}"/>  
-              
-  
-            <h:outputLabel for="descripcion" value="#{msg.DES2}" styleClass="negrita"/>                      
-            <p:inputText id="descripcion" value="#{proyectoController.descripcion}"/>
-                          
-            <h:outputLabel for="marco" value="#{msg.MAR}"  styleClass="negrita"/>                     
-            <h:selectOneMenu id="marco" value="#{proyectoController.proyectoEnEdicion.marcoTrabajo}" converter="omnifaces.SelectItemsConverter" required="true">  
-                <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{proyectoController.marco}" />  
-            </h:selectOneMenu>     
-            
-        </h:panelGrid>  
-        <p:commandButton value="#{msg.GUA}" update=" :growl" actionListener="#{proyectoController.doProyecto()}" styleClass="boton" /> 
-        <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/>  
-    </p:panel>
-</h:form>  
-</div>
-<p:growl id="growl" life="3000" />
-</ui:define>
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.CRE3}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" url="misproyectos.xhtml" />   
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">
+                <p:panel header="#{msg.CRE2}">
+                    <h:panelGrid id="grid" columns="2" cellpadding="5"> 
+
+                        <h:outputLabel for="nombre" value="#{msg.NOM2}"  styleClass="negrita"/>                      
+                        <p:inputText id="nombre" value="#{proyectoController.nombre}"/>  
+
+
+                        <h:outputLabel for="descripcion" value="#{msg.DES2}" styleClass="negrita"/>                      
+                        <p:inputText id="descripcion" value="#{proyectoController.descripcion}"/>
+                        
+                    </h:panelGrid>  
+                    <h:panelGrid id="grid1" columns="3" cellpadding="5"> 
+
+                        <h:outputLabel for="marco" value="#{msg.MAR4}"  styleClass="negrita"/>                     
+                        <h:selectOneMenu id="marco" value="#{proyectoController.proyectoEnEdicion.marcoTrabajo}" converter="omnifaces.SelectItemsConverter" required="true">  
+                            <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{proyectoController.marco}" />  
+                        </h:selectOneMenu> 
+                        
+                        <p:commandButton value="#{msg.DET}" update=" :growl" actionListener="#{marcosController.detalles()}" styleClass="boton" /> 
+
+                    </h:panelGrid>  
+                    <p:commandButton value="#{msg.GUA}" update=" :growl" actionListener="#{proyectoController.doProyecto()}" styleClass="boton" /> 
+                    <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/>  
+                </p:panel>
+            </h:form>  
+        </div>
+        <p:growl id="growl" life="3000" />
+    </ui:define>
 </ui:composition>

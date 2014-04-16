@@ -11,8 +11,6 @@ import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 /**
@@ -31,22 +29,11 @@ public class DegradacionController implements Serializable{
     public void DegradacionController() {
 
     }
+
+     /*Funciones GET y SET*/
     
-    /**
-     * Añade un mensaje de error a la jeraquia de componetes de la página JSF
-     *
-     * @param mensaje
-     */
-    protected void anadirMensajeError(String mensaje) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, null));
-    }
-
-    protected void anadirMensajeCorrecto(String mensaje) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
-    }
-
+    /************************************************************************************************/
+    
     public Double getGrado() {
         return grado;
     }
@@ -71,6 +58,5 @@ public class DegradacionController implements Serializable{
         this.dimension = dimension;
     }
     
-    
-
+    /************************************************************************************************/
 }

@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CRE4}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -31,44 +31,45 @@
                 <p:panel id="panel" header="#{msg.NUE}" style="tabla4">  
 
                     <h:panelGrid columns="2">  
-                        <h:outputLabel for="codigo" value="#{msg.COD}" />  
+                        <h:outputLabel for="codigo" value="#{msg.COD}" styleClass="negrita"/>  
                         <p:inputText id="codigo" value="#{activoController.codigo}"  label="Codigo"/> 
 
 
-                        <h:outputLabel for="nombre" value="#{msg.NOM}" />  
+                        <h:outputLabel for="nombre" value="#{msg.NOM}" styleClass="negrita"/>  
                         <p:inputText id="nombre" value="#{activoController.nombre}"  label="Nombre"/>    
 
-                        <h:outputLabel for="descripcion" value="#{msg.DES}" />  
+                        <h:outputLabel for="descripcion" value="#{msg.DES}" styleClass="negrita" />  
                         <p:inputText id="descripcion" value="#{activoController.descripcion}"  label="Descripcion"/>  
 
-                        <h:outputLabel for="responsable" value="#{msg.RES}" />  
+                        <h:outputLabel for="responsable" value="#{msg.RES}" styleClass="negrita" />  
                         <p:inputText id="responsable" value="#{activoController.responsable}"  label="Responsable"/>  
 
-                        <h:outputLabel for="ubicacion" value="#{msg.UBI}" />  
+                        <h:outputLabel for="ubicacion" value="#{msg.UBI}" styleClass="negrita" />  
                         <p:inputText id="ubicacion" value="#{activoController.ubicacion}"  label="Ubicacion"/>  
 
 
-                        <h:outputLabel for="cantidad" value="#{msg.CANT}" />  
+                        <h:outputLabel for="cantidad" value="#{msg.CANT}" styleClass="negrita" />  
                         <p:inputText id="cantidad" value="#{activoController.cantidad}"  label="Cantidad"/> 
 
-                        <h:outputLabel for="tipo" value="#{msg.TIP}" />  
-                        <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" converter="omnifaces.SelectItemsConverter" >  
-                            <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
-                        </h:selectOneMenu>  
-
                     </h:panelGrid>  
+                    
                     <h:panelGrid columns="3">  
-
-                        <h:outputLabel for="grupo" value="#{msg.GRU3}" />  
+                        <h:outputLabel for="grupo" value="#{msg.GRU3}" styleClass="negrita"/>  
                         <h:selectOneMenu id="grupo" value="#{activoController.nombreGrupo}" converter="omnifaces.SelectItemsConverter" >  
                             <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
                         </h:selectOneMenu>  
 
-                        <p:commandButton value="#{msg.NG}" action="nuevogrupo.xhtml"/><br/>
-
-
+                        <p:commandButton value="#{msg.NG}" actionListener="#{activoController.doGrupo()}"/>
                     </h:panelGrid>  
-                    <p><h:outputText value="#{msg.OBL}" /></p>
+                    <h:panelGrid columns="3">  
+                        <h:outputLabel for="tipo" value="#{msg.TIP}" styleClass="negrita"/>  
+                        <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" converter="omnifaces.SelectItemsConverter" >  
+                            <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
+                        </h:selectOneMenu>  
+
+                    <p:commandButton value="Detalles" actionListener="#{activoController.detalles()}" />
+                    </h:panelGrid>  
+                    <p><b><h:outputText value="#{msg.OBL}" /></b></p>
                     <p:commandButton update=" :growl" actionListener="#{activoController.doGuargar()}" value="#{msg.GUA}" /> 
                     <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
                 </p:panel>  

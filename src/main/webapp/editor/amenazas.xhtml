@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.LIS3}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -18,13 +18,16 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" actionListener="#{arbolAmenazasController.atras()}"/>  
                         <p:menuitem value="#{msg.ANA5}" url="crearamenaza.xhtml"/>
+                    </p:submenu>  
+                    <p:submenu label="#{msg.ANA6}"> 
                         <p:menuitem value="#{msg.IMP}" url="impacto.xhtml"/>
                         <p:menuitem value="#{msg.RIE}" url="riesgo.xhtml"/>
-                        <p:menuitem value="Impacto Repercutido" url="impactorepercutidoamenazas.xhtml"/>
-                        <p:menuitem value="Riesgo Repercutido" url="riesgorepercutidoamenazas.xhtml"/>
+                        <p:menuitem value="#{msg.IMP3}" url="impactorepercutidoamenazas.xhtml"/>
+                        <p:menuitem value="#{msg.RIE3}" url="riesgorepercutidoamenazas.xhtml"/>
                     </p:submenu>  
+                    <p:separator id="separator"/>  
+                    <p:menuitem value="#{msg.ATR}" actionListener="#{arbolAmenazasController.atras()}"/>  
                 </p:menu>
             </h:form>  
         </div>
@@ -33,7 +36,7 @@
         <div class="tabla">
             <h:form id="form">  
                 <p:treeTable id="multiSelect" emptyMessage="#{msg.VAC}" value="#{arbolAmenazasController.root}" var="node" 
-                             selection="#{arbolAmenazasController.selectedNodes}" selectionMode="multiple">  
+                             selection="#{arbolAmenazasController.selectedNodes}" scrollable="true" scrollHeight="350" styleClass="arbol" selectionMode="multiple">  
                     <p:column>  
                         <f:facet name="header">  
                             <h:outputText value="#{msg.AME}&#160;#{arbolActivosController.activoActual.nombre}"/>   
@@ -46,34 +49,46 @@
                                          update=":form:displayEdit, :growl" actionListener="#{arbolAmenazasController.update()}"/>
                         <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
                                          update=":form:displayMulti, :growl" actionListener="#{arbolAmenazasController.eliminar()}"/>
-                         <p:commandButton id="valoracion" value="#{msg.VAL4}" icon="ui-icon-plusthick"  
-                                          update=":growl" actionListener="#{arbolAmenazasController.valoracion()}"/>
+                        <h:outputText value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"/>  
+                        <p:commandButton id="valoracion" value="#{msg.VAL4}" icon="ui-icon-plusthick"  
+                                         update=":growl" actionListener="#{arbolAmenazasController.valoracion()}"/>
                     </f:facet>  
                 </p:treeTable>
-                <p:dialog id="multiEditDialog" header="#{msg.EDI2}" widgetVar="multiEditDialog"  
-                          height="500" width="500" showEffect="fade" hideEffect="explode">  
+                <p:dialog id="multiEditDialog" header="#{msg.EDI4}" widgetVar="multiEditDialog"  
+                          height="400" width="675" showEffect="fade" hideEffect="explode">  
                     <div class="datalist-noborder">
                         <p:dataList id="displayEdit" value="#{arbolAmenazasController.selectedNodes}" type="none" var="selectedEdit">  
-                            <p><h:outputLabel for="codigo" value="#{msg.COD2}&#160;" />  
-                            <p:inputText id="codigo" value="#{arbolAmenazasController.codigo}"  label="Codigo"/></p>
+                            <p><h:outputLabel for="codigo" value="#{msg.COD2}&#160;"  styleClass="negrita"/>  
+                                <p:inputText id="codigo" value="#{arbolAmenazasController.codigo}"  label="Codigo"/></p>
 
 
-                            <p><h:outputLabel for="nombre" value="#{msg.NOM2}&#160;" />  
+                            <p><h:outputLabel for="nombre" value="#{msg.NOM2}&#160;"  styleClass="negrita"/>  
                                 <p:inputText id="nombre" value="#{arbolAmenazasController.nombre}"  label="Nombre"/></p>    
 
-                            <p><h:outputLabel for="descripcion" value="#{msg.DES2}&#160;" />  
-                            <p:inputText id="descripcion" value="#{arbolAmenazasController.descripcion}"  label="Descripcion"/></p>  
+                            <p><h:outputLabel for="descripcion" value="#{msg.DES2}&#160;"  styleClass="negrita"/>  
+                                <p:inputText id="descripcion" value="#{arbolAmenazasController.descripcion}"  label="Descripcion"/></p>  
 
-                            <p><h:outputLabel for="ocurrencia" value="#{msg.OCU1}&#160;" />  
-                            <p:inputText id="ocurrencia" value="#{arbolAmenazasController.probabilidadOcurrencia}"  label="Ocurrencia"/></p>  
-
-                            <p><h:outputLabel for="degradacion" value="#{msg.DEG1}&#160;" />  
+                            <p><h:outputLabel for="degradacion" value="#{msg.DEG1}&#160;"  styleClass="negrita"/>  
                                 <p:inputText id="degradacion" value="#{arbolAmenazasController.gradoDegradacionBase}"  label="Ubicacion"/></p>  
 
-                            <p><h:outputLabel for="tipo" value="#{msg.TIP5}&#160;" />  
-                            <h:selectOneMenu id="tipo" value="#{arbolAmenazasController.nomTipo}" converter="omnifaces.SelectItemsConverter" >  
-                                <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{amenazaController.tipos}" />  
-                            </h:selectOneMenu></p>  
+                            <p> <h:outputLabel for="ocurrencia" value="#{msg.PRO3}&#160;" styleClass="negrita"/>  
+                                <h:selectOneMenu id="ocurrencia" value="#{amenazaController.probabilidadOcurrencia}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems value="#{amenazaController.probabilidad}" />  
+                                </h:selectOneMenu>  
+
+                                <p:commandButton id="criterio" value="#{msg.VAL5}&#160;" type="button" /> 
+                                <p:overlayPanel id="imgPanel" for="criterio" hideEffect="fade" showCloseIcon="true">  
+                                    <p:imageSwitch id="imgSwitch" effect="fade" style="width:500px;height:200px;">  
+                                        <p:graphicImage value="../images/probabilidad.png" width="500"/>  
+                                    </p:imageSwitch>  
+                                </p:overlayPanel> </p> 
+                            
+                            <p><h:outputLabel for="tipo" value="#{msg.TIP}&#160;"  styleClass="negrita"/>  
+                                <h:selectOneMenu id="tipo" value="#{arbolAmenazasController.nomTipo}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{amenazaController.tipos}" />  
+                                </h:selectOneMenu>
+
+                                <p:commandButton value="#{msg.DET}" actionListener="#{amenazaController.detalles1()}" /></p>  
 
                         </p:dataList>  
                     </div>
@@ -81,8 +96,8 @@
                     <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:dialog>
 
-                <p:dialog id="multiDialog" header="#{msg.ELI4}" widgetVar="multiDialog"  
-                          height="200" width="300" showEffect="fade" hideEffect="explode">  
+                <p:dialog id="multiDialog" header="#{msg.ELI6}" widgetVar="multiDialog"  
+                          height="200" width="425" showEffect="fade" hideEffect="explode">  
 
                     <p:dataList id="displayMulti" value="#{arbolAmenazasController.selectedNodes}" var="selected">  
                         <h:outputText value="#{selected}"/>

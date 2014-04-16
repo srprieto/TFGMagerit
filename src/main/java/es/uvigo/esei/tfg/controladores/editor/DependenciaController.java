@@ -12,6 +12,8 @@ import es.uvigo.esei.tfg.logica.servicios.GestorDependenciaService;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -26,6 +28,10 @@ import javax.inject.Named;
 @Named(value = "dependenciaController")
 @SessionScoped
 public class DependenciaController implements Serializable {
+
+    //Internacionalizacion
+    private Locale locale;
+    private ResourceBundle messages;
 
     private Activo principal;
     private Activo dependiente;
@@ -69,6 +75,10 @@ public class DependenciaController implements Serializable {
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
 
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
+    
     public String getNombre() {
         return nombre;
     }
@@ -118,44 +128,56 @@ public class DependenciaController implements Serializable {
         this.justificante = justificante;
     }
 
+    /************************************************************************************************/
+   
     public void doGuardar() throws IOException {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
+        //Redirección y mostrar mensajes
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 
         if (grado == null) {
-            anadirMensajeError("No se ha indicado un grado para la dependencia");
-            context.redirect("dependencianueva.xhtml");
+            anadirMensajeError(messages.getString("ERRDEP"));
         } else if (justificante.equals("")) {
-            anadirMensajeError("No se ha indicado una justificación");
-            context.redirect("dependencianueva.xhtml");
+            anadirMensajeError(messages.getString("ERRDEP1"));
         } else if (this.getActivos() == null) {
-            anadirMensajeError("No se pueden asignar una dpendencia");
-            context.redirect("dependencianueva.xhtml");
+            anadirMensajeError(messages.getString("ERRDEP2"));
         } else if (grado < 0 || grado > 100) {
-            anadirMensajeError("Tiene que introducir un grado entre 0 y 100");
-            context.redirect("dependencianueva.xhtml");
+            anadirMensajeError(messages.getString("ERRDEP3"));
         } else {
             context.redirect("confirmardependencia.xhtml");
         }
     }
 
     public void guardarDependencia() throws IOException {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+        
+        //Redirección y mostrar mensajes
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
         List<Activo> act = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
         for (int i = 0; i < act.size(); i++) {
             if (act.get(i).getNombre().equals(nombre)) {
                 dependiente = act.get(i);
             }
         }
+        
         gestorDependenciaDAO.crearNuevaDependencia(justificante, grado, arbolActivoController.getActivoActual(), dependiente);
-        anadirMensajeCorrecto("La dependencia  ha sido guardado correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRDEP"));
         justificante = "";
         grado = null;
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         context.redirect("dependencias.xhtml");
     }
-    
-     public void atras() throws IOException {
+
+    public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         grado = null;
         justificante = "";

@@ -16,6 +16,8 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -30,16 +32,20 @@ import javax.inject.Inject;
 @SessionScoped
 public class ProyectoController implements Serializable {
 
-    // Atributos
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Proyecto proyectoEnEdicion;
     private Proyecto proyectoActual;
 
     private boolean mostrar = false;
     private String nombre = "";
     private String descripcion = "";
-    private List<MarcoTrabajo> marco;
+   
     private Usuario creador;
     private MarcoTrabajo marcoelegido;
+    private List<MarcoTrabajo> marco;
 
     @Inject
     GestorProyectosService gestorProyectosService;
@@ -82,6 +88,10 @@ public class ProyectoController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public String getNombre() {
         return nombre;
@@ -146,45 +156,64 @@ public class ProyectoController implements Serializable {
     public void setMostrar(boolean mostrar) {
         this.mostrar = mostrar;
     }
-
+    
+   /************************************************************************************************/
+    
+   
     public void doProyecto() throws IOException {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Redirección y mostrar mensajes
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
         if (nombre.equals("")) {
-            anadirMensajeError("No se ha indicado un nombre para el proyecto");
-            context.redirect("crearproyecto.xhtml");
+            anadirMensajeError(messages.getString("ERRPRO"));
         } else if (descripcion.equals("")) {
-            anadirMensajeError("No se ha indicado una descripción");
-            context.redirect("crearproyecto.xhtml");
+            anadirMensajeError(messages.getString("ERRPRO1"));
         } else if (gestorProyectosService.existeProyecto(nombre)) {
-            anadirMensajeError("Ya existe un proyecto con ese nombre");
-            context.redirect("crearproyecto.xhtml");
+            anadirMensajeError(messages.getString("ERRPRO2"));
         } else {
             context.redirect("confirmarproyecto.xhtml");
         }
     }
 
     public void doCrearProyecto() throws IOException {
+       
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Redirección y mostrar mensajes
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
         gestorProyectosService.crearNuevoProyecto(nombre, descripcion, proyectoEnEdicion.getMarcoTrabajo(), proyectoEnEdicion.getCreador());
-        anadirMensajeCorrecto("El proyecto " + nombre + " ha sido guardado correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRPRO")+" "+ nombre +" "+messages.getString("CORRPRO1"));
         nombre = "";
         descripcion = "";
         context.redirect("misproyectos.xhtml");
     }
 
     public void doDestino() throws IOException {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Redirección y mostrar mensajes
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
         Proyecto[] lista = tablaProyectosController.getSelectedProyectos();
         int tamano = lista.length;
         if (tamano == 0) {
-            anadirMensajeError("debe seleccionar un proyecto");
-            context.redirect("misproyectos.xhtml");
+            anadirMensajeError(messages.getString("ERRPRO3"));
         } else if (tamano != 1) {
-            anadirMensajeError("Solo puede seleccionar un proyecto para trabajar sobre el");
-            context.redirect("misproyectos.xhtml");
+            anadirMensajeError(messages.getString("ERRPRO4"));
         } else {
             proyectoActual = lista[0];
             creador = usuarioActual;
@@ -194,20 +223,25 @@ public class ProyectoController implements Serializable {
     }
     
      public void doDestino1() throws IOException {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Redirección y mostrar mensajes
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
         Proyecto[] lista = tablaProyectoColaborativoController.getSelectedProyectos();
         int tamano = lista.length;
         if (tamano == 0) {
-            anadirMensajeError("debe seleccionar un proyecto");
-            context.redirect("misproyectos.xhtml");
+            anadirMensajeError(messages.getString("ERRPRO3"));
         } else if (tamano != 1) {
-            anadirMensajeError("Solo puede seleccionar un proyecto para trabajar sobre el");
-            context.redirect("misproyectos.xhtml");
+            anadirMensajeError(messages.getString("ERRPRO4"));
         } else {
             proyectoActual = lista[0];
             creador = usuarioActual;
-             mostrar = false;
+            mostrar = false;
             context.redirect("activos.xhtml");
         }
     }

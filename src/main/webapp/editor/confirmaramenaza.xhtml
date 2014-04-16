@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -28,14 +28,19 @@
         <div class="tabla">
             <h:form id="form" >
                 <p:panel header="#{msg.CON}">
-                    <p><h:outputText value="#{msg.COD4}&#160;#{amenazaController.codigo}"/></p>
-                    <p><h:outputText value="#{msg.NOM7}&#160;#{amenazaController.nombre}"/></p>
-                    <p><h:outputText value="#{msg.DES8}&#160;#{amenazaController.descripcion}"/></p>
-                    <p><h:outputText value="#{msg.OCU}&#160;#{amenazaController.probabilidadOcurrencia}"/></p>
-                    <p><h:outputText value="#{msg.DEG}&#160;#{amenazaController.gradoDegradacionBase}"/></p>
-                    <p><h:outputText value="#{msg.TIP4}&#160;#{amenazaController.nomTipo}"/></p>
+                    <p><b><h:outputText value="#{msg.COD4}&#160;"/></b>
+                                     <h:outputText value="#{amenazaController.codigo}"/></p>
+                    <p><b><h:outputText value="#{msg.NOM7}&#160;"/></b>
+                                     <h:outputText value="#{amenazaController.nombre}"/></p>
+                    <p><b><h:outputText value="#{msg.DES8}&#160;"/></b>
+                                     <h:outputText value="#{amenazaController.descripcion}"/></p>
+                    <p><b><h:outputText value="#{msg.OCU}&#160;"/></b>
+                                     <h:outputText value="#{amenazaController.probabilidadOcurrencia}"/></p>
+                    <p><b><h:outputText value="#{msg.DEG}&#160;"/></b>
+                                     <h:outputText value="#{amenazaController.gradoDegradacionBase}"/></p>
+                    <p><b><h:outputText value="#{msg.TIP4}&#160;"/></b>
+                                     <h:outputText value="#{amenazaController.nomTipo}"/></p>
                     <p:commandButton value="#{msg.GUA}" actionListener="#{amenazaController.guardarAmenaza()}"/>
-                    <p:commandButton value="#{msg.CAN}" action="crearamenaza.xhtml"/>
                 </p:panel>
             </h:form>  
         </div>

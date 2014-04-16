@@ -28,6 +28,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -43,7 +45,12 @@ import javax.inject.Named;
 @SessionScoped
 public class AmenazaController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private ResourceBundle messages;
+
     private List<TipoAmenaza> tiposAmenazas;
+    private TipoAmenaza tipoAmenaza;
 
     private String codigo;
     private String nomTipo;
@@ -51,8 +58,13 @@ public class AmenazaController implements Serializable {
     private String descripcion;
     private Double probabilidadOcurrencia;
     private Double gradoDegradacionBase;
+    private String nomtip;
+    private String destip;
+    private String abrtip;
+    private String origen;
+    private int vuelta=0;
 
-    private TipoAmenaza tipoAmenaza;
+    
 
     @Inject
     TipoAmenazaDAO tipoAmenazaDAO;
@@ -80,6 +92,9 @@ public class AmenazaController implements Serializable {
 
     @Inject
     ArbolActivosController arbolActivosController;
+    
+    @Inject
+    ArbolAmenazasController arbolAmenazasController;
 
     @Inject
     ProyectoController proyectoController;
@@ -110,6 +125,50 @@ public class AmenazaController implements Serializable {
     protected void anadirMensajeCorrecto(String mensaje) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+    }
+
+    /*Funciones GET y SET*/
+   
+    /************************************************************************************************/
+    
+    public String getNomtip() {
+        return nomtip;
+    }
+
+    public void setNomtip(String nomtip) {
+        this.nomtip = nomtip;
+    }
+
+    public int getVuelta() {
+        return vuelta;
+    }
+
+    public void setVuelta(int vuelta) {
+        this.vuelta = vuelta;
+    }
+
+    public String getDestip() {
+        return destip;
+    }
+
+    public void setDestip(String destip) {
+        this.destip = destip;
+    }
+
+    public String getAbrtip() {
+        return abrtip;
+    }
+
+    public void setAbrtip(String abrtip) {
+        this.abrtip = abrtip;
+    }
+
+    public String getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(String origen) {
+        this.origen = origen;
     }
 
     public TipoAmenaza getTipoAmenaza() {
@@ -176,6 +235,8 @@ public class AmenazaController implements Serializable {
         this.gradoDegradacionBase = gradoDegradacionBase;
     }
 
+    /*Funcion necesarios para mostrar los posibles valores de probabilidad de ocurrencia de
+     una amenaza en el select del formulario*/
     public List<Double> getProbabilidad() {
         List<Double> probabilidades = new ArrayList<>();
         probabilidades.add(100 * 1.0);
@@ -186,21 +247,82 @@ public class AmenazaController implements Serializable {
 
         return probabilidades;
     }
+    
+    /*Funcion necesarios para mostrar los tipos de amenazas asociadas al activo seleccionado*/
+    public List<String> getTipos() {
+        List<TipoAmenaza> posibles = tipoAmenazaDAO.buscarTipoActivo(arbolActivosController.getActivoActual().getTipoActivo());
+        List<String> nombres = new ArrayList<>();
+        for (int i = 0; i < posibles.size(); i++) {
+            nombres.add(posibles.get(i).getNombre());
+        }
+        return nombres;
+    }
 
-    public String doGuargar() {
-        String destino;
+    /************************************************************************************************/
+     
+    public void atras1() throws IOException{
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        if (vuelta==0){
+            context.redirect("crearamenaza.xhtml");
+        }else{
+            context.redirect("amenazas.xhtml");
+        }
+    }
+     
+    public void detalles() throws IOException{
+        vuelta=0;
+        ExternalContext context1 = FacesContext.getCurrentInstance().getExternalContext();
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+         List<TipoAmenaza> tipo = tipoAmenazaDAO.buscarMarco(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+
+        for (int i = 0; i < tipo.size(); i++) {
+            if (tipo.get(i).getNombre().equals(nomTipo)) {
+                tipoAmenaza = tipo.get(i);
+            }
+        }
+        nomtip = tipoAmenaza.getNombre();
+        abrtip = tipoAmenaza.getAbreviatura();
+        destip = tipoAmenaza.getDescripcion();
+        origen= tipoAmenaza.getOrigen();
+        context1.redirect("detallestipoAme.xhtml");
+    }
+     
+     public void detalles1() throws IOException{
+        vuelta=1;
+        ExternalContext context1 = FacesContext.getCurrentInstance().getExternalContext();
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+        List<TipoAmenaza> tipo = tipoAmenazaDAO.buscarMarco(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+
+        for (int i = 0; i < tipo.size(); i++) {
+            if (tipo.get(i).getNombre().equals(arbolAmenazasController.getNomTipo())) {
+                tipoAmenaza = tipo.get(i);
+            }
+        }
+        nomtip = tipoAmenaza.getNombre();
+        abrtip = tipoAmenaza.getAbreviatura();
+        destip = tipoAmenaza.getDescripcion();
+        origen= tipoAmenaza.getOrigen();
+        context1.redirect("detallestipoAme.xhtml");
+    }
+    
+    public void doGuargar() throws IOException {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
+        //Atributos
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+
         if (codigo.equals("")) {
-            anadirMensajeError("No se ha indicado un codigo para la amenaza");
-            destino = "crearamenaza.xhtml";
+            anadirMensajeError(messages.getString("ERRAME"));
         } else if (nombre.equals("")) {
-            anadirMensajeError("No se ha indicado un nombre para la amenaza");
-            destino = "crearamenaza.xhtml";
+            anadirMensajeError(messages.getString("ERRAME1"));
         } else if (descripcion.equals("")) {
-            anadirMensajeError("No se ha indicado una descripción para la amenaza");
-            destino = "crearamenaza.xhtml";
+            anadirMensajeError(messages.getString("ERRAME2"));
         } else if (gradoDegradacionBase == null) {
-            anadirMensajeError("No se ha indicado una degradación para la amenaza");
-            destino = "crearamenaza.xhtml";
+            anadirMensajeError(messages.getString("ERRAME3"));
         } else {
 
             int valor = 1;
@@ -220,25 +342,20 @@ public class AmenazaController implements Serializable {
             }
             setCodigo(sb.toString());
             if (valor == 1) {
-                destino = "confirmaramenaza.xhtml";
+                context.redirect("confirmaramenaza.xhtml");
             } else {
-                anadirMensajeError("Ya existe una Amenaza con ese nombre");
-                destino = "crearamenaza.xhtml";
+                anadirMensajeError(messages.getString("ERRAME4"));
             }
         }
-        return destino;
-    }
-
-    public List<String> getTipos() {
-        List<TipoAmenaza> posibles = tipoAmenazaDAO.buscarTipoActivo(arbolActivosController.getActivoActual().getTipoActivo());
-        List<String> nombres = new ArrayList<>();
-        for (int i = 0; i < posibles.size(); i++) {
-            nombres.add(posibles.get(i).getNombre());
-        }
-        return nombres;
     }
 
     public void guardarAmenaza() throws IOException {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
+        //Atributos
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         List<Dimension> dimensiones = new ArrayList<>();
@@ -246,6 +363,7 @@ public class AmenazaController implements Serializable {
         List<Impacto> impact = new ArrayList<>();
         Activo actual;
         List<TipoAmenaza> tipo = tipoAmenazaDAO.buscarMarco(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+
         for (int i = 0; i < tipo.size(); i++) {
             if (tipo.get(i).getNombre().equals(nomTipo)) {
                 tipoAmenaza = tipo.get(i);
@@ -268,7 +386,7 @@ public class AmenazaController implements Serializable {
                 }
             }
         }
-        anadirMensajeCorrecto("La Amenaza " + nombre + " ha sido guardada correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRAME")+" "+ nombre +" "+messages.getString("CORRAME1"));
         nombre = "";
         descripcion = "";
         codigo = "";
@@ -319,11 +437,11 @@ public class AmenazaController implements Serializable {
                     }
                 }
             }
-        } 
+        }
         return resultado;
 
     }
-    
+
     public List<Degradacion> getImpactoRepercutido(Activo activo) {
 
         List<Degradacion> degradaciones = new ArrayList<>();
@@ -365,11 +483,10 @@ public class AmenazaController implements Serializable {
                     }
                 }
             }
-        } 
+        }
         return resultado;
 
     }
-
 
     public List<Degradacion> getImpacto() {
 
@@ -467,11 +584,15 @@ public class AmenazaController implements Serializable {
         return resultado;
 
     }
-    
+
     public List<Riesgo> getRiesgoRepercutido() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
 
         Activo actual = arbolActivosController.getActivoActual();
-        
+
         List<Riesgo> resultado = new ArrayList<>();
         List<Degradacion> impacto = this.getImpactoRepercutido(actual);
         List<Impacto> impactos = impactoDAO.buscarAmenazasActivo(actual);
@@ -516,15 +637,15 @@ public class AmenazaController implements Serializable {
                     }
 
                     if (val == 0) {
-                        daño = "Despreciable";
+                        daño = messages.getString("CORRAME2");
                     } else if (val >= 1 && val <= 2) {
-                        daño = "Bajo";
+                        daño = messages.getString("CORRAME3");
                     } else if (val >= 3 && val <= 5) {
-                        daño = "Apreciable";
+                        daño = messages.getString("CORRAME4");
                     } else if (val >= 6 && val <= 8) {
-                        daño = "Importante";
+                        daño = messages.getString("CORRAME5");
                     } else {
-                        daño = "Crítico";
+                        daño = messages.getString("CORRAME6");
                     }
                     riesgo.setGravedad(daño);
                     riesgo.setValor(val);
@@ -539,6 +660,10 @@ public class AmenazaController implements Serializable {
     }
 
     public List<Riesgo> getRiesgo() {
+        
+         //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
 
         List<Riesgo> resultado = new ArrayList<>();
         List<Degradacion> impacto = this.getImpacto(arbolActivosController.getActivoActual());
@@ -586,15 +711,15 @@ public class AmenazaController implements Serializable {
                     }
 
                     if (val == 0) {
-                        daño = "Despreciable";
+                        daño = messages.getString("CORRAME2");
                     } else if (val >= 1 && val <= 2) {
-                        daño = "Bajo";
+                        daño = messages.getString("CORRAME3");
                     } else if (val >= 3 && val <= 5) {
-                        daño = "Apreciable";
+                        daño = messages.getString("CORRAME4");
                     } else if (val >= 6 && val <= 8) {
-                        daño = "Importante";
+                        daño = messages.getString("CORRAME5");
                     } else {
-                        daño = "Crítico";
+                        daño = messages.getString("CORRAME6");
                     }
                     riesgo.setGravedad(daño);
                     riesgo.setValor(val);
@@ -609,6 +734,10 @@ public class AmenazaController implements Serializable {
     }
 
     public List<Riesgo> getRiesgo(Activo activo) {
+
+         //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
 
         List<Riesgo> resultado = new ArrayList<>();
         List<Degradacion> impacto = this.getImpacto(activo);
@@ -656,15 +785,15 @@ public class AmenazaController implements Serializable {
                     }
 
                     if (val == 0) {
-                        daño = "Despreciable";
+                        daño = messages.getString("CORRAME2");
                     } else if (val >= 1 && val <= 2) {
-                        daño = "Bajo";
+                        daño = messages.getString("CORRAME3");
                     } else if (val >= 3 && val <= 5) {
-                        daño = "Apreciable";
+                        daño = messages.getString("CORRAME4");
                     } else if (val >= 6 && val <= 8) {
-                        daño = "Importante";
+                        daño = messages.getString("CORRAME5");
                     } else {
-                        daño = "Crítico";
+                        daño = messages.getString("CORRAME6");
                     }
                     riesgo.setGravedad(daño);
                     riesgo.setValor(val);

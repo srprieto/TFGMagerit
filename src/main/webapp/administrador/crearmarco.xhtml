@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -37,7 +37,7 @@
                         <p:inputText id="descripcion" value="#{marcosController.descripcion}"/>  
 
                     </h:panelGrid>  
-                    <p:commandButton id="botonaceptar" value="#{msg.ACE}" update=" :growl" action="#{marcosController.doMarco()}" styleClass="boton" /> 
+                    <p:commandButton id="botonaceptar" value="#{msg.GUA}" update=" :growl" actionListener="#{marcosController.doMarco()}" styleClass="boton" /> 
                     <p:commandButton id="botonborrar" value="#{msg.LIM}" styleClass="boton" actionListener="#{marcosController.atras()}"/>  
                 </p:panel>
             </h:form>  

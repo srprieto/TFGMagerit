@@ -19,8 +19,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaDependientesController.atras()}" />
                         <p:menuitem value="#{msg.ANA3}" url="dependencianueva.xhtml"/> 
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaDependientesController.atras()}" />
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -29,7 +29,7 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="#{msg.VAC1}" var="dependiente" value="#{tablaDependientesController.dependienteModel}"  paginator="true" rows="10" selection="#{tablaDependientesController.selectedDependientes}">  
+                <p:dataTable id="Proyectos" emptyMessage="#{msg.VAC1}" var="dependiente" value="#{tablaDependientesController.dependienteModel}"  paginator="true" rows="8" selection="#{tablaDependientesController.selectedDependientes}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.ACT2} #{arbolActivosController.activoActual.nombre}"/>   
@@ -41,15 +41,15 @@
                     <p:column id="nombre" styleClass="tabla1" headerText="#{msg.ACT1}">  
                         <h:outputText value="#{dependiente.activoDependiente.nombre}" />    
                     </p:column> 
-                    
-                     <p:column id="grado" styleClass="tabla1" headerText="#{msg.GRA1}">  
+
+                    <p:column id="grado" styleClass="tabla1" headerText="#{msg.GRA1}">  
                         <h:outputText value="#{dependiente.grado}" />    
                     </p:column> 
-                    
-                     <p:column id="justificante" styleClass="tabla1" headerText="#{msg.JUS1}">  
-                         <h:outputText value="#{dependiente.justificacion}" />    
+
+                    <p:column id="justificante" styleClass="tabla1" headerText="#{msg.JUS1}">  
+                        <h:outputText value="#{dependiente.justificacion}" />    
                     </p:column> 
-                    
+
 
                     <f:facet name="footer">  
                         <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  

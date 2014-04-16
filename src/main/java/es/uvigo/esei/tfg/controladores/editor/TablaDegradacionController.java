@@ -12,6 +12,8 @@ import es.uvigo.esei.tfg.logica.daos.DegradacionDAO;
 import es.uvigo.esei.tfg.logica.daos.ImpactoDAO;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -27,6 +29,10 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class TablaDegradacionController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Degradacion degradacion;
     private List<Degradacion> degradaciones;
     private Degradacion selectedDegradacion;
@@ -64,7 +70,11 @@ public class TablaDegradacionController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
-
+    
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
+    
     public Degradacion getDegradacion() {
         return degradacion;
     }
@@ -119,34 +129,47 @@ public class TablaDegradacionController implements Serializable {
     public void setFilteredDegradacion(List<Degradacion> filteredDegradacion) {
         this.filteredDegradacion = filteredDegradacion;
     }
+    
+    /************************************************************************************************/
 
     public void update() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Degradacion[] seleccionados = this.getSelectedDegradaciones();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
             this.setSelectedDegradaciones(null);
-            anadirMensajeError("No ha seleccionado ninguna degradación");
+            anadirMensajeError(messages.getString("ERRTABDEG"));
         } else if (tamano != 1) {
             this.setSelectedDegradaciones(null);
-            anadirMensajeError("Solo puede seleccionar una degradacion para editarla");
+            anadirMensajeError(messages.getString("ERRTABDEG1"));
         } else {
             RequestContext.getCurrentInstance().execute("multiEditDialog.show();");
         }
     }
     
     public void updateDegradacion() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Degradacion[] seleccionados = this.getSelectedDegradaciones();
         int tamano = seleccionados.length;
         Degradacion seleccionado = seleccionados[0];
         this.setSelectedDegradaciones(null);
 
         if (seleccionado.getGrado()== null) {
-            anadirMensajeError("Tienes que introducir un grado para la degradación");
+            anadirMensajeError(messages.getString("ERRTABDEG2"));
         } else if (seleccionado.getProbabilidad() == null) {
-            anadirMensajeError("Tienes que introducir una probabilidad de ocurrencia para la degradación");
+            anadirMensajeError(messages.getString("ERRTABDEG3"));
         } else {
             degradacionDAO.actualizar(seleccionado);
-            anadirMensajeCorrecto("La degradacion ha sido modificado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABDEG"));
             RequestContext.getCurrentInstance().update("form");
         }
 

@@ -15,6 +15,7 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
@@ -31,8 +32,8 @@ import javax.inject.Inject;
 public class GestionUsuarioController implements Serializable {
 
     //Internacionalizacion
-    private Locale locale;
-    private ResourceBundle messages;
+    private  Locale locale;
+    private  ResourceBundle messages;
 
     // Atributos
     private TipoUsuario tipo1;
@@ -41,8 +42,8 @@ public class GestionUsuarioController implements Serializable {
     private String password2 = "";
     private boolean nuevoUsuario = true;
     
-    @Inject
-    UsuarioDAO usuarioDAO;
+    //Necesario para poder realizar el redireccionamiento a otra vista
+    private ExternalContext context1;
 
     @Inject
     TablaUsuariosController tablaUsuariosController;
@@ -58,7 +59,10 @@ public class GestionUsuarioController implements Serializable {
 
     }
 
-    // Metodos get y set
+    //Funciones GET y SET
+    
+    /*************************************************************************************************/
+    
     public Usuario getUsuarioActual() {
         return usuarioActual;
     }
@@ -106,6 +110,8 @@ public class GestionUsuarioController implements Serializable {
     public void setTipo(TipoUsuario tipo1) {
         this.tipo1 = tipo1;
     }
+    
+    /*************************************************************************************************/
 
     /**
      * Mensajes de error y correctos Añade un mensaje de error a la jeraquia de
@@ -124,42 +130,40 @@ public class GestionUsuarioController implements Serializable {
     }
 
     /*Funcion doUsuario() nos redirecciona a la vista de confirmacion de usuario en caso de que todos los
-     valores sean correctos, en caso contrario muestra el mensaje de error correspondiente y nose redirecciona
-     nuevamente a la vista de creación de usuarios*/
+     valores sean correctos, en caso contrario muestra el mensaje de error correspondiente.*/
     public void doUsuario() throws IOException {
+        
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes",locale);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-
+        
+        context1 = FacesContext.getCurrentInstance().getExternalContext(); 
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);//Necesario para mostrar los mensajes del sistema una vez realizada la redirección a otra vista
+       
         if (login.equals("")) {
             anadirMensajeError(messages.getString("ERRUSU"));
-            context.redirect("crearusuario.xhtml");
         } else if (password.equals("")) {
             anadirMensajeError(messages.getString("ERRUSU1"));
-            context.redirect("crearusuario.xhtml");
         } else if (password2.equals("")) {
             anadirMensajeError(messages.getString("ERRUSU2"));
-            context.redirect("crearusuario.xhtml");
         } else if (!password.equals(password2)) {
             anadirMensajeError(messages.getString("ERRUSU3"));
-            context.redirect("crearusuario.xhtml");
         } else if (gestorUsuariosService.existeUsuario(login)) {
             anadirMensajeError(messages.getString("ERRUSU4") +" " + login +" "+ messages.getString("ERRUSU5"));
-            context.redirect("crearusuario.xhtml");
         } else {
-            context.redirect("confirmarusuario.xhtml");
+            context1.redirect("confirmarusuario.xhtml");
         }
     }
 
     /*Funcion encriptar() encripta mediante el algoritmo MD5 la clave que le pasamos como parametro*/
     public String encriptar(String password) {
-        String algorithm = "MD5";
+        
+        String algorithm = "MD5";//Algoritmo de encriptación usado para encriptar la clave de Usuario en la base de datos. En nuestro caso usaremos MD%, pero se podría usar cualquier otro cifrado.
         byte[] plainText = password.getBytes();
         MessageDigest md = null;
+        
         try {
             md = MessageDigest.getInstance(algorithm);
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException e) {
             System.err.println(e.toString());
         }
         md.reset();
@@ -176,29 +180,40 @@ public class GestionUsuarioController implements Serializable {
         return sb.toString();
     }
 
-     /*Funcion doUsuario() crea un nuevo usuario en la base de datos con los datos introducidos*/
+    /*Funcion doUsuario() crea un nuevo usuario en la base de datos con los datos introducidos*/
     public void doCrearUsuario() throws IOException {
+        
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes",locale);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
+        context1 = FacesContext.getCurrentInstance().getExternalContext();       
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);//Necesario para mostrar los mensajes del sistema una vez realizada la redirección a otra vista
+        
         String nuevoPass = this.encriptar(password);
+        
         gestorUsuariosService.crearNuevoUsuario(login, nuevoPass, tipo1);
         anadirMensajeCorrecto(messages.getString("CORRUSU")+ " " + login + " "+messages.getString("CORRUSU1"));
         login = "";
         password = "";
         tipo1 = null;
         tablaUsuariosController.setSelectedUsuarios(null);
-        context.redirect("usuarios.xhtml");
+        context1.redirect("usuarios.xhtml");
     }
     
     /*Funcion atras() hace referencia al boton Atras de la vista de creación de un usuario, ya que necesitamos 
     limpiar los atributos para que no se muestren los datos una vez abandonada la vista*/
     public void atras() throws IOException {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        context1 = FacesContext.getCurrentInstance().getExternalContext(); 
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);//Necesario para mostrar los mensajes del sistema una vez realizada la redirección a otra vista
+        
         login = "";
         password = "";
         tipo1 = null;
-        context.redirect("crearusuario.xhtml");
+        
+        context1.redirect("crearusuario.xhtml");
     }
 }

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -30,6 +32,10 @@ import javax.inject.Named;
 @SessionScoped
 public class ValoracionController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Double valor;
     private String justificacion;
     private Dimension dimension;
@@ -65,6 +71,10 @@ public class ValoracionController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+      /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public List<String> getDimensiones() {
         dimensiones = dimensionDAO.buscarTodos(proyectoController.getProyectoActual().getMarcoTrabajo());
@@ -127,29 +137,39 @@ public class ValoracionController implements Serializable {
     public void setDimension(Dimension dimension) {
         this.dimension = dimension;
     }
+    
+     /************************************************************************************************/
 
-    public String doGuardar() {
-
-        String destino;
+    public void doGuardar() throws IOException {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+       
         if (nomDimension.equals("")) {
-            anadirMensajeError("No se ha indicado una dimension");
-            destino = "valoracionnueva.xhtml";
+            anadirMensajeError(messages.getString("ERRVAL"));
         } else if (valor == null || valor < 0 || valor > 10) {
-            anadirMensajeError("No se ha indicado un valor, tiene que introducir un valor entre 0 y 10");
-            destino = "valoracionnueva.xhtml";
+            anadirMensajeError(messages.getString("ERRVAL1"));
         } else if (justificacion.equals("")) {
-            anadirMensajeError("No se ha indicado una justificaión, tiene que introducir una justificación para la valoración");
-            destino = "valoracionnueva.xhtml";
+            anadirMensajeError(messages.getString("ERRVAL2"));
         } else {
-            destino = "confirmarvaloracion.xhtml";
+            context.redirect("confirmarvaloracion.xhtml");
         }
-        return destino;
     }
 
     public void doCrear() throws IOException {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        
         List<Dimension> dimensiones = dimensionDAO.buscarMarco(arbolActivosController.getActivoActual().getProyecto().getMarcoTrabajo());
+        
         for(int i =0; i<dimensiones.size();i++){
             if(dimensiones.get(i).getNombre().equals(nomDimension)){
                 dimension = dimensiones.get(i);
@@ -157,7 +177,7 @@ public class ValoracionController implements Serializable {
         }
         Activo actual = arbolActivosController.getActivoActual();
         gestorValoracionService.crearNuevaValoracion(valor, justificacion, actual, dimension);
-        anadirMensajeCorrecto("La valoración ha sido almacenada correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRVAL"));
         valor = null;
         justificacion = "";
         context.redirect("valoraciones.xhtml");

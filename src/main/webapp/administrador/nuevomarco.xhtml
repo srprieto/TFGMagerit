@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CON2}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -28,10 +28,11 @@
         <div class="tabla">
             <h:form id="form">
                 <p:panel header="#{msg.CON}">
-                    <p><h:outputText value="#{msg.NOM3}&#160;#{marcosController.nombre}"/></p>
-                    <p><h:outputText value="#{msg.DES3}&#160;#{marcosController.descripcion}"/></p>
+                    <p><b><h:outputText value="#{msg.NOM3}&#160;"/></b>
+                        <h:outputText  value="#{marcosController.nombre}"/></p>
+                    <p><b><h:outputText value="#{msg.DES3}&#160;"/></b> 
+                        <h:outputText value="#{marcosController.descripcion}"/></p>
                     <p:commandButton value="#{msg.GUA}" ajax="false"  actionListener="#{marcosController.doCrear()}"/>
-                    <p:commandButton value="#{msg.CAN}" actionListener="#{marcosController.atras()}"/>
                 </p:panel>
             </h:form>  
         </div>

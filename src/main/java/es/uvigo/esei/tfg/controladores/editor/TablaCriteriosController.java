@@ -32,6 +32,10 @@ public class TablaCriteriosController implements Serializable {
     
     @Inject
     ArbolActivosController arbolActivosController;
+    
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public List<ItemValoracion> getItems(CriterioValoracion criterio) {
         items = criterio.getItemsValoracion();
@@ -59,6 +63,6 @@ public class TablaCriteriosController implements Serializable {
         this.valoraciones = valoraciones;
     }
 
-    
+   /************************************************************************************************/
    
 }

@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -45,6 +47,10 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class ArbolActivosController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private ResourceBundle messages;
+
     private TreeNode root;
     private TreeNode[] selectedNodes;
     private Activo activoActual;
@@ -56,6 +62,8 @@ public class ArbolActivosController implements Serializable {
     private String ubicacion;
     private Long cantidad;
     private String nombreGrupo;
+
+    private List<TipoActivo> tipoActivos;
 
     private TipoActivo tiposActivos;
     private GrupoActivos grupoActivos;
@@ -90,10 +98,18 @@ public class ArbolActivosController implements Serializable {
     @Inject
     TablaProyectosController tablaProyectoController;
 
+    @Inject
+    ActivoController activoController;
+    
+
     public ArbolActivosController() {
 
     }
 
+    /*Funciones GET y SET*/
+    /**
+     * *********************************************************************************************
+     */
     public TreeNode getRoot() {
         root = new DefaultTreeNode("root", null);
         Proyecto actual = proyectoController.getProyectoActual();
@@ -118,7 +134,7 @@ public class ArbolActivosController implements Serializable {
         }
         return root;
     }
-
+    
     public String getNombreGrupo() {
         return nombreGrupo;
     }
@@ -127,7 +143,17 @@ public class ArbolActivosController implements Serializable {
         this.nombreGrupo = nombreGrupo;
     }
 
+    public List<TipoActivo> getTipoActivos() {
+        tipoActivos = activoController.getTiposActivos();
+        return tipoActivos;
+    }
+    
+    public void setTipoActivos(List<TipoActivo> tipoActivos) {
+        this.tipoActivos = tipoActivos;
+    }
+
     public TipoActivo getTiposActivos() {
+
         return tiposActivos;
     }
 
@@ -220,6 +246,9 @@ public class ArbolActivosController implements Serializable {
     }
 
     /**
+     * *********************************************************************************************
+     */
+    /**
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
      *
      * @param mensaje
@@ -235,9 +264,16 @@ public class ArbolActivosController implements Serializable {
     }
 
     public void eliminar() {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
+        //Atributos
         int valor = 0;
+
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar al menos un activo para eliminarlo");
+            anadirMensajeError(messages.getString("ERRTABACT"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -250,16 +286,23 @@ public class ArbolActivosController implements Serializable {
         if (valor == 0) {
             RequestContext.getCurrentInstance().execute("multiDialog.show();");
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
+            anadirMensajeError(messages.getString("ERRTABACT1"));
         }
     }
 
     public void eliminarActivo() {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
+        //Atributos
         String builder;
         Activo seleccionado;
         List<Dependencia> dependenciasEliminar = new ArrayList<>();
         List<Valoracion> valoracionesEliminar = new ArrayList<>();
         List<Activo> lista = new ArrayList<>();
+
         for (TreeNode node : selectedNodes) {
             builder = node.getData().toString();
             String[] separadas1 = builder.split(" ", 2);
@@ -301,16 +344,23 @@ public class ArbolActivosController implements Serializable {
         }
         int tamano = selectedNodes.length;
         if (tamano == 1) {
-            anadirMensajeCorrecto("El Activo ha sido eliminado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABACT"));
         } else {
-            anadirMensajeCorrecto("Los Activos fueron eliminados correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABACT1"));
         }
     }
 
     public void update() {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
         int valor = 0;
+        
+
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar al menos un activo para editarlo");
+            anadirMensajeError(messages.getString("ERRTABACT2"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -345,31 +395,37 @@ public class ArbolActivosController implements Serializable {
                 }
             }
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
+            anadirMensajeError(messages.getString("ERRTABACT1"));
         } else if (valor == 3) {
-            anadirMensajeError("Solo puede seleccionar un activo para editarlo");
+            anadirMensajeError(messages.getString("ERRTABACT3"));
         }
     }
 
     public void updateActivo() {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
         String builder;
         TreeNode node = selectedNodes[0];
         builder = node.getData().toString();
         String[] separadas1 = builder.split(" ", 2);
         builder = separadas1[1];
         List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
+
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).getNombre().equals(builder)) {
                 Activo seleccionado = lista.get(i);
                 Long id = seleccionado.getId();
                 if (codigo.equals("")) {
-                    anadirMensajeError("Tienes que introducir un codigo para el activo");
+                    anadirMensajeError(messages.getString("ERRTABACT4"));
                 } else if (nombre.equals("")) {
-                    anadirMensajeError("Tienes que introducir un nombre para el activo");
+                    anadirMensajeError(messages.getString("ERRTABACT5"));
                 } else if (descripcion.equals("")) {
-                    anadirMensajeError("Tienes que introducir una descripción para el activo");
+                    anadirMensajeError(messages.getString("ERRTABACT6"));
                 } else if (seleccionado.getResponsable().equals("")) {
-                    anadirMensajeError("Tienes que introducir un responsable para el activo");
+                    anadirMensajeError(messages.getString("ERRTABACT7"));
                 } else {
                     int valor = 1;
                     List<Activo> listanueva = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
@@ -379,7 +435,7 @@ public class ArbolActivosController implements Serializable {
                         }
                     }
                     if (valor == 0) {
-                        anadirMensajeError("Ya existe un Activo con ese nombre");
+                        anadirMensajeError(messages.getString("ERRTABACT8"));
                     } else {
                         seleccionado.setCodigo(codigo);
                         seleccionado.setNombre(nombre);
@@ -387,10 +443,10 @@ public class ArbolActivosController implements Serializable {
                         seleccionado.setPropietario(propietario);
                         seleccionado.setResponsable(responsable);
                         seleccionado.setUbicacion(ubicacion);
-                        seleccionado.setTipoActivo(tiposActivos);
+                        seleccionado.setTipoActivo(activoController.getActivoEnEdicion().getTipoActivo());
                         seleccionado.setGrupoActivos(grupoActivosDAO.buscarPorNombre(nombreGrupo));
                         activoDAO.actualizar(seleccionado);
-                        anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
+                        anadirMensajeCorrecto(messages.getString("CORRTABACT2"));
                         RequestContext.getCurrentInstance().update("form");
                     }
                 }
@@ -399,12 +455,17 @@ public class ArbolActivosController implements Serializable {
     }
 
     public void doDestino() throws IOException {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         int valor = 0;
+
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar al menos un activo para editarlo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT9"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -431,21 +492,24 @@ public class ArbolActivosController implements Serializable {
                 }
             }
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT1"));
         } else if (valor == 3) {
-            anadirMensajeError("Solo puede seleccionar un activo para editarlo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT10"));
         }
     }
 
     public void valoracion() throws IOException {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         int valor = 0;
+
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar al menos un activo para valorarlo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT11"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -472,21 +536,24 @@ public class ArbolActivosController implements Serializable {
                 }
             }
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT1"));
         } else if (valor == 3) {
-            anadirMensajeError("Solo puede seleccionar un activo para valorarlo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT12"));
         }
     }
 
     public void amenazas() throws IOException {
+
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes", locale);
+
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         int valor = 0;
+
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar al menos un activo para valorarlo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT13"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -513,11 +580,9 @@ public class ArbolActivosController implements Serializable {
                 }
             }
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT1"));
         } else if (valor == 3) {
-            anadirMensajeError("Solo puede seleccionar un activo para valorarlo");
-            context.redirect("activos.xhtml");
+            anadirMensajeError(messages.getString("ERRTABACT14"));
         }
     }
 

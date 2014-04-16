@@ -11,7 +11,6 @@ package es.uvigo.esei.tfg.controladores.editor;
  */
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
 import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
-import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import es.uvigo.esei.tfg.controladores.LoginController.LoggedIn;
 import es.uvigo.esei.tfg.controladores.modelos.DependientesModel;
@@ -19,6 +18,8 @@ import es.uvigo.esei.tfg.logica.daos.DependenciaDAO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -30,7 +31,11 @@ import org.primefaces.context.RequestContext;
 @Named(value = "tablaDependientesController")
 @SessionScoped
 public class TablaDependientesController implements Serializable {
-
+    
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Dependencia dependiente;
     private List<Dependencia> dependientes;
     private Dependencia selectedDependiente;
@@ -66,6 +71,10 @@ public class TablaDependientesController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public Dependencia[] getSelectedDependientes() {
         return selectedDependientes;
@@ -114,60 +123,85 @@ public class TablaDependientesController implements Serializable {
         dependientesModel = new DependientesModel(dependientes);
         return dependientesModel;
     }
+    
+    /************************************************************************************************/
 
     public void update() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Dependencia[] seleccionados = this.getSelectedDependientes();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
             this.setSelectedDependientes(null);
-            anadirMensajeError("No ha seleccionado ninguna Dependencia");
+            anadirMensajeError(messages.getString("ERRTABDEP"));
         } else if (tamano != 1) {
             this.setSelectedDependientes(null);
-            anadirMensajeError("Solo puede seleccionar unlaa Dependencia para editar");
+            anadirMensajeError(messages.getString("ERRTABDEP1"));
         } else {
             RequestContext.getCurrentInstance().execute("multiEditDialog.show();");
         }
     }
 
     public void updateDependencia() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Dependencia[] seleccionados = this.getSelectedDependientes();
         int tamano = seleccionados.length;
         Dependencia seleccionado = seleccionados[0];
         this.setSelectedDependientes(null);
 
         if (seleccionado.getGrado() == null) {
-            anadirMensajeError("Tienes que introducir un grado para la dependencia");
+            anadirMensajeError(messages.getString("ERRTABDEP2"));
         } else if (seleccionado.getJustificacion().equals("")) {
-            anadirMensajeError("Tienes que introducir una justificación para la dependencia");
+            anadirMensajeError(messages.getString("ERRTABDEP3"));
         } else {
             dependenciaDAO.actualizar(seleccionado);
-            anadirMensajeCorrecto("La dependencia ha sido modificado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABDEP"));
             RequestContext.getCurrentInstance().update("form");
         }
 
     }
 
     public void eliminar() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Dependencia[] seleccionados = this.getSelectedDependientes();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
-            anadirMensajeError("No ha seleccionado ninguna dependencia");
+            anadirMensajeError(messages.getString("ERRTABDEP"));
         } else {
             RequestContext.getCurrentInstance().execute("multiDialog.show();");
         }
     }
 
     public void eliminarDependencias() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Dependencia[] lista = this.getSelectedDependientes();
         int tamano = lista.length;
+        
         for (int i = 0; i < tamano; i++) {
             Dependencia dep = lista[i];
             dependenciaDAO.eliminar(dep);
         }
         if (tamano == 1) {
-            anadirMensajeCorrecto("La dependencia ha sido eliminado correctamente");
+            anadirMensajeCorrecto(messages.getString("ERRTABDEP4"));
         } else {
-            anadirMensajeCorrecto("Las dependencias fueron eliminados correctamente");
+            anadirMensajeCorrecto(messages.getString("ERRTABDEP5"));
         }
     }
 

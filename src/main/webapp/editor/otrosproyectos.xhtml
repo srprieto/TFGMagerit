@@ -28,7 +28,7 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="#{msg.ERR}" var="proyecto" value="#{tablaProyectoColaborativoController.proyectoModel}"  paginator="true" rows="10" selection="#{tablaProyectoColaborativoController.selectedProyectos}">  
+                <p:dataTable id="Proyectos" emptyMessage="#{msg.ERR}" var="proyecto" value="#{tablaProyectoColaborativoController.proyectoModel}"  paginator="true" rows="8" selection="#{tablaProyectoColaborativoController.selectedProyectos}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.PRO}"/>   

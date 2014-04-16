@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -32,6 +34,10 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class TablaUsuariosProyectoController implements Serializable {
 
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Usuario usuario;
     private List<Usuario> usuarios;
     private Usuario selectedUsuario;
@@ -70,6 +76,10 @@ public class TablaUsuariosProyectoController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public List<Usuario> getFilteredUsuarios() {
         return filteredUsuarios;
@@ -124,18 +134,30 @@ public class TablaUsuariosProyectoController implements Serializable {
         usuarioModel = new UsuarioModel(usuarios);
         return usuarioModel;
     }
+    
+    /************************************************************************************************/
 
     public void update() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
-            anadirMensajeError("No ha seleccionado ningun usuario");
+            anadirMensajeError(messages.getString("ERRTABUSUPRO1"));
         } else {
             RequestContext.getCurrentInstance().execute("multiDialog.show();");
         }
     }
 
     public void aceptarUsuarios() throws IOException {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -153,7 +175,7 @@ public class TablaUsuariosProyectoController implements Serializable {
         pro.setEditores(usuarios);
         proyectoDAO.actualizar(pro);
 
-        anadirMensajeCorrecto("Usuarios asignados correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRTABUSUPRO1"));
         context.redirect("usuarios.xhtml");
     }
 }

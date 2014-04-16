@@ -31,8 +31,8 @@ import org.primefaces.context.RequestContext;
 public class TablaUsuariosController implements Serializable {
     
     //Internacionalizacion
-    private Locale locale; //nos sirve para indicar el idioma (es, en, fr...)
-    private ResourceBundle messages;//recupera los mensajes del archivo properties
+    private Locale locale; //Nos sirve para indicar el idioma (es, en, fr...)
+    private ResourceBundle messages;//Recupera los mensajes del archivo properties
     
     //Atributos
     private Usuario usuario;
@@ -40,7 +40,9 @@ public class TablaUsuariosController implements Serializable {
     private Usuario[] selectedUsuarios; //Lista de usuarios seleccionados por el usuario en la tabla
     private UsuarioModel usuarioModel;//modelo de usuario ,necesario para cargar los datos en la tabla
     private List<Usuario> filteredUsuarios;//Lista que contiene los usuarios necesarios para el filtrado de los mismos en la tabla
-
+    
+    private ExternalContext context1;
+    
     @Inject
     UsuarioDAO usuarioDAO;
 
@@ -65,7 +67,11 @@ public class TablaUsuariosController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
-
+    
+    /*Funciones GET y SET*/
+    
+    /***********************************************************************************************/
+    
     public List<Usuario> getFilteredUsuarios() {
         return filteredUsuarios;
     }
@@ -106,6 +112,8 @@ public class TablaUsuariosController implements Serializable {
         usuarioModel = new UsuarioModel(usuarios);
         return usuarioModel;
     }
+    
+    /************************************************************************************************/
 
     /*Funcion que valida si se selecciono un usuario, en caso de no seleccionar ninguno o mas 
     de uno se mostrara un mensaje de error, en caso contrario nos muestra el formulario de edición*/
@@ -135,9 +143,9 @@ public class TablaUsuariosController implements Serializable {
         //Internacionalizacion
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes",locale);
-        Usuario[] seleccionados = this.getSelectedUsuarios();
-        
+
         //Atributos
+        Usuario[] seleccionados = this.getSelectedUsuarios();
         int tamano = seleccionados.length;
         Usuario seleccionado = seleccionados[0];
         Long id = seleccionado.getId();
@@ -150,7 +158,7 @@ public class TablaUsuariosController implements Serializable {
         } else {
             usuarioDAO.actualizar(seleccionado);
             anadirMensajeCorrecto(messages.getString("CORRTABUSU"));
-            RequestContext.getCurrentInstance().update("form");
+            RequestContext.getCurrentInstance().update("form");//Necesario para que se actualice la tabla de la vista de usuarios una vez modificados los datos de un usuario.
         }
     }
 
@@ -162,6 +170,7 @@ public class TablaUsuariosController implements Serializable {
         
         //Atributos
         Usuario[] seleccionados = this.getSelectedUsuarios();
+        
         int tamano = seleccionados.length;
         
         if (tamano == 0) {
@@ -186,6 +195,7 @@ public class TablaUsuariosController implements Serializable {
             user = lista[i];
             usuarioDAO.eliminar(user);
         }
+        
         if (tamano == 1) {
             anadirMensajeCorrecto(messages.getString("CORRTABUSU1"));
         } else {
@@ -199,14 +209,14 @@ public class TablaUsuariosController implements Serializable {
     }
 
     public void atras() throws IOException {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context1 = FacesContext.getCurrentInstance().getExternalContext(); 
         this.setSelectedUsuarios(null);
-        context.redirect("usuarios.xhtml");
+        context1.redirect("usuarios.xhtml");
     }
     
     public void atras1() throws IOException {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context1 = FacesContext.getCurrentInstance().getExternalContext(); 
         this.setSelectedUsuarios(null);
-        context.redirect("indexadministrador.xhtml");
+        context1.redirect("indexadministrador.xhtml");
     }
 }

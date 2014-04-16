@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.MAR2}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -18,8 +18,8 @@
             <h:form id="frmMenu" prependId="false">
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaMarcosController.atras1()}" />  
                         <p:menuitem value="#{msg.ANA1}" url="crearmarco.xhtml"/> 
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaMarcosController.atras1()}" />  
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -28,7 +28,7 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="multiMarcos" emptyMessage="#{msg.ERR1}" var="marco" value="#{tablaMarcosController.marcoModel}"  paginator="true" rows="10" selection="#{tablaMarcosController.selectedMarcos}"> 
+                <p:dataTable id="multiMarcos" emptyMessage="#{msg.ERR1}" var="marco" value="#{tablaMarcosController.marcoModel}"  paginator="true" rows="8" selection="#{tablaMarcosController.selectedMarcos}"> 
                     <f:facet id="cabecera" name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.MAR1}"/>   

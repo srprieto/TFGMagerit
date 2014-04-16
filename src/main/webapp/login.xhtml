@@ -8,8 +8,7 @@ xmlns:p="http://primefaces.org/ui"
 template="/templates/plantilla.xhtml">
 <ui:define name="head">:: Login ::</ui:define>
 <ui:define name="content">
-<h1 class="title ui-widget-header ui-corner-all">Bienvenidos al Sistema</h1>
-    <div class="entry">
+    <div class="entry login">
         <h:form id="Acceso">
                    <h:panelGrid id="grid" columns="3" cellpadding="4">  
                         <h:outputLabel value="#{msg.LOG}" for="login"/>
@@ -22,7 +21,7 @@ template="/templates/plantilla.xhtml">
                     </h:panelGrid>
              
                     <h:panelGrid columns="2">
-                        <h:commandButton value="#{msg.ACC}"  action="#{loginController.doLogin()}" />
+                        <h:commandButton value="#{msg.ACC}"  styleClass="loginboton" action="#{loginController.doLogin()}" />
                     </h:panelGrid>     
          </h:form>  
     </div>

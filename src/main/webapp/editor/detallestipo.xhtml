@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/plantilla.xhtml">
     <h:outputStylesheet library="css" name="estilo.css"  />
-    <ui:define name="head"><h:outputText value="#{msg.CON3}"/></ui:define>
+    <ui:define name="head"><h:outputText value="#{msg.CRE1}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
             <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
@@ -18,7 +18,7 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" actionListener="#{proyectoController.atras()}" />   
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{activoController.atras1()}" />   
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -27,14 +27,13 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form" >
-                <p:panel header="#{msg.CON}">
-                    <p><b><h:outputText value="#{msg.NOM8}&#160;"/></b>
-                            <h:outputText value="#{proyectoController.nombre}"/></p>
-                    <p><b><h:outputText value="#{msg.DES5}&#160;"/></b>
-                        <h:outputText value="#{proyectoController.descripcion}"/></p>
-                    <p><b><h:outputText value="#{msg.MAR3}&#160;"/></b>
-                        <h:outputText value="#{proyectoController.proyectoEnEdicion.marcoTrabajo.nombre}"/></p>
-                    <p:commandButton value="#{msg.GUA}" actionListener="#{proyectoController.doCrearProyecto()}"/>
+                <p:panel header="Detalles del Tipo de Activo">
+                    <p><b><h:outputText value="Abreviatura del Tipo:&#160;"/></b>
+                        <h:outputText value="#{activoController.abrtip}"/></p>
+                    <p><b><h:outputText value="Nombre del Tipo:&#160;"/></b>
+                        <h:outputText value="#{activoController.nomtip}"/></p>
+                    <p><b><h:outputText value="Descripción del Tipo:&#160;"/></b>
+                        <h:outputText value="#{activoController.destip}"/></p>
                 </p:panel>
             </h:form>  
         </div>

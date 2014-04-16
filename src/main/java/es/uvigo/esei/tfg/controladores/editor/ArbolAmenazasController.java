@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -36,6 +38,10 @@ import org.primefaces.model.TreeNode;
 @Named(value = "arbolAmenazasController")
 @SessionScoped
 public class ArbolAmenazasController implements Serializable {
+    
+     //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
 
     private TreeNode root;
     private TreeNode[] selectedNodes;
@@ -84,6 +90,10 @@ public class ArbolAmenazasController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+     /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public TreeNode getRoot() {
         root = new DefaultTreeNode("root", null);
@@ -177,6 +187,8 @@ public class ArbolAmenazasController implements Serializable {
     public void setSelectedNodes(TreeNode[] selectedNodes) {
         this.selectedNodes = selectedNodes;
     }
+    
+    /************************************************************************************************/
 
     public void atras() throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -186,9 +198,14 @@ public class ArbolAmenazasController implements Serializable {
     }
 
     public void eliminar() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         int valor = 0;
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar al menos una amenaza para eliminarla");
+            anadirMensajeError(messages.getString("ERRTABAME"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -201,11 +218,16 @@ public class ArbolAmenazasController implements Serializable {
         if (valor == 0) {
             RequestContext.getCurrentInstance().execute("multiDialog.show();");
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
+            anadirMensajeError(messages.getString("ERRTABAME1"));
         }
     }
 
     public void eliminarAmenaza() {
+        
+         //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         String builder;
 
         for (TreeNode node : selectedNodes) {
@@ -241,16 +263,22 @@ public class ArbolAmenazasController implements Serializable {
         }
         int tamano = selectedNodes.length;
         if (tamano == 1) {
-            anadirMensajeCorrecto("La Amenaza ha sido eliminada correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABAME"));
         } else {
-            anadirMensajeCorrecto("Las Amenazas fueron eliminadas correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABAME1"));
         }
     }
 
     public void update() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         int valor = 0;
+        
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar una amenaza para editarla");
+            anadirMensajeError(messages.getString("ERRTABAME2"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -282,33 +310,37 @@ public class ArbolAmenazasController implements Serializable {
                 }
             }
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
+            anadirMensajeError(messages.getString("ERRTABAME3"));
         } else if (valor == 3) {
-            anadirMensajeError("Solo puede seleccionar un activo para editarlo");
+            anadirMensajeError(messages.getString("ERRTABAME4"));
         }
     }
 
     public void updateAmenaza() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         String builder;
         TreeNode node = selectedNodes[0];
         builder = node.getData().toString();
         String[] separadas1 = builder.split(" ", 2);
         builder = separadas1[1];
         List<Impacto> lista = impactoDAO.buscarAmenazasActivo(arbolActivosController.getActivoActual());
+        
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).getAmenaza().getNombre().equals(builder)) {
                 Amenaza seleccionado = lista.get(i).getAmenaza();
                 Long id = seleccionado.getId();
                 if (codigo.equals("")) {
-                    anadirMensajeError("Tienes que introducir un codigo para la Amenaza");
+                    anadirMensajeError(messages.getString("ERRTABAME5"));
                 } else if (nombre.equals("")) {
-                    anadirMensajeError("Tienes que introducir un nombre para la Amenaza");
+                    anadirMensajeError(messages.getString("ERRTABAME6"));
                 } else if (descripcion.equals("")) {
-                    anadirMensajeError("Tienes que introducir una descripción para la Amenaza");
+                    anadirMensajeError(messages.getString("ERRTABAME7"));
                 } else if (seleccionado.getGradoDegradacionBase() == null) {
-                    anadirMensajeError("Tienes que introducir un grado de degradacion para la Amenaza");
-                } else if (seleccionado.getGradoDegradacionBase() == null) {
-                    anadirMensajeError("Tienes que introducir un grado de degradacion para la Amenaza");
+                    anadirMensajeError(messages.getString("ERRTABAME8"));
                 } else {
                     int valor = 1;
                     List<Impacto> listanueva = impactoDAO.buscarAmenazasActivo(arbolActivosController.getActivoActual());
@@ -319,7 +351,7 @@ public class ArbolAmenazasController implements Serializable {
                     }
 
                     if (valor == 0) {
-                        anadirMensajeError("Ya existe una Amenaza con ese nombre");
+                        anadirMensajeError(messages.getString("ERRTABAME9"));
                     } else {
                         TipoAmenaza tip = tipoAmenazaDAO.buscarPorNombre(nomTipo);
                         seleccionado.setCodigo(codigo);
@@ -329,7 +361,7 @@ public class ArbolAmenazasController implements Serializable {
                         seleccionado.setProbabilidadOcurrencia(probabilidadOcurrencia);
                         seleccionado.setTipoAmenaza(tip);
                         amenazaDAO.actualizar(seleccionado);
-                        anadirMensajeCorrecto("La Amenaza ha sido modificada correctamente");
+                        anadirMensajeCorrecto(messages.getString("CORRTABAME2"));
                         RequestContext.getCurrentInstance().update("form");
                     }
                 }
@@ -338,12 +370,17 @@ public class ArbolAmenazasController implements Serializable {
     }
 
     public void valoracion() throws IOException {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         int valor = 0;
+        
         if (selectedNodes == null) {
-            anadirMensajeError("Tienes que seleccionar una amenaza para valorarla");
-            context.redirect("amenazas.xhtml");
+            anadirMensajeError(messages.getString("ERRTABAME10"));
             valor = 2;
         } else {
             int tamano = selectedNodes.length;
@@ -370,11 +407,9 @@ public class ArbolAmenazasController implements Serializable {
                 }
             }
         } else if (valor == 1) {
-            anadirMensajeError("No puedes seleccionar un Tipo");
-            context.redirect("amenazas.xhtml");
+            anadirMensajeError(messages.getString("ERRTABAME3"));
         } else if (valor == 3) {
-            anadirMensajeError("Solo puede seleccionar una amenaza para valorarla");
-            context.redirect("amenazas.xhtml");
+            anadirMensajeError(messages.getString("ERRTABAME11"));
         }
     }
 }

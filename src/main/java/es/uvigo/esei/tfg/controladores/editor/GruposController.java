@@ -11,6 +11,8 @@ import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -23,15 +25,25 @@ import javax.inject.Inject;
 @Named(value = "gruposController")
 @SessionScoped
 public class GruposController implements Serializable {
+    
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
 
     private String nombre;
     private String abreviatura;
 
+    private ExternalContext context1;
+     
     @Inject
     GrupoActivosDAO grupoActivosDAO;
 
     @Inject
     GestorGruposService gestorGruposService;
+
+    public GruposController() {
+
+    }
 
     /**
      * Añade un mensaje de error a la jeraquia de componetes de la página JSF
@@ -47,6 +59,10 @@ public class GruposController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+     /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public String getNombre() {
         return nombre;
@@ -63,32 +79,44 @@ public class GruposController implements Serializable {
     public void setAbreviatura(String abreviatura) {
         this.abreviatura = abreviatura;
     }
+    
+    /************************************************************************************************/
 
     public void doGuardar() throws IOException {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+         //Redirección y mostrar mensajes
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+        
         if (nombre.equals("")) {
-            anadirMensajeError("No se ha indicado un nombre para el grupo");
-            context.redirect("nuevogrupo.xhtml");
+            anadirMensajeError(messages.getString("ERRGRU"));
         } else if (abreviatura.equals("")) {
-            anadirMensajeError("No se ha indicado una abreviatura para el grupo");
-            context.redirect("nuevogrupo.xhtml");
+            anadirMensajeError(messages.getString("ERRGRU1"));
         } else if (grupoActivosDAO.buscarPorNombre(nombre) != null) {
-            anadirMensajeError("El nombre " + nombre + " ya existe");
-            context.redirect("nuevogrupo.xhtml");
+            anadirMensajeError(messages.getString("ERRGRU2"));
         } else {
-            context.redirect("confirmargrupo.xhtml");
+            context1.redirect("confirmargrupo.xhtml");
         }
     }
 
     public void doCrear() throws IOException {
+        
+         //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        //Redirección y mostrar mensajes
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+        
         gestorGruposService.crearNuevoGrupo(abreviatura, nombre);
-        anadirMensajeCorrecto("El Grupo " + nombre + " ha sido guardado correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRGRU")+" "+ nombre +" "+messages.getString("CORRGRU1"));
         nombre = "";
         abreviatura = "";
-        context.redirect("activos.xhtml");
+        context1.redirect("crearactivo.xhtml");
     }
 }

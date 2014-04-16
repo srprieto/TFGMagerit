@@ -10,7 +10,7 @@
     <ui:define name="head"><h:outputText value="#{msg.CRE}"/></ui:define>
     <ui:define name="sidebar">
         <h:form id="logout">
-            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
         </h:form>
     </ui:define>
     <ui:define name="sidebar1">  
@@ -26,10 +26,12 @@
     </ui:define>
     <ui:define name="content">
         <div class="tabla">
-            <h:form enctype="multipart/form-data">    
-                <p><p:fileUpload value="#{ficherosController.file}" mode="simple"/></p>  
-                <p:commandButton value="#{msg.CAR1}" ajax="false"  
-                                 actionListener="#{ficherosController.upload}"/>  
+            <h:form enctype="multipart/form-data"> 
+                <p:panel header="Añadir Modelo XML">
+                    <p><p:fileUpload value="#{ficherosController.file}" mode="simple"/></p>  
+                    <p:commandButton value="#{msg.CAR1}" ajax="false"  
+                                     actionListener="#{ficherosController.upload}"/>  
+                </p:panel>
             </h:form>  
         </div>
         <p:growl id="growl" life="3000" />

@@ -97,6 +97,10 @@ public class TablaProyectoColaborativoController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public String getNomMarco() {
         return nomMarco;
@@ -164,6 +168,9 @@ public class TablaProyectoColaborativoController implements Serializable {
         proyectoModel = new ProyectoModel(resultado);
         return proyectoModel;
     }
+    
+     
+    /************************************************************************************************/
     
     public void cancelar() throws IOException {
         this.setSelectedProyectos(null);

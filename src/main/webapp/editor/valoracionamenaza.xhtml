@@ -64,11 +64,20 @@
                     <div class="datalist-noborder">
                         <p:dataList id="displayEdit" value="#{tablaDegradacionController.selectedDegradaciones}" type="none" var="selectedEdit">  
                             
-                            <p><h:outputLabel for="grado" value="grado"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="grado" value="Grado: "  styleClass="negrita"/> 
                                 <p:inputText id="grado" value="#{selectedEdit.grado}"/></p>
 
-                            <p><h:outputLabel for="probabilidad" value="probabilidad"  styleClass="negrita"/> 
-                                <p:inputText id="probabilidad" value="#{selectedEdit.probabilidad}"/></p>
+                             <p> <h:outputLabel for="ocurrencia" value="Probabilidad Ocurrencia: " styleClass="negrita"/>  
+                                 <h:selectOneMenu id="ocurrencia" value="#{selectedEdit.probabilidad}" converter="omnifaces.SelectItemsConverter" >  
+                                    <f:selectItems value="#{amenazaController.probabilidad}" />  
+                                </h:selectOneMenu>  
+
+                                <p:commandButton id="criterio" value="Valores Posibles" type="button" /> 
+                                <p:overlayPanel id="imgPanel" for="criterio" hideEffect="fade" showCloseIcon="true">  
+                                    <p:imageSwitch id="imgSwitch" effect="fade" style="width:500px;height:200px;">  
+                                        <p:graphicImage value="../images/probabilidad.png" width="500"/>  
+                                    </p:imageSwitch>  
+                                </p:overlayPanel> </p> 
 
                         </p:dataList>  
                     </div>

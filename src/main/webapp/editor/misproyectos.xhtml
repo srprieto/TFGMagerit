@@ -19,8 +19,8 @@
             <h:form id="frmMenu" prependId="false" >
                 <p:menu>  
                     <p:submenu label="#{msg.MEN}">  
-                        <p:menuitem value="#{msg.ATR}" url="indexeditor.xhtml" />  
                         <p:menuitem value="#{msg.CRE2}" url="crearproyecto.xhtml" /> 
+                        <p:menuitem value="#{msg.ATR}" url="indexeditor.xhtml" />  
                     </p:submenu>  
                 </p:menu>
             </h:form>  
@@ -29,7 +29,7 @@
     <ui:define name="content">
         <div class="tabla">
             <h:form id="form">  
-                <p:dataTable id="Proyectos" emptyMessage="#{msg.ERR}" var="proyecto" value="#{tablaProyectosController.proyectoModel}"  paginator="true" rows="10" selection="#{tablaProyectosController.selectedProyectos}">  
+                <p:dataTable id="Proyectos" emptyMessage="#{msg.ERR}" var="proyecto" value="#{tablaProyectosController.proyectoModel}"  paginator="true" rows="8" selection="#{tablaProyectosController.selectedProyectos}">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.PRO}"/>   
@@ -87,7 +87,9 @@
                             <p><h:outputLabel for="marco" value="#{msg.MAR}"  styleClass="negrita"/>                     
                                 <h:selectOneMenu id="marco" value="#{selectedEdit.marcoTrabajo.nombre}" converter="omnifaces.SelectItemsConverter" required="true">  
                                     <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{tablaProyectosController.marcos}" />  
-                                </h:selectOneMenu></p>
+                                </h:selectOneMenu>
+                            
+                                <p:commandButton value="Detalles" actionListener="#{marcosController.detallesModificar()}" styleClass="boton" /> </p>
                         </p:dataList>  
                     </div>
                     <p:commandButton value="#{msg.ACE}" update=":growl" actionListener="#{tablaProyectosController.updateProyecto()}" icon="ui-icon-check"/> 

@@ -8,11 +8,9 @@ package es.uvigo.esei.tfg.controladores.editor;
 import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.proyecto.Activo;
-import es.uvigo.es.tfg.entidades.proyecto.Amenaza;
 import es.uvigo.es.tfg.entidades.proyecto.Degradacion;
 import es.uvigo.es.tfg.entidades.proyecto.Dependencia;
 import es.uvigo.es.tfg.entidades.proyecto.GrupoActivos;
-import es.uvigo.es.tfg.entidades.proyecto.Impacto;
 import es.uvigo.es.tfg.entidades.proyecto.Riesgo;
 import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import es.uvigo.esei.tfg.logica.daos.ActivoDAO;
@@ -29,6 +27,8 @@ import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -42,7 +42,12 @@ import javax.inject.Inject;
 @Named(value = "activoController")
 @SessionScoped
 public class ActivoController implements Serializable {
-
+    
+    
+    //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Activo activoEnEdicion;
 
     private List<TipoActivo> tiposActivos;
@@ -57,6 +62,12 @@ public class ActivoController implements Serializable {
     private String propietario;
     private String ubicacion;
     private Long cantidad;
+    private String nomtip;
+    private String destip;
+    private String abrtip;
+    private int valor;
+    
+    private ExternalContext context1; 
 
     @Inject
     ActivoDAO activoDAO;
@@ -90,9 +101,10 @@ public class ActivoController implements Serializable {
 
     @Inject
     AmenazaController amenazaController;
+    
 
     public ActivoController() {
-
+    
     }
 
     @PostConstruct
@@ -115,7 +127,21 @@ public class ActivoController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+    /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
+    
+    public int getValor() {
+        return valor;
+    }
 
+    public void setValor(int valor) {
+        this.valor = valor;
+    }
+
+
+    
     public String getNombreGrupo() {
         return nombreGrupo;
     }
@@ -124,6 +150,30 @@ public class ActivoController implements Serializable {
         this.nombreGrupo = nombreGrupo;
     }
 
+    public String getNomtip() {
+        return nomtip;
+    }
+
+    public void setNomtip(String nomtip) {
+        this.nomtip = nomtip;
+    }
+
+    public String getDestip() {
+        return destip;
+    }
+
+    public void setDestip(String destip) {
+        this.destip = destip;
+    }
+
+    public String getAbrtip() {
+        return abrtip;
+    }
+
+    public void setAbrtip(String abrtip) {
+        this.abrtip = abrtip;
+    }
+         
     public String getCodigo() {
         return codigo;
     }
@@ -207,26 +257,54 @@ public class ActivoController implements Serializable {
     public void setGrupoActivos(List<GrupoActivos> grupoActivos) {
         this.grupoActivos = grupoActivos;
     }
+    
+    /************************************************************************************************/
 
-    public void doGuargar() throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+    public void atras1() throws IOException{
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-
+        if (valor==0){
+            context.redirect("crearactivo.xhtml");
+        }else{
+            context.redirect("activos.xhtml");
+        }
+    }
+    
+     public void detalles1() throws IOException{
+        valor=1;
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+        nomtip = activoEnEdicion.getTipoActivo().getNombre();
+        abrtip = activoEnEdicion.getTipoActivo().getAbreviatura();
+        destip = activoEnEdicion.getTipoActivo().getDescripcion();
+        context1.redirect("detallestipo.xhtml");
+    }
+   
+    public void detalles() throws IOException{
+        valor=0;
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+        nomtip = activoEnEdicion.getTipoActivo().getNombre();
+        abrtip = activoEnEdicion.getTipoActivo().getAbreviatura();
+        destip = activoEnEdicion.getTipoActivo().getDescripcion();
+        context1.redirect("detallestipo.xhtml");
+    }
+    
+    public void doGuargar() throws IOException {
+        
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+        
         if (codigo.equals("")) {
-            anadirMensajeError("No se ha indicado un codigo para el activo");
-            context.redirect("crearactivo.xhtml");
+            anadirMensajeError(messages.getString("ERRACT"));
         } else if (nombre.equals("")) {
-            anadirMensajeError("No se ha indicado un nombre para el activo");
-            context.redirect("crearactivo.xhtml");
+            anadirMensajeError(messages.getString("ERRACT1"));
         } else if (descripcion.equals("")) {
-            anadirMensajeError("No se ha indicado una descripción para el activo");
-            context.redirect("crearactivo.xhtml");
+            anadirMensajeError(messages.getString("ERRACT2"));
         } else if (responsable.equals("")) {
-            anadirMensajeError("No se ha indicado un responsable para el activo");
-            context.redirect("crearactivo.xhtml");
+            anadirMensajeError(messages.getString("ERRACT3"));
         } else if (nombreGrupo.equals("")) {
-            anadirMensajeError("No se ha indicado un grupo para el activo, si no existe uno puede crear uno nuevo");
-            context.redirect("crearactivo.xhtml");
+            anadirMensajeError(messages.getString("ERRACT4"));
         } else {
             int valor = 1;
             List<Activo> lista = activoDAO.buscarActivosProyecto(proyectoController.getProyectoActual());
@@ -245,17 +323,16 @@ public class ActivoController implements Serializable {
             }
             setCodigo(sb.toString());
             if (valor == 1) {
-                context.redirect("confirmaractivo.xhtml");
+                context1.redirect("confirmaractivo.xhtml");
             } else {
-                anadirMensajeError("Ya existe un Activo con ese nombre");
-                context.redirect("crearactivo.xhtml");
+                anadirMensajeError(messages.getString("ERRACT5"));
             }
         }
 
     }
 
     public void atras() throws IOException {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
         nombre = "";
         descripcion = "";
         codigo = "";
@@ -263,14 +340,19 @@ public class ActivoController implements Serializable {
         ubicacion = "";
         cantidad = null;
         nombreGrupo = "";
-        context.redirect("crearactivo.xhtml");
+        context1.redirect("crearactivo.xhtml");
     }
 
     public void guardarActivo() throws IOException {
+        
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context1 = FacesContext.getCurrentInstance().getExternalContext();
+        
         gestorActivoService.crearNuevoActivo(codigo, nombre, descripcion, responsable, propietario, ubicacion, null, cantidad, proyectoController.getProyectoActual(), activoEnEdicion.getTipoActivo(), grupoActivoDAO.buscarPorNombre(nombreGrupo));
-        anadirMensajeCorrecto("El Activo " + nombre + " ha sido guardado correctamente");
+        anadirMensajeCorrecto(messages.getString("CORRACT")+" "+ nombre +" "+messages.getString("CORRACT1"));
         nombre = "";
         descripcion = "";
         codigo = "";
@@ -278,9 +360,14 @@ public class ActivoController implements Serializable {
         ubicacion = "";
         cantidad = null;
         nombreGrupo = "";
-        context.redirect("activos.xhtml");
+        context1.redirect("activos.xhtml");
     }
-
+    
+    public void doGrupo() throws IOException{
+          context1 = FacesContext.getCurrentInstance().getExternalContext();
+          context1.redirect("nuevogrupo.xhtml");
+    }
+    
     public List<String> getGrupoActivos() {
         grupoActivos = grupoActivoDAO.buscarTodos();
         List<String> grupos = new ArrayList<>();
@@ -292,7 +379,7 @@ public class ActivoController implements Serializable {
     }
 
     public List<Valoracion> getModeloValor() {
-        //buscar activos superiores
+        
         boolean esta = false;
 
         Activo activo;

@@ -116,6 +116,10 @@ public class TablaMarcosController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+     /*Funciones GET y SET*/
+    
+    /***********************************************************************************************/
 
     public MarcoTrabajo[] getSelectedMarcos() {
         return selectedMarcos;
@@ -149,28 +153,43 @@ public class TablaMarcosController implements Serializable {
     public void setSelectedMarco(MarcoTrabajo selectedMarco) {
         this.selectedMarco = selectedMarco;
     }
-
+    
+    
     public MarcoModel getMarcoModel() {
         marcos = marcoDAO.buscarTodos();
         marcoModel = new MarcoModel(marcos);
         return marcoModel;
     }
-
+    
+    /***********************************************************************************************/
+    
+    /*Función que comprueba que hemos seleccionado algun marco para borrarlo*/
     public void eliminar() {
+        
+        //Internacionalización
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
+        
+        //Atributos
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
             anadirMensajeError(messages.getString("ERRTABMAR"));
         } else {
             RequestContext.getCurrentInstance().execute("multiMarcoDialog.show();");
         }
     }
-
+    
+    /*Funcion que elimina los Marcos seleccionados, así como todos sus elementos asociados
+    en la base de datos*/
     public void eliminarMarcos() {
+        
+        //Internacionalización
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
+        
+        //Atributos: Listas donde se almacenan todos los elementos relacionados con el marco
         List<TipoAmenaza> tipoAmenazaEliminar = new ArrayList<>();
         List<TipoActivo> tipoActivoEliminar = new ArrayList<>();
         List<Dimension> dimensionesEliminar = new ArrayList<>();
@@ -182,6 +201,7 @@ public class TablaMarcosController implements Serializable {
         List<Dependencia> dependenciasEliminar = new ArrayList<>();
         List<Valoracion> valoracionesEliminar = new ArrayList<>();
         List<Usuario> editores = new ArrayList<>();
+        
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
 
         Amenaza amenazaEliminar;
@@ -249,15 +269,20 @@ public class TablaMarcosController implements Serializable {
             anadirMensajeCorrecto(messages.getString("CORRTABMAR"));
         } else {
             anadirMensajeCorrecto(messages.getString("CORRTABMAR1"));
-
         }
     }
-
+    
+    /*Función que comprueba que se ha seleccionado un solo marco para poder editarlo*/
     public void update() {
+        
+        //Internacionalización
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
+        
+        //Atributos
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
             this.setSelectedMarcos(null);
             anadirMensajeError(messages.getString("ERRTABMAR"));
@@ -269,13 +294,18 @@ public class TablaMarcosController implements Serializable {
         }
     }
 
+    /*Función que comprueba que todos los datos del formulario de edición estan correctos, y ademas,
+    una vez ha comprobado que están correctos, actualiza el marco en la BD*/
     public void updateMarco() {
+        
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
+        
         int tamano = seleccionados.length;
         MarcoTrabajo seleccionado = seleccionados[0];
         Long id = seleccionado.getId();
+        
         this.setSelectedMarcos(null);
 
         if (seleccionado.getNombre().equals("")) {
@@ -290,12 +320,16 @@ public class TablaMarcosController implements Serializable {
             RequestContext.getCurrentInstance().update("form");
         }
     }
-
+    
+    /*Función que comprueba que hemos seleccionado un marco para poder cargar un archivo xml sobre el*/
     public void fichero() throws IOException {
+        
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
+        
         MarcoTrabajo[] seleccionados = this.getSelectedMarcos();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
             this.setSelectedMarcos(null);
             anadirMensajeError(messages.getString("ERRTABMAR5"));

@@ -34,6 +34,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -46,6 +48,10 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class TablaProyectosController implements Serializable {
 
+     //Internacionalizacion
+    private Locale locale;
+    private  ResourceBundle messages;
+    
     private Proyecto proyecto;
     private List<Proyecto> proyectos;
     private Proyecto selectedProyecto;
@@ -104,6 +110,10 @@ public class TablaProyectosController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+     /*Funciones GET y SET*/
+    
+    /************************************************************************************************/
 
     public String getNomMarco() {
         return nomMarco;
@@ -160,22 +170,36 @@ public class TablaProyectosController implements Serializable {
         proyectoModel = new ProyectoModel(proyectos);
         return proyectoModel;
     }
+    
+   /************************************************************************************************/
+
 
     public void update() {
+        
+         //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Proyecto[] seleccionados = this.getSelectedProyectos();
         int tamano = seleccionados.length;
+        
         if (tamano == 0) {
             this.setSelectedProyectos(null);
-            anadirMensajeError("No ha seleccionado ningun proyecto");
+            anadirMensajeError(messages.getString("ERRTABPRO"));
         } else if (tamano != 1) {
             this.setSelectedProyectos(null);
-            anadirMensajeError("Solo puede seleccionar un proyecto para editarlo");
+            anadirMensajeError(messages.getString("ERRTABPRO1"));
         } else {
             RequestContext.getCurrentInstance().execute("multiEditDialog.show();");
         }
     }
 
     public void updateProyecto() {
+        
+        //Internacionalización
+        locale = new Locale("default");//añdir es, en...
+        messages = ResourceBundle.getBundle("inter.mensajes",locale);
+        
         Proyecto[] seleccionados = this.getSelectedProyectos();
         int tamano = seleccionados.length;
         Proyecto seleccionado = seleccionados[0];
@@ -183,17 +207,17 @@ public class TablaProyectosController implements Serializable {
         this.setSelectedProyectos(null);
 
         if (seleccionado.getNombre().equals("")) {
-            anadirMensajeError("Tienes que introducir un nombre para el proyecto");
+            anadirMensajeError(messages.getString("ERRTABPRO2"));
         } else if (seleccionado.getDescripcion().equals("")) {
-            anadirMensajeError("Tienes que introducir una descripción para el proyecto");
+            anadirMensajeError(messages.getString("ERRTABPRO3"));
         } else if (gestorProyectosService.existeProyecto(seleccionado.getNombre()) == true && gestorProyectosService.existeId(seleccionado.getNombre()) != id) {
-            anadirMensajeError("Ya existe un Proyecto con ese nombre");
+            anadirMensajeError(messages.getString("ERRTABPRO4"));
         } else {
             seleccionado.setFechaModificacion(Calendar.getInstance().getTime());
             MarcoTrabajo marco = marcoTrabajoDAO.buscarPorNombre(seleccionado.getMarcoTrabajo().getNombre());
             seleccionado.setMarcoTrabajo(marco);
             proyectoDAO.actualizar(seleccionado);
-            anadirMensajeCorrecto("El proyecto ha sido modificado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABPRO"));
             RequestContext.getCurrentInstance().update("form");
         }
     }
@@ -202,7 +226,7 @@ public class TablaProyectosController implements Serializable {
         Proyecto[] seleccionados = this.getSelectedProyectos();
         int tamano = seleccionados.length;
         if (tamano == 0) {
-            anadirMensajeError("No ha seleccionado ningun proyecto");
+            anadirMensajeError(messages.getString("ERRTABPRO"));
         } else {
             RequestContext.getCurrentInstance().execute("multiDialog.show();");
         }
@@ -253,12 +277,12 @@ public class TablaProyectosController implements Serializable {
             activoEliminar.clear();
             impactoEliminar.clear();
             degradacionEliminar.clear();
-            anadirMensajeCorrecto("El proyecto ha sido eliminado correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABPRO1"));
         } else {
             activoEliminar.clear();
             impactoEliminar.clear();
             degradacionEliminar.clear();
-            anadirMensajeCorrecto("Los proyectos fueron eliminados correctamente");
+            anadirMensajeCorrecto(messages.getString("CORRTABPRO2"));
         }
     }
 

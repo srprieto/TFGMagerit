@@ -30,13 +30,13 @@
                 <p:panel id="panel" header="#{msg.NUE1}" style="tabla4">  
                     <p:messages id="messages" />  
                     <h:panelGrid columns="2">  
-                        <h:outputLabel for="grado" value="#{msg.GRA1}" />  
+                        <h:outputLabel for="grado" value="#{msg.GRA2}" styleClass="negrita"/>  
                         <p:inputText id="grado" value="#{dependenciaController.grado}"  label="grado"/> 
 
-                        <h:outputLabel for="justificante" value="#{msg.JUS1}" />  
+                        <h:outputLabel for="justificante" value="#{msg.JUS4}" styleClass="negrita"/>  
                         <p:inputText id="justificante" value="#{dependenciaController.justificante}"  label="justificante"/>    
 
-                        <h:outputLabel for="dependiente" value="#{msg.ACT1}" />  
+                        <h:outputLabel for="dependiente" value="#{msg.ACT5}" styleClass="negrita"/>  
                         <h:selectOneMenu id="dependiente" value="#{dependenciaController.nombre}" converter="omnifaces.SelectItemsConverter" > 
                             <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{dependenciaController.activos}" />  
                         </h:selectOneMenu>  

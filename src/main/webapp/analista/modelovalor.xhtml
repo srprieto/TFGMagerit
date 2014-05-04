@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.VAL3}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaDependientesController.atras()}" />                
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+                <p:dataTable id="Proyectos" var="valoracion" emptyMessage="#{msg.VAC2}"  
+                             paginator="true" rows="8" value="#{activoController.modeloValor}" >  
+                    <f:facet name="header" >  
+                        <p:outputPanel>  
+                            <h:outputText value="#{msg.MOD1}"/>   
+                        </p:outputPanel>  
+                    </f:facet> 
+
+                    <p:column id="activo" styleClass="tabla1">  
+                         <f:facet name="header"> 
+                               <h:outputText value="#{msg.ACT4}" />  
+                        </f:facet> 
+                        <h:outputText value="#{valoracion.activo.nombre}" />    
+                    </p:column> 
+
+                    <p:column id="dimension" styleClass="tabla1">  
+                        <f:facet name="header"> 
+                               <h:outputText value="#{msg.DIM1}" />  
+                        </f:facet> 
+                        <h:outputText value="#{valoracion.dimension.nombre}" />    
+                    </p:column> 
+
+                    <p:column id="valor" styleClass="tabla1"> 
+                        <f:facet name="header"> 
+                               <h:outputText value="#{msg.VAL2}" />  
+                        </f:facet> 
+                        <h:outputText value="#{valoracion.valor}" />    
+                    </p:column> 
+                    <f:facet name="footer">  
+                    </f:facet>
+                </p:dataTable> 
+                <h:commandLink>  
+                    <p:graphicImage value="/images/excel.png" />  
+                    <p:dataExporter type="xls" target="Proyectos" fileName="ValoraAcumulado" />  
+                </h:commandLink>  
+                <h:commandLink>  
+                    <p:graphicImage value="/images/pdf.png" />  
+                    <p:dataExporter type="pdf" target="Proyectos" fileName="ValoraAcumulado"/>  
+                </h:commandLink>  
+
+                <h:commandLink>  
+                    <p:graphicImage value="/images/csv.png" />  
+                    <p:dataExporter type="csv" target="Proyectos" fileName="ValoraAcumulado" />  
+                </h:commandLink>  
+
+                <h:commandLink>  
+                    <p:graphicImage value="/images/xml.png" />  
+                    <p:dataExporter type="xml" target="Proyectos" fileName="ValoraAcumulado" />  
+                </h:commandLink> 
+            </h:form>
+        </div>
+        <p:growl id="growl" life="3000" /> 
+    </ui:define>
+</ui:composition>

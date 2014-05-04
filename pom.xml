@@ -56,6 +56,16 @@
             <version>4.0</version>
         </dependency>
         <dependency>
+            <groupId>itext-2.1.7</groupId>
+            <artifactId>itext-2.1.7</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>poi-3.8-20120326</groupId>
+            <artifactId>poi-3.8-20120326</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>

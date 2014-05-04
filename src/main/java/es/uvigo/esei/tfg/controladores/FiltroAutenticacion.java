@@ -66,7 +66,7 @@ public class FiltroAutenticacion implements Filter {
             // Redirir a la página de login del tipo de usuario que corresponda
             httpServletRequest.getSession().invalidate();
             String ctxPath = httpServletRequest.getContextPath();
-            ((HttpServletResponse) response).sendRedirect(ctxPath + "/faces/index.xhtml");
+            ((HttpServletResponse) response).sendRedirect(ctxPath + "/index.xhtml");
         }
 
     }

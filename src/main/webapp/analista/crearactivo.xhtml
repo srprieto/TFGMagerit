@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.CRE4}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="#{msg.CER}" actionListener="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ATR}" url="activos.xhtml" />   
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+
+                <p:panel id="panel" header="#{msg.NUE}" style="tabla4">  
+
+                    <h:panelGrid columns="2">  
+                        <h:outputLabel for="codigo" value="#{msg.COD}" styleClass="negrita"/>  
+                        <p:inputText id="codigo" value="#{activoController.codigo}"  label="Codigo"/> 
+
+
+                        <h:outputLabel for="nombre" value="#{msg.NOM}" styleClass="negrita"/>  
+                        <p:inputText id="nombre" value="#{activoController.nombre}"  label="Nombre"/>    
+
+                        <h:outputLabel for="descripcion" value="#{msg.DES}" styleClass="negrita" />  
+                        <p:inputText id="descripcion" value="#{activoController.descripcion}"  label="Descripcion"/>  
+
+                        <h:outputLabel for="responsable" value="#{msg.RES}" styleClass="negrita" />  
+                        <p:inputText id="responsable" value="#{activoController.responsable}"  label="Responsable"/>  
+
+                        <h:outputLabel for="ubicacion" value="#{msg.UBI}" styleClass="negrita" />  
+                        <p:inputText id="ubicacion" value="#{activoController.ubicacion}"  label="Ubicacion"/>  
+
+
+                        <h:outputLabel for="cantidad" value="#{msg.CANT}" styleClass="negrita" />  
+                        <p:inputText id="cantidad" value="#{activoController.cantidad}"  label="Cantidad"/> 
+
+                    </h:panelGrid>  
+                    
+                    <h:panelGrid columns="3">  
+                        <h:outputLabel for="grupo" value="#{msg.GRU3}" styleClass="negrita"/>  
+                        <h:selectOneMenu id="grupo" value="#{activoController.nombreGrupo}" converter="omnifaces.SelectItemsConverter" >  
+                            <f:selectItems var="item" itemLabel="#{item}" itemValue="#{item}" value="#{activoController.grupoActivos}" />  
+                        </h:selectOneMenu>  
+
+                        <p:commandButton value="#{msg.NG}" actionListener="#{activoController.doGrupo()}"/>
+                    </h:panelGrid>  
+                    <h:panelGrid columns="3">  
+                        <h:outputLabel for="tipo" value="#{msg.TIP}" styleClass="negrita"/>  
+                        <h:selectOneMenu id="tipo" value="#{activoController.activoEnEdicion.tipoActivo}" converter="omnifaces.SelectItemsConverter" >  
+                            <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item}" value="#{activoController.tiposActivos}" />  
+                        </h:selectOneMenu>  
+
+                    <p:commandButton value="#{msg.DET}" actionListener="#{activoController.detalles()}" />
+                    </h:panelGrid>  
+                    <p><b><h:outputText value="#{msg.OBL}" /></b></p>
+                    <p:commandButton update=" :growl" actionListener="#{activoController.doGuargar()}" value="#{msg.GUA}" /> 
+                    <p:commandButton id="botonborrar" value="#{msg.LIM}" immediate="true"  type="reset" styleClass="boton"/> 
+                </p:panel>  
+            </h:form>  
+        </div>
+        <p:growl id="growl" life="3000" />
+    </ui:define>
+</ui:composition>
+

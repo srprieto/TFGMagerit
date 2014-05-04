@@ -7,8 +7,8 @@ package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.proyecto.Proyecto;
-import es.uvigo.esei.tfg.controladores.editor.ProyectoController;
-import es.uvigo.esei.tfg.controladores.editor.TablaProyectosController;
+import es.uvigo.esei.tfg.controladores.analista.ProyectoController;
+import es.uvigo.esei.tfg.controladores.analista.TablaProyectosController;
 import es.uvigo.esei.tfg.logica.daos.MarcoTrabajoDAO;
 import es.uvigo.esei.tfg.logica.servicios.GestorMarcosService;
 import java.io.IOException;

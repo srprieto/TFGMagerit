@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/plantilla.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:outputStylesheet library="css" name="estilo.css"  />
+    <ui:define name="head"><h:outputText value="#{msg.DEP1}"/></ui:define>
+    <ui:define name="sidebar">
+        <h:form id="logout">
+            <h:commandLink value="#{msg.CER}" action="#{loginController.doLogout()}" styleClass="logout"/>
+        </h:form>
+    </ui:define>
+    <ui:define name="sidebar1">  
+        <div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar menu" >
+            <h:form id="frmMenu" prependId="false" >
+                <p:menu>  
+                    <p:submenu label="#{msg.MEN}">  
+                        <p:menuitem value="#{msg.ANA3}" url="dependencianueva.xhtml"/> 
+                        <p:menuitem value="#{msg.ATR}" actionListener="#{tablaDependientesController.atras()}" />
+                    </p:submenu>  
+                </p:menu>
+            </h:form>  
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <div class="tabla">
+            <h:form id="form">  
+                <p:dataTable id="Proyectos" emptyMessage="#{msg.VAC1}" var="dependiente" value="#{tablaDependientesController.dependienteModel}" 
+                             paginator="true" rows="8" selection="#{tablaDependientesController.selectedDependientes}">  
+                    <f:facet name="header" >  
+                        <p:outputPanel>  
+                            <h:outputText value="#{msg.ACT2} #{arbolActivosController.activoActual.nombre}"/>   
+                        </p:outputPanel>  
+                    </f:facet> 
+
+                    <p:column styleClass="tabla2" selectionMode="multiple"/> 
+
+                    <p:column id="nombre" styleClass="tabla1" headerText="#{msg.ACT1}">  
+                        <h:outputText value="#{dependiente.activoDependiente.nombre}" />    
+                    </p:column> 
+
+                    <p:column id="grado" styleClass="tabla1" headerText="#{msg.GRA1}">  
+                        <h:outputText value="#{dependiente.grado}" />    
+                    </p:column> 
+
+                    <p:column id="justificante" styleClass="tabla1" headerText="#{msg.JUS1}">  
+                        <h:outputText value="#{dependiente.justificacion}" />    
+                    </p:column> 
+
+
+                    <f:facet name="footer">  
+                        <p:commandButton id="multiEditButton" value="#{msg.EDI}" icon="ui-icon-edit"  
+                                         update=":form:displayEdit, :growl" actionListener="#{tablaDependientesController.update()}"/>
+                        <p:commandButton id="multiDeleteButton" value="#{msg.BOR}" icon="ui-icon-trash"  
+                                         update=":form:displayMulti, :growl" actionListener="#{tablaDependientesController.eliminar()}"/> 
+                    </f:facet>
+                </p:dataTable> 
+                <p:dialog id="multiEditDialog" header="#{msg.EDI1}" widgetVar="multiEditDialog"  
+                          height="200" width="500" showEffect="fade" hideEffect="explode">  
+                    <div class="datalist-noborder">
+                        <p:dataList id="displayEdit" value="#{tablaDependientesController.selectedDependientes}" type="none" var="selectedEdit">  
+                            <p><h:outputLabel for="grado" value="#{msg.GRA1}"  styleClass="negrita"/> 
+                                <p:inputText id="grado" value="#{selectedEdit.grado}"/></p>
+
+                            <p><h:outputLabel for="justificacion" value="#{msg.JUS1}"  styleClass="negrita"/> 
+                                <p:inputText id="justificacion" value="#{selectedEdit.justificacion}"/></p>
+
+                        </p:dataList>  
+                    </div>
+                    <p:commandButton value="#{msg.ACE}" update=":form,  :growl" actionListener="#{tablaDependientesController.updateDependencia()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiEditDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>
+
+                <p:dialog id="multiDialog" header="#{msg.ELI5}" widgetVar="multiDialog"  
+                          height="200" width="500" showEffect="fade" hideEffect="explode">  
+
+                    <p:dataList id="displayMulti" value="#{tablaDependientesController.selectedDependientes}" var="selected">  
+                        <h:outputText value="#{msg.ACT3} &#160;#{selected.activoDependiente.nombre}"/>
+                    </p:dataList>  
+                    <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaDependientesController.eliminarDependencias()}" icon="ui-icon-check"/> 
+                    <p:commandButton value="#{msg.CAN}" onclick="multiDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:dialog>  
+            </h:form>
+        </div>
+        <p:growl id="growl" life="3000" /> 
+    </ui:define>
+</ui:composition>

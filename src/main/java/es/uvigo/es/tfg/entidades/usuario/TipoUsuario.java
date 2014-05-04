@@ -13,7 +13,7 @@ package es.uvigo.es.tfg.entidades.usuario;
  */
 public enum TipoUsuario {
     ADMINISTRADOR("ADMINISTRADOR"),
-    EDITOR("EDITOR");
+    ANALISTA("ANALISTA");
     
     private final String label;
 

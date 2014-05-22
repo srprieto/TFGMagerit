@@ -12,6 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class Impacto implements Serializable { 
     @Id

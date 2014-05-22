@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.uvigo.esei.tfg.controladores.administrador;
 
 import es.uvigo.es.tfg.entidades.usuario.TipoUsuario;
@@ -22,7 +17,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -42,14 +36,16 @@ public class GestionUsuarioController implements Serializable {
     private String password = "";
     private String password2 = "";
     private boolean nuevoUsuario = true;
-    private int valor = 0;
+    private int valor = 0; // variable necesaria para control si el que modifica los datos es un 
+                          //administrador o un analista y redireccionar a una vista u otra dependiendo del valor
 
     //Necesario para poder realizar el redireccionamiento a otra vista
     private ExternalContext context1;
 
     @Inject
     TablaUsuariosController tablaUsuariosController;
-
+    
+   //"Acceso" a metodos de otras clases
     @Inject
     GestorUsuariosService gestorUsuariosService;
 
@@ -146,7 +142,8 @@ public class GestionUsuarioController implements Serializable {
     /*Funcion doUsuario() nos redirecciona a la vista de confirmacion de usuario en caso de que todos los
      valores sean correctos, en caso contrario muestra el mensaje de error correspondiente.*/
     public void doUsuario() throws IOException {
-
+        
+        //Internacionalización
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
 
@@ -196,7 +193,8 @@ public class GestionUsuarioController implements Serializable {
 
     /*Funcion doUsuario() crea un nuevo usuario en la base de datos con los datos introducidos*/
     public void doCrearUsuario() throws IOException {
-
+        
+        //Internacionalización
         locale = new Locale("default");//añdir es, en...
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
 
@@ -240,7 +238,8 @@ public class GestionUsuarioController implements Serializable {
 
         context1.redirect("modificardatos.xhtml");
     }
-
+    
+    //Estas dos funciones modificar1()  y doModificarUsuario(), sirven para modificar los datos personales de cada usuario
     public void modificar1() throws IOException {
 
         valor = 1;

@@ -29,7 +29,7 @@
         <div class="tabla">
             <h:form id="form">  
                 <p:dataTable id="Proyectos" emptyMessage="#{msg.VAC3}" 
-                             var="degradacion" value="#{activoController.impactoAcumulado}" sortBy="impacto.activo.nombre">  
+                             paginator="true" rows="8" var="degradacion" value="#{activoController.impactoAcumulado}" sortBy="impacto.activo.nombre">  
                     <f:facet name="header" >  
                         <p:outputPanel>  
                             <h:outputText value="#{msg.IMP}"/>   

@@ -3,7 +3,6 @@ package es.uvigo.es.tfg.entidades.proyecto;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.usuario.Usuario;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -11,12 +10,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class Proyecto implements Serializable {
 

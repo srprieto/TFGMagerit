@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.uvigo.esei.tfg.controladores;
 
 /**
@@ -10,7 +5,7 @@ package es.uvigo.esei.tfg.controladores;
  * usuarios por parte de usuarios no autenticados o usuarios autenticado de otro
  * tipo
  *
- * @author saul
+ * 
  */
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -26,6 +21,11 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @WebFilter(filterName = "FiltroAutenticacion",
         urlPatterns = {"/faces/administrador/*",
             "/faces/editor/*",})

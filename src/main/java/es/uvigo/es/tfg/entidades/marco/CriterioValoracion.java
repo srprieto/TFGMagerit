@@ -1,6 +1,5 @@
 package es.uvigo.es.tfg.entidades.marco;
 
-import es.uvigo.es.tfg.entidades.proyecto.Valoracion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
-
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class CriterioValoracion implements Serializable {
     @Id

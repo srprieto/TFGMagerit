@@ -351,7 +351,7 @@ public class ActivoController implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         context1 = FacesContext.getCurrentInstance().getExternalContext();
         
-        gestorActivoService.crearNuevoActivo(codigo, nombre, descripcion, responsable, propietario, ubicacion, null, cantidad, proyectoController.getProyectoActual(), activoEnEdicion.getTipoActivo(), grupoActivoDAO.buscarPorNombre(nombreGrupo));
+        gestorActivoService.crearNuevoActivo(codigo, nombre, descripcion, responsable, propietario, ubicacion,cantidad, proyectoController.getProyectoActual(), activoEnEdicion.getTipoActivo(), grupoActivoDAO.buscarPorNombre(nombreGrupo));
         anadirMensajeCorrecto(messages.getString("CORRACT")+" "+ nombre +" "+messages.getString("CORRACT1"));
         nombre = "";
         descripcion = "";

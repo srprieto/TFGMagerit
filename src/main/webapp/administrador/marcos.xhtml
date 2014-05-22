@@ -87,7 +87,7 @@
                           height="200" width="300" showEffect="fade" hideEffect="explode">  
 
                     <p:dataList id="displayMulti" value="#{tablaMarcosController.selectedMarcos}" var="selectedMarco">  
-                        <h:outputText value="#{msg.NOM}&#160;#{selectedMarco.nombre}"/>
+                        <h:outputText value="#{msg.NOM2}&#160;#{selectedMarco.nombre}"/>
                     </p:dataList>  
                     <p:commandButton value="#{msg.ACE}" update=":form, :growl"   actionListener="#{tablaMarcosController.eliminarMarcos()}" icon="ui-icon-check"/> 
                     <p:commandButton value="#{msg.CAN}" onclick="multiMarcoDialog.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />

@@ -11,6 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class Activo implements Serializable {
 
@@ -24,7 +29,6 @@ public class Activo implements Serializable {
     String responsable;
     String propietario;  
     String ubicacion;
-    Double valorBase;
     Long cantidad;
 
     @ManyToOne
@@ -45,14 +49,13 @@ public class Activo implements Serializable {
     public Activo() {
     }
 
-    public Activo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad, Proyecto proyecto,TipoActivo tipo, GrupoActivos grupo) {
+    public Activo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Long cantidad, Proyecto proyecto,TipoActivo tipo, GrupoActivos grupo) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.responsable = responsable;
         this.propietario = propietario;
         this.ubicacion = ubicacion;
-        this.valorBase = valorBase;
         this.cantidad = cantidad;
         this.proyecto = proyecto;
         this.tipoActivo = tipo;
@@ -113,14 +116,6 @@ public class Activo implements Serializable {
 
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
-    }
-
-    public Double getValorBase() {
-        return valorBase;
-    }
-
-    public void setValorBase(Double valorBase) {
-        this.valorBase = valorBase;
     }
 
     public Long getCantidad() {

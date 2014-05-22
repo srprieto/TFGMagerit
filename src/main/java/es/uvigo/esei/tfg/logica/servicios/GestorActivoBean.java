@@ -25,9 +25,9 @@ public class GestorActivoBean implements GestorActivoService {
   ActivoDAO activoDAO;
   
   @Override
-    public void crearNuevoActivo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad,Proyecto proyecto, TipoActivo tipo, GrupoActivos grupo) {
+    public void crearNuevoActivo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Long cantidad,Proyecto proyecto, TipoActivo tipo, GrupoActivos grupo) {
         // Crear el usuario 
-        Activo nuevo = new Activo(codigo,nombre,descripcion,responsable,propietario,ubicacion,valorBase,cantidad,proyecto,tipo,grupo);
+        Activo nuevo = new Activo(codigo,nombre,descripcion,responsable,propietario,ubicacion,cantidad,proyecto,tipo,grupo);
         activoDAO.crear(nuevo);
     }
     

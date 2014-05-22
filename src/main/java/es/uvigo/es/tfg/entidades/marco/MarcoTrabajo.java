@@ -10,6 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class MarcoTrabajo implements Serializable {
 

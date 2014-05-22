@@ -1,13 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package es.uvigo.esei.tfg.controladores;
 
-import java.security.MessageDigest;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
@@ -15,7 +7,6 @@ import javax.inject.Named;
  *
  * @author Saul
  */
-
 @Named 
 @RequestScoped
 public class Credenciales {

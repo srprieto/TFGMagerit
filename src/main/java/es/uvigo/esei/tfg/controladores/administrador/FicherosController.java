@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -19,6 +20,11 @@ import org.apache.commons.io.IOUtils;
 
 import org.primefaces.model.UploadedFile;
 
+
+/**
+ *
+ * @author Saul
+ */
 @Named(value = "ficherosController")
 @SessionScoped
 public class FicherosController implements Serializable {
@@ -45,6 +51,15 @@ public class FicherosController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
     }
+    
+    @PostConstruct
+    public void inicializar()
+    {
+        File folder= new File("glassfish/domains/domain1/applications/TFG/upload");
+        if(!folder.exists()){
+            folder.mkdirs();
+        } 
+    }
 
     public UploadedFile getFile() {
         return file;
@@ -58,28 +73,32 @@ public class FicherosController implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         if (file != null) {
-            File folder = new File("C:/Users/Saul/Downloads/uploads");
+            File folder = new File("glassfish/domains/domain1/applications/TFG/upload");
             InputStream stream = file.getInputstream();
             String prefix = FilenameUtils.getBaseName(file.getFileName());
             String suffix = FilenameUtils.getExtension(file.getFileName());
-            File file1 = File.createTempFile(prefix + "-", "." + suffix, folder);
-            InputStream input = file.getInputstream();
-            OutputStream output = new FileOutputStream(file1);
+            if ("xml".equals(suffix)) {
+                File file1 = File.createTempFile(prefix + "-", "." + suffix, folder);
+                InputStream input = file.getInputstream();
+                OutputStream output = new FileOutputStream(file1);
 
-            try {
-                IOUtils.copy(input, output);
-            } finally {
-                IOUtils.closeQuietly(output);
-                IOUtils.closeQuietly(input);
-            }
-            MarcoTrabajo[] seleccionados = tablaMarcosController.getSelectedMarcos();
-            MarcoTrabajo seleccionado = seleccionados[0];
-            cargadorCatalogoService.cargarRecurso(file1.getAbsolutePath(), seleccionado);
-            anadirMensajeCorrecto("El archivo xml ha sido cargado correctamente");
-            context.redirect("marcos.xhtml");
+                try {
+                    IOUtils.copy(input, output);
+                } finally {
+                    IOUtils.closeQuietly(output);
+                    IOUtils.closeQuietly(input);
+                }
+                MarcoTrabajo[] seleccionados = tablaMarcosController.getSelectedMarcos();
+                MarcoTrabajo seleccionado = seleccionados[0];
+                cargadorCatalogoService.cargarRecurso(file1.getAbsolutePath(), seleccionado);
+                anadirMensajeCorrecto("El archivo xml ha sido cargado correctamente");
+                context.redirect("marcos.xhtml");
+            } else {
+                anadirMensajeError("El archivo no tiene la extension correcta");
+                context.redirect("marcoxml.xhtml");
+            }  
         }
     }
-
     private MarcoTrabajo[] getSelectedMarcos() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

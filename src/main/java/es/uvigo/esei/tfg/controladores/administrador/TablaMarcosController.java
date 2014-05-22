@@ -51,10 +51,9 @@ public class TablaMarcosController implements Serializable {
 
     //Atributos
     private List<MarcoTrabajo> marcos;
-    private MarcoTrabajo selectedMarco;
-    private MarcoTrabajo[] selectedMarcos;
+    private MarcoTrabajo[] selectedMarcos;//Devuelve los marcos seleccionados, implementada por Primefaces
     private MarcoModel marcoModel;
-    private boolean disponible = false;
+    private boolean disponible = false;//variable que no nos deja modificar datos si otro usuario esta realizando cambios
 
     @Inject
     MarcoTrabajoDAO marcoDAO;
@@ -144,17 +143,9 @@ public class TablaMarcosController implements Serializable {
 
     public void setSelectedMarcos(MarcoTrabajo[] selectedMarcos) {
         this.selectedMarcos = selectedMarcos;
-    }
-
-    public MarcoTrabajo getSelectedMarco() {
-        return selectedMarco;
-    }
-
-    public void setSelectedMarco(MarcoTrabajo selectedMarco) {
-        this.selectedMarco = selectedMarco;
-    }
+    }    
     
-    
+    //Función que usamos para cargar la tabla marcos
     public MarcoModel getMarcoModel() {
         marcos = marcoDAO.buscarTodos();
         marcoModel = new MarcoModel(marcos);
@@ -190,6 +181,7 @@ public class TablaMarcosController implements Serializable {
         messages = ResourceBundle.getBundle("inter.mensajes", locale);
         
         //Atributos: Listas donde se almacenan todos los elementos relacionados con el marco
+        //para su posterior borrado
         List<TipoAmenaza> tipoAmenazaEliminar = new ArrayList<>();
         List<TipoActivo> tipoActivoEliminar = new ArrayList<>();
         List<Dimension> dimensionesEliminar = new ArrayList<>();
@@ -206,7 +198,8 @@ public class TablaMarcosController implements Serializable {
 
         Amenaza amenazaEliminar;
         int tamano = seleccionados.length;
-
+        
+        //Bucles para eliminar todos los datos asociados al marco en la base de datos para evitar la excepción
         for (int i = 0; i < tamano; i++) {
             MarcoTrabajo seleccionado = seleccionados[i];
             proyectosEliminar = proyectoDAO.buscarMarco(seleccionado);

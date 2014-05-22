@@ -10,6 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class GrupoActivos implements Serializable {
 

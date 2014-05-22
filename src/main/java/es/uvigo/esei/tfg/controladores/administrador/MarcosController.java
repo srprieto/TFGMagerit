@@ -41,7 +41,8 @@ public class MarcosController implements Serializable {
     private String descripcion = "";
     private Date fechaCreacion= null;
     private int volver=0;
-
+    
+    //"Acceso" a metodos de otras clases
     @Inject
     GestorMarcosService gestorMarcoService;
     

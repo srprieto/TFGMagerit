@@ -9,6 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class Valoracion implements Serializable {
     @Id
@@ -74,8 +79,5 @@ public class Valoracion implements Serializable {
 
     public void setDimension(Dimension dimension) {
         this.dimension = dimension;
-    }
-
-    
-    
+    }    
 }

@@ -17,7 +17,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface GestorActivoService {
-     void crearNuevoActivo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Double valorBase, Long cantidad,Proyecto proyecto, TipoActivo tipo, GrupoActivos grupo);
+     void crearNuevoActivo(String codigo, String nombre, String descripcion, String responsable, String propietario, String ubicacion, Long cantidad,Proyecto proyecto, TipoActivo tipo, GrupoActivos grupo);
      Long existeId (String nombre);
      boolean existeActivo(String nombre);
 }

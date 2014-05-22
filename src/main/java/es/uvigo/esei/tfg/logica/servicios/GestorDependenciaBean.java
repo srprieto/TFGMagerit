@@ -59,7 +59,6 @@ public class GestorDependenciaBean implements GestorDependenciaService {
         for (int i = 0; i < activos.size(); i++) {
             for (int j = 0; j < asociados.size(); j++) {
                 if (asociados.get(j).getActivoDependiente().getNombre().equals(activos.get(i).getNombre())) {
-                    System.out.println(activos.get(i).getNombre());
                     activos.remove(i);
                 }
             }

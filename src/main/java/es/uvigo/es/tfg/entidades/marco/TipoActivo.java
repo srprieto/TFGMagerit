@@ -15,6 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 
+
+/**
+ *
+ * @author srprieto
+ */
 @Entity
 public class TipoActivo implements Serializable {
 
@@ -126,7 +131,6 @@ public class TipoActivo implements Serializable {
         if (tiposAmenaza == null) {
             tiposAmenaza = new HashSet<TipoAmenaza>();
         }
-        // OMITIRLO: daria un bucle infinito -> tipoAmenza.anadirTipoActivo(this); // TODO: es necesario esto ¿?
         tiposAmenaza.add(tipoAmenza);
     }
 

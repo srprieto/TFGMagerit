@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.uvigo.esei.tfg.controladores.analista;
 
 import es.uvigo.es.tfg.entidades.marco.Dimension;
@@ -323,6 +318,8 @@ public class AmenazaController implements Serializable {
             anadirMensajeError(messages.getString("ERRAME2"));
         } else if (gradoDegradacionBase == null) {
             anadirMensajeError(messages.getString("ERRAME3"));
+         } else if (gradoDegradacionBase>100 || gradoDegradacionBase<1) {
+            anadirMensajeError(messages.getString("ERRAME5"));
         } else {
 
             int valor = 1;
@@ -348,7 +345,8 @@ public class AmenazaController implements Serializable {
             }
         }
     }
-
+    
+    //Función que nos permite gusradar una amenaza en el sistema y asociarla a un activo
     public void guardarAmenaza() throws IOException {
 
         //Internacionalización
@@ -395,7 +393,7 @@ public class AmenazaController implements Serializable {
         gradoDegradacionBase = null;
         context.redirect("amenazas.xhtml");
     }
-
+    //Función que nos devuelve el imacto repercutido de todas las amenazas relacionadas con el activo seleccionado
     public List<Degradacion> getImpactoRepercutido() {
 
         List<Degradacion> degradaciones = new ArrayList<>();
@@ -531,7 +529,7 @@ public class AmenazaController implements Serializable {
         return resultado;
 
     }
-
+    //Función necesario para el redondeo de valores double
     private int round(double d) {
         double dAbs = Math.abs(d);
         int i = (int) dAbs;
@@ -543,6 +541,7 @@ public class AmenazaController implements Serializable {
         }
     }
 
+    //Función que devuleve el impacto acumulado de las amenazas de un activo
     public List<Degradacion> getImpacto(Activo activo) {
 
         List<Degradacion> degradaciones = new ArrayList<>();

@@ -59,14 +59,14 @@
                                          update=":form:displayMulti, :growl" actionListener="#{tablaDependientesController.eliminar()}"/> 
                     </f:facet>
                 </p:dataTable> 
-                <p:dialog id="multiEditDialog" header="#{msg.EDI1}" widgetVar="multiEditDialog"  
+                <p:dialog id="multiEditDialog" header="Modificar datos de la dependencia" widgetVar="multiEditDialog"  
                           height="200" width="500" showEffect="fade" hideEffect="explode">  
                     <div class="datalist-noborder">
                         <p:dataList id="displayEdit" value="#{tablaDependientesController.selectedDependientes}" type="none" var="selectedEdit">  
-                            <p><h:outputLabel for="grado" value="#{msg.GRA1}"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="grado" value="#{msg.GRA2} "  styleClass="negrita"/> 
                                 <p:inputText id="grado" value="#{selectedEdit.grado}"/></p>
 
-                            <p><h:outputLabel for="justificacion" value="#{msg.JUS1}"  styleClass="negrita"/> 
+                            <p><h:outputLabel for="justificacion" value="#{msg.JUS2} "  styleClass="negrita"/> 
                                 <p:inputText id="justificacion" value="#{selectedEdit.justificacion}"/></p>
 
                         </p:dataList>  

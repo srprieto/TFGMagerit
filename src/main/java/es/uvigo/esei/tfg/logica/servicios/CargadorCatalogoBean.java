@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.uvigo.esei.tfg.logica.servicios;
 
 import es.uvigo.es.tfg.entidades.marco.CriterioValoracion;
@@ -11,7 +6,6 @@ import es.uvigo.es.tfg.entidades.marco.ItemValoracion;
 import es.uvigo.es.tfg.entidades.marco.MarcoTrabajo;
 import es.uvigo.es.tfg.entidades.marco.TipoActivo;
 import es.uvigo.es.tfg.entidades.marco.TipoAmenaza;
-import es.uvigo.es.tfg.entidades.marco.TipoSalvaguarda;
 import es.uvigo.esei.tfg.logica.daos.xml.ClassType;
 import es.uvigo.esei.tfg.logica.daos.xml.ClassesType;
 import es.uvigo.esei.tfg.logica.daos.xml.CriteriaType;
@@ -52,7 +46,7 @@ public class CargadorCatalogoBean implements CargadorCatalogoService {
     private Map<String, CriterioValoracion> tablaCriterios;
     private Map<String, TipoActivo> tablaTiposActivos;
     private Map<String, TipoAmenaza> tablaTiposAmenazas;
-    private Map<String, TipoSalvaguarda> tablaTiposSalvaguardas;
+    //private Map<String, TipoSalvaguarda> tablaTiposSalvaguardas; Si hubiera salvaguardas
 
     private void inicializar() {
 
@@ -61,7 +55,7 @@ public class CargadorCatalogoBean implements CargadorCatalogoService {
         tablaCriterios = new HashMap<String, CriterioValoracion>();
         tablaTiposActivos = new HashMap<String, TipoActivo>();
         tablaTiposAmenazas = new HashMap<String, TipoAmenaza>();
-        tablaTiposSalvaguardas = new HashMap<String, TipoSalvaguarda>();
+        //tablaTiposSalvaguardas = new HashMap<String, TipoSalvaguarda>(); Si hubiera salvaguardas
     }
 
     @Override
@@ -77,7 +71,7 @@ public class CargadorCatalogoBean implements CargadorCatalogoService {
             cargarCriterios(marcoTrabajo);
             cargarTiposActivos(marcoTrabajo);
             cargarTiposAmenazas(marcoTrabajo);
-            cargarTiposSalvaguardas(marcoTrabajo);
+            //cargarTiposSalvaguardas(marcoTrabajo); Si hubiera salvaguardas
 
         } catch (JAXBException e) {
             System.out.println("Error cargando Catalogo MAGERIT desde " + localizacionRecurso);
@@ -220,9 +214,4 @@ public class CargadorCatalogoBean implements CargadorCatalogoService {
         }
 
     }
-
-    private void cargarTiposSalvaguardas(MarcoTrabajo marcoTrabajo) {
-        // PENDIENTE
-    }
-
 }
